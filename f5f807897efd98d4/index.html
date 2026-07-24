@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tobi — words we learned</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#3a2e2a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'Fredoka','Segoe UI',system-ui,sans-serif; color:var(--ink);
+    background:#fdf0d5;
+    background-image: radial-gradient(#f6d9a0 1.4px, transparent 1.4px);
+    background-size: 22px 22px;
+    padding:22px 16px; min-height:100vh;
+  }
+  .top {
+    max-width:960px; margin:0 auto 20px; display:flex; flex-wrap:wrap;
+    align-items:center; justify-content:space-between; gap:12px;
+  }
+  h1 { font-size:30px; font-weight:700; letter-spacing:.3px; }
+  h1 .emo { font-size:30px; }
+  .datepill {
+    display:flex; align-items:center; gap:8px; background:#fff; border:3px solid var(--ink);
+    border-radius:40px; padding:6px 8px 6px 16px; font-weight:600; font-size:15px;
+    box-shadow:4px 4px 0 rgba(58,46,42,.85);
+  }
+  #dateSel {
+    font:inherit; font-weight:700; font-size:15px; border:none; background:#ffdf9e;
+    color:var(--ink); border-radius:30px; padding:6px 12px; cursor:pointer;
+  }
+  .hint { max-width:960px; margin:0 auto 18px; text-align:center; color:#8a6d4b; font-size:14px; }
+  #grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
+    gap:16px; max-width:960px; margin:0 auto;
+  }
+  .card {
+    background:#fff; border:3px solid var(--ink); border-radius:20px;
+    padding:16px 12px 14px; text-align:center;
+    box-shadow:5px 6px 0 rgba(58,46,42,.9);
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+  }
+  .pic {
+    width:76px; height:76px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:42px; line-height:1; border:3px solid var(--ink);
+  }
+  .pic .letter { font-family:'Andika',sans-serif; font-weight:700; font-size:38px; color:#fff; }
+  .word {
+    font-family:'Andika','Comic Sans MS',sans-serif; font-weight:700; font-size:24px;
+    line-height:1.12; cursor:pointer; user-select:none; padding:3px 6px; border-radius:10px;
+    transition:transform .08s;
+  }
+  .word:active { transform:scale(.93); }
+  .word .spk { font-size:15px; opacity:.55; }
+  .reveal {
+    font:inherit; font-weight:600; font-size:13px; border:2px solid var(--ink);
+    background:#fff; color:var(--ink); border-radius:30px; padding:4px 14px; cursor:pointer;
+  }
+  .reveal:active { transform:translateY(1px); }
+  .gloss { font-family:'Fredoka',sans-serif; font-size:16px; color:#6b4f36; min-height:19px; font-weight:500; }
+  .gloss.hidden { visibility:hidden; }
+  footer { text-align:center; color:#b79b74; font-size:12px; margin-top:26px; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <h1><span class="emo">🎒</span> Words we learned</h1>
+    <div class="datepill"><span>Lesson</span><select id="dateSel"></select></div>
+  </div>
+  <p class="hint">Tap a word to hear it 🔊 &nbsp;·&nbsp; tap «перевод» to check the meaning</p>
+  <div id="grid"></div>
+  <footer>Tobi · vocab review</footer>
+<script>
+  const DATA = {"2026-07-24": [{"w": "orange", "g": "апельсин", "e": "🟠"}, {"w": "watermelon", "g": "арбуз", "e": ""}, {"w": "star fruit", "g": "карамбола", "e": "⭐"}, {"w": "pomegranate", "g": "гранат", "e": ""}]}, DATES = ["2026-07-24"];
+  const ACC = ["#ff6b6b", "#20b3a2", "#f4a534", "#9b5de5", "#3ab34a", "#ff5da2", "#4d96ff", "#e5643e"];
+  const sel = document.getElementById('dateSel'), grid = document.getElementById('grid');
+  DATES.forEach(d => { const o=document.createElement('option'); o.value=o.textContent=d; sel.appendChild(o); });
+
+  /* Voice locked to Google UK English Female (same as Space Lotto / Dino Squad) */
+  let vcVoice = null;
+  function vcLoad(){
+    const vs = speechSynthesis.getVoices();
+    vcVoice =
+      vs.find(v => v.name === 'Google UK English Female') ||
+      vs.find(v => /google/i.test(v.name) && /en-GB/i.test(v.lang)) ||
+      vs.find(v => /en-GB/i.test(v.lang) && /female|samantha|kate|serena|stephanie/i.test(v.name)) ||
+      vs.find(v => /en-GB/i.test(v.lang)) ||
+      vs.find(v => /^en/i.test(v.lang)) || null;
+  }
+  if('speechSynthesis' in window){ vcLoad(); speechSynthesis.onvoiceschanged = vcLoad; }
+  function speak(t){ if(!('speechSynthesis'in window))return; const u=new SpeechSynthesisUtterance(t);
+    u.lang = vcVoice ? vcVoice.lang : 'en-GB'; u.rate=.9; u.pitch=1.0; if(vcVoice) u.voice=vcVoice;
+    speechSynthesis.cancel(); speechSynthesis.speak(u); }
+
+  function render(date){
+    grid.innerHTML='';
+    (DATA[date]||[]).forEach((it,i)=>{
+      const acc = ACC[i % ACC.length];
+      const card=document.createElement('div'); card.className='card';
+      card.style.transform = 'rotate('+((i%2)?1.1:-1.1)+'deg)';
+
+      const pic=document.createElement('div'); pic.className='pic';
+      if(it.e){ pic.style.background=acc+'33'; pic.textContent=it.e; }
+      else { pic.style.background=acc; pic.innerHTML='<span class="letter">'+(it.w[0]||'?').toUpperCase()+'</span>'; }
+      card.appendChild(pic);
+
+      const w=document.createElement('div'); w.className='word'; w.style.color=acc;
+      w.innerHTML=it.w+' <span class="spk">🔊</span>'; w.onclick=()=>speak(it.w);
+      card.appendChild(w);
+
+      if(it.g){
+        const gl=document.createElement('div'); gl.className='gloss hidden'; gl.textContent=it.g;
+        const b=document.createElement('button'); b.className='reveal'; b.textContent='перевод';
+        b.style.borderColor=acc; b.style.color=acc; b.onclick=()=>gl.classList.toggle('hidden');
+        card.appendChild(gl); card.appendChild(b);
+      }
+      grid.appendChild(card);
+    });
+  }
+  sel.onchange=()=>render(sel.value);
+  if(DATES.length){ sel.value=DATES[0]; render(DATES[0]); }
+  else grid.innerHTML='<p style="text-align:center;color:#b79b74">No words yet.</p>';
+</script>
+</body>
+</html>

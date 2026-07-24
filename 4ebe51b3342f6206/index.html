@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow"><title>Vocab hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Fredoka',system-ui,sans-serif;background:#fdf0d5;
+    background-image:radial-gradient(#f6d9a0 1.4px,transparent 1.4px);background-size:22px 22px;
+    color:#3a2e2a;padding:26px 16px;min-height:100vh}
+  .wrap{max-width:640px;margin:0 auto}
+  h1{font-size:26px;margin-bottom:6px}
+  .sub{color:#8a6d4b;font-size:14px;margin-bottom:20px}
+  .row{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid #3a2e2a;
+    border-radius:16px;padding:12px 14px;margin-bottom:12px;box-shadow:4px 5px 0 rgba(58,46,42,.9)}
+  .nm{font-weight:700;font-size:18px;flex:1}
+  .btn{font:inherit;font-weight:600;font-size:14px;border:2px solid #3a2e2a;border-radius:30px;
+    padding:7px 15px;cursor:pointer;text-decoration:none;color:#3a2e2a;background:#fff}
+  .btn.open{background:#20b3a2;color:#04141a;border-color:transparent}
+  .btn.copy{background:#ffdf9e}
+  .btn.copy.done{background:#3ab34a;color:#fff;border-color:transparent}
+  .foot{color:#b79b74;font-size:12px;margin-top:18px;text-align:center}
+</style></head>
+<body><div class="wrap">
+  <h1>📚 Vocab hub</h1>
+  <p class="sub">Your private index. "Copy link" gives a parent-shareable link that shows ONLY that child — no access to others. Keep this hub page's own address to yourself.</p>
+  
+      <div class="row">
+        <span class="nm">Darina</span>
+        <a class="btn open" href="https://arsdashok.github.io/vocab/6bf9d2ec89346b12/" target="_blank" rel="noopener">Open</a>
+        <button class="btn copy" data-url="https://arsdashok.github.io/vocab/6bf9d2ec89346b12/">Copy link</button>
+      </div>
+      <div class="row">
+        <span class="nm">Emma</span>
+        <a class="btn open" href="https://arsdashok.github.io/vocab/c1b07f8eee71e8be/" target="_blank" rel="noopener">Open</a>
+        <button class="btn copy" data-url="https://arsdashok.github.io/vocab/c1b07f8eee71e8be/">Copy link</button>
+      </div>
+      <div class="row">
+        <span class="nm">Erin</span>
+        <a class="btn open" href="https://arsdashok.github.io/vocab/bdb28fb5246582af/" target="_blank" rel="noopener">Open</a>
+        <button class="btn copy" data-url="https://arsdashok.github.io/vocab/bdb28fb5246582af/">Copy link</button>
+      </div>
+      <div class="row">
+        <span class="nm">Mia</span>
+        <a class="btn open" href="https://arsdashok.github.io/vocab/802372ceb78e396f/" target="_blank" rel="noopener">Open</a>
+        <button class="btn copy" data-url="https://arsdashok.github.io/vocab/802372ceb78e396f/">Copy link</button>
+      </div>
+      <div class="row">
+        <span class="nm">Tobi</span>
+        <a class="btn open" href="https://arsdashok.github.io/vocab/f5f807897efd98d4/" target="_blank" rel="noopener">Open</a>
+        <button class="btn copy" data-url="https://arsdashok.github.io/vocab/f5f807897efd98d4/">Copy link</button>
+      </div>
+      <div class="row">
+        <span class="nm">Yulya</span>
+        <a class="btn open" href="https://arsdashok.github.io/vocab/6974d461ccd72ed6/" target="_blank" rel="noopener">Open</a>
+        <button class="btn copy" data-url="https://arsdashok.github.io/vocab/6974d461ccd72ed6/">Copy link</button>
+      </div>
+  <p class="foot">6 students · vocab site</p>
+</div>
+<script>
+  document.querySelectorAll('.btn.copy').forEach(b=>b.addEventListener('click',async()=>{
+    try{ await navigator.clipboard.writeText(b.dataset.url); }catch(e){
+      const t=document.createElement('textarea');t.value=b.dataset.url;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();}
+    const o=b.textContent;b.textContent='Copied ✓';b.classList.add('done');
+    setTimeout(()=>{b.textContent=o;b.classList.remove('done');},1400);
+  }));
+</script>
+</body></html>
