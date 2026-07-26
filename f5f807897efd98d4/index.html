@@ -46,9 +46,10 @@
   .pic {
     width:76px; height:76px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    font-size:42px; line-height:1; border:3px solid var(--ink);
+    font-size:42px; line-height:1; border:3px solid var(--ink); overflow:hidden;
   }
   .pic .letter { font-family:'Andika',sans-serif; font-weight:700; font-size:38px; color:#fff; }
+  .picimg { width:72%; height:72%; object-fit:contain; display:block; margin:auto; }
   .word {
     font-family:'Andika','Comic Sans MS',sans-serif; font-weight:700; font-size:24px;
     line-height:1.12; cursor:pointer; user-select:none; padding:3px 6px; border-radius:10px;
@@ -71,12 +72,13 @@
     <h1><span class="emo">🎒</span> Words we learned</h1>
     <div class="datepill"><span>Lesson</span><select id="dateSel"></select></div>
   </div>
-  <p class="hint">Tap a word to hear it 🔊 &nbsp;·&nbsp; tap «перевод» to check the meaning</p>
+  <p class="hint">Tap a word to hear it 🔊</p>
   <div id="grid"></div>
   <footer>Tobi · vocab review</footer>
 <script>
-  const DATA = {"2026-07-26": [{"w": "me", "g": "мне, меня", "e": ""}, {"w": "we", "g": "мы", "e": ""}, {"w": "lemon", "g": "лимон", "e": ""}, {"w": "lime", "g": "лайм", "e": ""}, {"w": "cherry", "g": "вишня", "e": ""}, {"w": "kiwi", "g": "киви", "e": ""}, {"w": "fig", "g": "инжир", "e": ""}, {"w": "two oranges", "g": "два апельсина", "e": ""}, {"w": "two apples", "g": "два яблока", "e": ""}], "2026-07-24": [{"w": "orange", "g": "апельсин", "e": "🟠"}, {"w": "watermelon", "g": "арбуз", "e": ""}, {"w": "star fruit", "g": "карамбола", "e": "⭐"}, {"w": "pomegranate", "g": "гранат", "e": ""}]}, DATES = ["2026-07-26", "2026-07-24"];
+  const DATA = {"2026-07-26": [{"w": "me", "g": "", "e": ""}, {"w": "we", "g": "", "e": ""}, {"w": "lemon", "g": "", "e": "🍋"}, {"w": "lime", "g": "", "e": ""}, {"w": "cherry", "g": "", "e": "🍒"}, {"w": "kiwi", "g": "", "e": "🥝"}, {"w": "fig", "g": "", "e": ""}, {"w": "two oranges", "g": "", "e": "🍊"}, {"w": "two apples", "g": "", "e": "🍎"}], "2026-07-24": [{"w": "orange", "g": "", "e": "🍊"}, {"w": "watermelon", "g": "", "e": "🍉"}, {"w": "star fruit", "g": "", "e": "⭐"}, {"w": "pomegranate", "g": "", "e": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA2NCA2NCc+PGRlZnM+PHJhZGlhbEdyYWRpZW50IGlkPSdwZycgY3g9JzQyJScgY3k9JzM0JScgcj0nNzIlJz48c3RvcCBvZmZzZXQ9JzAlJyBzdG9wLWNvbG9yPScjRTI0QTVCJy8+PHN0b3Agb2Zmc2V0PSc1NSUnIHN0b3AtY29sb3I9JyNDMjFGM0EnLz48c3RvcCBvZmZzZXQ9JzEwMCUnIHN0b3AtY29sb3I9JyM5MzEzMkInLz48L3JhZGlhbEdyYWRpZW50PjwvZGVmcz48cGF0aCBkPSdNMjQgMTYgTDI2IDUgTDI5IDEyIEwzMiAzIEwzNSAxMiBMMzggNSBMNDAgMTYgWicgZmlsbD0nIzdDMUQyQScvPjxlbGxpcHNlIGN4PSczMicgY3k9JzM5JyByeD0nMjInIHJ5PScyMycgZmlsbD0ndXJsKCNwZyknLz48cGF0aCBkPSdNMzIgMTggUTMwIDM4IDMyIDYxJyBzdHJva2U9JyM4RjEzMjcnIHN0cm9rZS13aWR0aD0nMS40JyBmaWxsPSdub25lJyBvcGFjaXR5PScwLjM1Jy8+PGVsbGlwc2UgY3g9JzI0JyBjeT0nMzAnIHJ4PSc1LjUnIHJ5PSc4LjUnIGZpbGw9JyNmZmYnIG9wYWNpdHk9JzAuMjInIHRyYW5zZm9ybT0ncm90YXRlKC0yMCAyNCAzMCknLz48L3N2Zz4="}]}, DATES = ["2026-07-26", "2026-07-24"];
   const ACC = ["#ff6b6b", "#20b3a2", "#f4a534", "#9b5de5", "#3ab34a", "#ff5da2", "#4d96ff", "#e5643e"];
+
   const sel = document.getElementById('dateSel'), grid = document.getElementById('grid');
   DATES.forEach(d => { const o=document.createElement('option'); o.value=o.textContent=d; sel.appendChild(o); });
 
@@ -95,6 +97,7 @@
   function speak(t){ if(!('speechSynthesis'in window))return; const u=new SpeechSynthesisUtterance(t);
     u.lang = vcVoice ? vcVoice.lang : 'en-GB'; u.rate=.9; u.pitch=1.0; if(vcVoice) u.voice=vcVoice;
     speechSynthesis.cancel(); speechSynthesis.speak(u); }
+  function isImg(e){ return /^(https?:|data:)/i.test(e) || /\.(png|jpe?g|svg|webp|gif)(\?|$)/i.test(e); }
 
   function render(date){
     grid.innerHTML='';
@@ -104,7 +107,9 @@
       card.style.transform = 'rotate('+((i%2)?1.1:-1.1)+'deg)';
 
       const pic=document.createElement('div'); pic.className='pic';
-      if(it.e){ pic.style.background=acc+'33'; pic.textContent=it.e; }
+      if(it.e){ pic.style.background=acc+'33';
+        if(isImg(it.e)){ const im=document.createElement('img'); im.className='picimg'; im.src=it.e; im.alt=''; pic.appendChild(im); }
+        else { pic.textContent=it.e; } }
       else { pic.style.background=acc; pic.innerHTML='<span class="letter">'+(it.w[0]||'?').toUpperCase()+'</span>'; }
       card.appendChild(pic);
 

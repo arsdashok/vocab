@@ -6,77 +6,76 @@
 <title>Maksim — words we learned</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#3a2e2a; }
+  /* GSAP style — neon playground in midnight void (Admin/Design Styles/DESIGN gsap.md) */
+  :root { --void:#0e100f; --cream:#fffce1; --olive:#42433d; --ash:#7c7c6f; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body {
-    font-family:'Fredoka','Segoe UI',system-ui,sans-serif; color:var(--ink);
-    background:#fdf0d5;
-    background-image: radial-gradient(#f6d9a0 1.4px, transparent 1.4px);
-    background-size: 22px 22px;
-    padding:22px 16px; min-height:100vh;
+    font-family:'Inter Tight',ui-sans-serif,system-ui,-apple-system,sans-serif;
+    background:var(--void); color:var(--cream); letter-spacing:-0.01em;
+    padding:40px 24px 64px; min-height:100vh; -webkit-font-smoothing:antialiased;
   }
+  .wrap { max-width:1100px; margin:0 auto; }
+  .tag { font-size:14px; color:var(--cream); opacity:.85; margin-bottom:16px; }
   .top {
-    max-width:960px; margin:0 auto 20px; display:flex; flex-wrap:wrap;
-    align-items:center; justify-content:space-between; gap:12px;
+    display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
+    gap:20px; margin-bottom:18px;
   }
-  h1 { font-size:30px; font-weight:700; letter-spacing:.3px; }
-  h1 .emo { font-size:30px; }
-  .datepill {
-    display:flex; align-items:center; gap:8px; background:#fff; border:3px solid var(--ink);
-    border-radius:40px; padding:6px 8px 6px 16px; font-weight:600; font-size:15px;
-    box-shadow:4px 4px 0 rgba(58,46,42,.85);
-  }
+  h1 { font-size:clamp(38px,8vw,72px); font-weight:400; line-height:.95;
+       letter-spacing:-0.03em; color:var(--cream); }
+  .datepill { display:flex; align-items:center; gap:10px; font-size:15px; color:var(--cream); }
   #dateSel {
-    font:inherit; font-weight:700; font-size:15px; border:none; background:#ffdf9e;
-    color:var(--ink); border-radius:30px; padding:6px 12px; cursor:pointer;
+    font:inherit; font-size:15px; color:var(--cream); background:transparent;
+    border:1px solid var(--cream); border-radius:100px; padding:9px 18px; cursor:pointer;
+    letter-spacing:-0.01em;
   }
-  .hint { max-width:960px; margin:0 auto 18px; text-align:center; color:#8a6d4b; font-size:14px; }
-  #grid {
-    display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
-    gap:16px; max-width:960px; margin:0 auto;
-  }
+  #dateSel option { background:var(--void); color:var(--cream); }
+  .hint { font-size:16px; color:var(--ash); margin-bottom:26px; }
+  .rule { height:1px; background:var(--olive); width:100%; margin-bottom:32px; }
+  #grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:16px; }
   .card {
-    background:#fff; border:3px solid var(--ink); border-radius:20px;
-    padding:16px 12px 14px; text-align:center;
-    box-shadow:5px 6px 0 rgba(58,46,42,.9);
-    display:flex; flex-direction:column; align-items:center; gap:10px;
+    background:var(--void); border:1px solid var(--olive); border-radius:8px;
+    padding:22px 22px 20px; display:flex; flex-direction:column; align-items:flex-start;
+    gap:14px; min-height:158px;
   }
-  .pic {
-    width:76px; height:76px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:42px; line-height:1; border:3px solid var(--ink);
-  }
-  .pic .letter { font-family:'Andika',sans-serif; font-weight:700; font-size:38px; color:#fff; }
+  .meta { font-size:14px; }
+  .pic { font-size:34px; line-height:1; }
+  .picimg { width:46px; height:46px; object-fit:contain; display:block; }
   .word {
-    font-family:'Andika','Comic Sans MS',sans-serif; font-weight:700; font-size:24px;
-    line-height:1.12; cursor:pointer; user-select:none; padding:3px 6px; border-radius:10px;
-    transition:transform .08s;
+    font-size:23px; font-weight:500; line-height:1.15; letter-spacing:-0.015em;
+    cursor:pointer; user-select:none;
   }
-  .word:active { transform:scale(.93); }
+  .word:active { opacity:.6; }
   .word .spk { font-size:15px; opacity:.55; }
+  .gloss { font-size:16px; color:var(--cream); line-height:1.35; }
+  .gloss.hidden { display:none; }
   .reveal {
-    font:inherit; font-weight:600; font-size:13px; border:2px solid var(--ink);
-    background:#fff; color:var(--ink); border-radius:30px; padding:4px 14px; cursor:pointer;
+    margin-top:auto; font:inherit; font-size:14px; font-weight:400; color:var(--cream);
+    background:transparent; border:1px solid var(--cream); border-radius:100px;
+    padding:8px 18px; cursor:pointer; letter-spacing:-0.01em; transition:opacity .15s;
   }
-  .reveal:active { transform:translateY(1px); }
-  .gloss { font-family:'Fredoka',sans-serif; font-size:16px; color:#6b4f36; min-height:19px; font-weight:500; }
-  .gloss.hidden { visibility:hidden; }
-  footer { text-align:center; color:#b79b74; font-size:12px; margin-top:26px; }
+  .reveal:hover { opacity:.65; }
+  .reveal.open { border-color:var(--olive); color:var(--ash); }
+  footer { color:var(--ash); font-size:13px; margin-top:44px; }
 </style>
 </head>
 <body>
-  <div class="top">
-    <h1><span class="emo">🎒</span> Words we learned</h1>
-    <div class="datepill"><span>Lesson</span><select id="dateSel"></select></div>
+  <div class="wrap">
+    <div class="tag">{ vocab review }</div>
+    <div class="top">
+      <h1>Words we learned</h1>
+      <div class="datepill"><span>Lesson</span><select id="dateSel"></select></div>
+    </div>
+    <p class="hint">Tap a word to hear it 🔊 &nbsp;·&nbsp; tap «перевод» to check the meaning</p>
+    <div class="rule"></div>
+    <div id="grid"></div>
+    <footer>{ Maksim · vocab review }</footer>
   </div>
-  <p class="hint">Tap a word to hear it 🔊 &nbsp;·&nbsp; tap «перевод» to check the meaning</p>
-  <div id="grid"></div>
-  <footer>Maksim · vocab review</footer>
 <script>
-  const DATA = {"2026-07-26": [{"w": "in a week", "g": "через неделю", "e": ""}, {"w": "my belongings", "g": "мои вещи, всё что мне принадлежит", "e": ""}, {"w": "to pack", "g": "упаковать / распаковать", "e": ""}, {"w": "they will do it by themselves", "g": "они сделают это сами", "e": ""}, {"w": "I don't know if they will unpack", "g": "я не знаю, распакуют ли они", "e": ""}, {"w": "Is it furnished or unfurnished?", "g": "она с мебелью или без?", "e": ""}, {"w": "a wardrobe", "g": "шкаф для одежды", "e": ""}, {"w": "kitchen appliances", "g": "кухонная техника", "e": ""}, {"w": "a dishwasher", "g": "посудомоечная машина", "e": ""}, {"w": "a washing machine", "g": "стиральная машина", "e": ""}, {"w": "a fridge", "g": "холодильник", "e": ""}, {"w": "an air conditioner, an AC", "g": "кондиционер", "e": ""}, {"w": "something else", "g": "что-то ещё", "e": ""}, {"w": "further than our current flat", "g": "дальше, чем наша нынешняя квартира", "e": ""}, {"w": "a one-year term", "g": "срок на один год", "e": ""}, {"w": "a contrasting city", "g": "город контрастов", "e": ""}, {"w": "the bank of a river", "g": "берег реки", "e": ""}, {"w": "he broke his arm", "g": "он сломал руку", "e": ""}, {"w": "she twisted her ankle", "g": "она подвернула лодыжку", "e": ""}, {"w": "his leg hurts", "g": "у него болит нога", "e": ""}]}, DATES = ["2026-07-26"];
-  const ACC = ["#ff6b6b", "#20b3a2", "#f4a534", "#9b5de5", "#3ab34a", "#ff5da2", "#4d96ff", "#e5643e"];
+  const DATA = {"2026-07-26": [{"w": "in a week", "g": "через неделю", "e": ""}, {"w": "my belongings", "g": "мои вещи, всё что мне принадлежит", "e": ""}, {"w": "to pack", "g": "упаковать / распаковать", "e": ""}, {"w": "they will do it by themselves", "g": "они сделают это сами", "e": ""}, {"w": "I don't know if they will unpack", "g": "я не знаю, распакуют ли они", "e": ""}, {"w": "Is it furnished or unfurnished?", "g": "она с мебелью или без?", "e": ""}, {"w": "a wardrobe", "g": "шкаф для одежды", "e": ""}, {"w": "kitchen appliances", "g": "кухонная техника", "e": ""}, {"w": "a dishwasher", "g": "посудомоечная машина", "e": ""}, {"w": "a washing machine", "g": "стиральная машина", "e": "🧼"}, {"w": "a fridge", "g": "холодильник", "e": "🧊"}, {"w": "an air conditioner, an AC", "g": "кондиционер", "e": ""}, {"w": "something else", "g": "что-то ещё", "e": ""}, {"w": "further than our current flat", "g": "дальше, чем наша нынешняя квартира", "e": "🏢"}, {"w": "a one-year term", "g": "срок на один год", "e": ""}, {"w": "a contrasting city", "g": "город контрастов", "e": ""}, {"w": "the bank of a river", "g": "берег реки", "e": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA2NCA2NCc+PHJlY3QgeD0nMicgeT0nNCcgd2lkdGg9JzYwJyBoZWlnaHQ9JzU2JyByeD0nMTInIGZpbGw9JyM4Y2NmODYnLz48cGF0aCBkPSdNMjIgMyBRNDEgMTggMjYgMzIgUTExIDQ2IDM1IDYxJyBzdHJva2U9JyM0YWE4ZTYnIHN0cm9rZS13aWR0aD0nMTEnIGZpbGw9J25vbmUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcvPjxwYXRoIGQ9J00yMiAzIFE0MSAxOCAyNiAzMiBRMTEgNDYgMzUgNjEnIHN0cm9rZT0nIzgzYzZmMicgc3Ryb2tlLXdpZHRoPSc0LjUnIGZpbGw9J25vbmUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcgb3BhY2l0eT0nMC43NScvPjwvc3ZnPg=="}, {"w": "he broke his arm", "g": "он сломал руку", "e": "💪"}, {"w": "she twisted her ankle", "g": "она подвернула лодыжку", "e": "🦶"}, {"w": "his leg hurts", "g": "у него болит нога", "e": "🦵"}]}, DATES = ["2026-07-26"];
+  const ACC = ["#0ae448", "#fec5fb", "#ff8709", "#9d95ff", "#00bae2", "#abff84"];
+
   const sel = document.getElementById('dateSel'), grid = document.getElementById('grid');
   DATES.forEach(d => { const o=document.createElement('option'); o.value=o.textContent=d; sel.appendChild(o); });
 
@@ -95,18 +94,25 @@
   function speak(t){ if(!('speechSynthesis'in window))return; const u=new SpeechSynthesisUtterance(t);
     u.lang = vcVoice ? vcVoice.lang : 'en-GB'; u.rate=.9; u.pitch=1.0; if(vcVoice) u.voice=vcVoice;
     speechSynthesis.cancel(); speechSynthesis.speak(u); }
+  function isImg(e){ return /^(https?:|data:)/i.test(e) || /\.(png|jpe?g|svg|webp|gif)(\?|$)/i.test(e); }
 
   function render(date){
     grid.innerHTML='';
     (DATA[date]||[]).forEach((it,i)=>{
       const acc = ACC[i % ACC.length];
       const card=document.createElement('div'); card.className='card';
-      card.style.transform = 'rotate('+((i%2)?1.1:-1.1)+'deg)';
+      card.style.borderColor = acc;
 
-      const pic=document.createElement('div'); pic.className='pic';
-      if(it.e){ pic.style.background=acc+'33'; pic.textContent=it.e; }
-      else { pic.style.background=acc; pic.innerHTML='<span class="letter">'+(it.w[0]||'?').toUpperCase()+'</span>'; }
-      card.appendChild(pic);
+      const meta=document.createElement('div'); meta.className='meta';
+      meta.textContent = '{ '+String(i+1).padStart(2,'0')+' }'; meta.style.color = acc;
+      card.appendChild(meta);
+
+      if(it.e){
+        const pic=document.createElement('div'); pic.className='pic';
+        if(isImg(it.e)){ const im=document.createElement('img'); im.className='picimg'; im.src=it.e; im.alt=''; pic.appendChild(im); }
+        else { pic.textContent=it.e; }
+        card.appendChild(pic);
+      }
 
       const w=document.createElement('div'); w.className='word'; w.style.color=acc;
       w.innerHTML=it.w+' <span class="spk">🔊</span>'; w.onclick=()=>speak(it.w);
@@ -114,16 +120,17 @@
 
       if(it.g){
         const gl=document.createElement('div'); gl.className='gloss hidden'; gl.textContent=it.g;
+        card.appendChild(gl);
         const b=document.createElement('button'); b.className='reveal'; b.textContent='перевод';
-        b.style.borderColor=acc; b.style.color=acc; b.onclick=()=>gl.classList.toggle('hidden');
-        card.appendChild(gl); card.appendChild(b);
+        b.onclick=()=>{ gl.classList.toggle('hidden'); b.classList.toggle('open'); };
+        card.appendChild(b);
       }
       grid.appendChild(card);
     });
   }
   sel.onchange=()=>render(sel.value);
   if(DATES.length){ sel.value=DATES[0]; render(DATES[0]); }
-  else grid.innerHTML='<p style="text-align:center;color:#b79b74">No words yet.</p>';
+  else grid.innerHTML='<p style="color:var(--ash)">No words yet.</p>';
 </script>
 </body>
 </html>
