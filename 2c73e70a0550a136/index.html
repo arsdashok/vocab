@@ -41,25 +41,24 @@
   }
   .crow { display:flex; align-items:center; justify-content:space-between; width:100%; gap:10px; }
   .meta { font-size:14px; }
+  .ctl-group { display:flex; align-items:center; gap:8px; }  /* matched controls, top-right */
+  .ctl {
+    width:32px; height:32px; border-radius:100px; border:1px solid var(--olive);
+    background:transparent; color:var(--racc); cursor:pointer; padding:0;
+    display:inline-flex; align-items:center; justify-content:center; transition:.15s;
+  }
+  .ctl svg { width:17px; height:17px; display:block; }
+  .ctl:hover { border-color:var(--racc); }
+  .ctl.open { background:var(--racc); color:var(--void); border-color:var(--racc); }
   .pic { font-size:34px; line-height:1; }
   .picimg { width:46px; height:46px; object-fit:contain; display:block; }
   .word {
     font-size:23px; font-weight:500; line-height:1.15; letter-spacing:-0.015em;
-    cursor:pointer; user-select:none; display:flex; align-items:center; gap:9px;
+    cursor:pointer; user-select:none;
   }
   .word:active { opacity:.6; }
-  .word .spk { flex:none; display:inline-flex; }           /* bright accent speaker (inherits word colour) */
-  .word .spk svg { width:19px; height:19px; display:block; }
   .gloss { font-size:16px; color:var(--cream); line-height:1.35; }
   .gloss.hidden { display:none; }
-  .rev {                                                    /* small reveal-translation icon, top-right */
-    flex:none; width:30px; height:30px; border-radius:100px; border:1px solid var(--olive);
-    background:transparent; color:var(--ash); cursor:pointer; padding:0;
-    display:inline-flex; align-items:center; justify-content:center; transition:.15s;
-  }
-  .rev svg { width:16px; height:16px; display:block; }
-  .rev:hover { color:var(--cream); border-color:var(--cream); }
-  .rev.open { color:var(--racc); border-color:var(--racc); }
   footer { color:var(--ash); font-size:13px; margin-top:44px; }
 </style>
 </head>
@@ -106,12 +105,18 @@
     (DATA[date]||[]).forEach((it,i)=>{
       const acc = ACC[i % ACC.length];
       const card=document.createElement('div'); card.className='card';
-      card.style.borderColor = acc;
+      card.style.borderColor = acc; card.style.setProperty('--racc', acc);
 
       const top=document.createElement('div'); top.className='crow';
       const meta=document.createElement('div'); meta.className='meta';
       meta.textContent = '{ '+String(i+1).padStart(2,'0')+' }'; meta.style.color = acc;
       top.appendChild(meta);
+
+      const grp=document.createElement('div'); grp.className='ctl-group';
+      const spk=document.createElement('button'); spk.className='ctl'; spk.title='listen';
+      spk.setAttribute('aria-label','listen'); spk.innerHTML=SPK_SVG; spk.onclick=()=>speak(it.w);
+      grp.appendChild(spk);
+      top.appendChild(grp);
       card.appendChild(top);
 
       if(it.e){
@@ -122,19 +127,16 @@
       }
 
       const w=document.createElement('div'); w.className='word'; w.style.color=acc;
-      const wt=document.createElement('span'); wt.textContent=it.w; w.appendChild(wt);
-      const spk=document.createElement('span'); spk.className='spk'; spk.innerHTML=SPK_SVG;
-      w.appendChild(spk); w.onclick=()=>speak(it.w);
+      w.textContent=it.w; w.onclick=()=>speak(it.w);
       card.appendChild(w);
 
       if(it.g){
         const gl=document.createElement('div'); gl.className='gloss hidden'; gl.textContent=it.g;
         card.appendChild(gl);
-        const rev=document.createElement('button'); rev.className='rev'; rev.title='перевод';
+        const rev=document.createElement('button'); rev.className='ctl'; rev.title='перевод';
         rev.setAttribute('aria-label','перевод'); rev.innerHTML=EYE_SVG;
-        rev.style.setProperty('--racc', acc);
         rev.onclick=()=>{ gl.classList.toggle('hidden'); rev.classList.toggle('open'); };
-        top.appendChild(rev);
+        grp.appendChild(rev);
       }
       grid.appendChild(card);
     });
