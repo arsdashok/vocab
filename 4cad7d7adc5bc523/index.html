@@ -171,8 +171,23 @@
         hb.onclick=()=>hint.classList.toggle('hidden');
         btns.appendChild(hb);
       }
+      /* Show/Hide must be a TOGGLE: after peeking he needs to hide the word again and
+         have another go (Dasha, 2026-07-30). Hiding also clears his previous attempt so
+         the retry is genuine, and un-counts the card until he gets it right again. */
       const sb=document.createElement('button'); sb.className='act showb'; sb.textContent='Show me';
-      sb.onclick=()=>{ mask.textContent=it.w; mask.classList.add('shown'); };
+      let shown=false;
+      sb.onclick=()=>{
+        shown=!shown;
+        if(shown){
+          mask.textContent=it.w; mask.classList.add('shown'); sb.textContent='Hide';
+        } else {
+          mask.textContent=maskOf(it.w); mask.classList.remove('shown'); sb.textContent='Show me';
+          inp.value=''; v.classList.add('hidden');
+          card.classList.remove('ok','bad');
+          delete done[i]; updateScore(date);
+          inp.focus();
+        }
+      };
       btns.appendChild(sb);
 
       card.appendChild(btns);
