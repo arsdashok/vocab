@@ -4,80 +4,104 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kiyan — words we learned</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body {
-    font-family:'Segoe UI',system-ui,-apple-system,sans-serif; color:#1f2937;
-    background:#f6f5ff; padding:20px 14px; min-height:100vh;
+  /* Brainfish (Admin/Design Styles/DESIGN brainfish.md): white canvas, single lime accent,
+     1px black borders, hard offset shadows with ZERO blur, pill buttons, pastel sticker cards.
+     Satoshi is not a web font here, so its documented substitute Inter is used. */
+  :root{
+    --lime:#a3e635; --ink:#000; --paper:#fff; --shadow:rgb(10,10,13);
+    --steel:#737373; --fog:#f5f5f5; --graphite:#171717;
+    --butter:#fef3c8; --mint:#d2fae5; --lilac:#fae9ff; --bubble:#f5d1fe; --sky:#b7eaf6;
   }
-  .wrap { max-width:900px; margin:0 auto; }
-  header {
-    background:linear-gradient(135deg,#6c63ff,#a78bfa); color:#fff;
-    border-radius:14px; padding:16px 22px; margin-bottom:14px;
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:Inter,'DM Sans','Segoe UI',system-ui,sans-serif; font-weight:500;
+    color:var(--ink); background:var(--paper); padding:24px 16px 64px;
+    letter-spacing:-0.096px; font-feature-settings:"ss01" on,"cv11" on;
   }
-  header h1 { font-size:23px; font-weight:700; }
-  header .sub { font-size:13.5px; opacity:.93; margin-top:3px; }
-  .bar {
-    display:flex; flex-wrap:wrap; gap:10px; align-items:center;
-    justify-content:space-between; margin-bottom:16px;
+  .wrap{ max-width:1200px; margin:0 auto; }
+  .hero{
+    background:var(--sky); border:1px solid var(--ink); border-radius:20px;
+    padding:28px 24px; margin-bottom:24px;
+    box-shadow:4px 4px 0 0 rgb(23,23,23);
   }
-  select {
-    font:inherit; font-size:15px; padding:8px 12px; border-radius:9px;
-    border:2px solid #ddd6fe; background:#fff; color:#4c1d95; font-weight:600;
+  .eyebrow{
+    display:inline-block; background:var(--paper); border:1px solid var(--ink);
+    border-radius:100px; padding:6px 14px; font-size:14px; font-weight:500;
+    letter-spacing:-0.14px; margin-bottom:12px;
   }
-  .score {
-    font-size:15px; font-weight:700; color:#4c1d95; background:#ede9fe;
-    border-radius:9px; padding:8px 14px;
+  h1{ font-size:32px; font-weight:700; letter-spacing:-0.32px; line-height:1.33; }
+  .sub{ font-size:16px; font-weight:500; line-height:1.5; margin-top:8px; letter-spacing:-0.096px; }
+  .bar{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:24px; }
+  select{
+    font:inherit; font-weight:500; font-size:16px; padding:10px 14px;
+    background:var(--paper); color:var(--ink);
+    border:1px solid var(--ink); border-radius:100px;
+    box-shadow:2px 2px 0 0 var(--shadow); cursor:pointer;
   }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:12px; }
-  .card {
-    background:#fff; border:2px solid #e5e7eb; border-radius:13px;
-    padding:13px 14px 14px; transition:border-color .15s;
+  .score{
+    background:var(--lime); border:1px solid var(--ink); border-radius:8px;
+    padding:10px 16px; font-size:16px; font-weight:700; letter-spacing:-0.096px;
   }
-  .card.ok  { border-color:#22c55e; background:#f0fdf4; }
-  .card.bad { border-color:#ef4444; background:#fef2f2; }
-  .crow { display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; }
-  .num { font-size:12px; font-weight:800; color:#7c3aed; letter-spacing:.6px; }
-  .listen {
-    border:2px solid #6c63ff; background:#fff; color:#6c63ff; cursor:pointer;
-    border-radius:9px; padding:6px 13px; font:inherit; font-size:14px; font-weight:700;
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+  .card{
+    background:var(--paper); border:1px solid var(--ink); border-radius:16px;
+    padding:24px; box-shadow:4px 4px 0 0 rgb(23,23,23);
   }
-  .listen:hover { background:#6c63ff; color:#fff; }
-  .mask {
-    font-family:'Courier New',monospace; font-size:21px; letter-spacing:5px;
-    color:#9ca3af; margin-bottom:9px; min-height:26px; word-break:break-all;
+  .card.ok{ background:var(--mint); }
+  .card.bad{ background:var(--butter); }
+  .crow{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
+  .num{ font-size:14px; font-weight:700; letter-spacing:-0.14px; }
+  /* Ghost outlined button = secondary action */
+  .listen{
+    background:var(--paper); border:1px solid var(--ink); border-radius:100px;
+    padding:10px 20px; font:inherit; font-weight:500; font-size:16px; color:var(--ink);
+    box-shadow:2px 2px 0 0 var(--shadow); cursor:pointer; letter-spacing:-0.096px;
   }
-  .mask.shown { color:#4c1d95; font-weight:700; letter-spacing:2px; }
-  input.ans {
-    width:100%; font:inherit; font-size:17px; padding:9px 11px; border-radius:9px;
-    border:2px solid #ddd6fe; background:#fff; color:#1f2937;
+  .mask{
+    font-family:'Courier New',monospace; font-size:22px; letter-spacing:6px;
+    color:var(--steel); margin-bottom:16px; min-height:28px; word-break:break-all;
   }
-  input.ans:focus { outline:none; border-color:#6c63ff; }
-  .btns { display:flex; flex-wrap:wrap; gap:7px; margin-top:9px; }
-  button.act {
-    border:none; cursor:pointer; border-radius:8px; padding:7px 13px;
-    font:inherit; font-size:13.5px; font-weight:700;
+  .mask.shown{ color:var(--ink); font-weight:700; letter-spacing:1px; font-family:inherit; }
+  /* Input field: 4px radius, black border, focus adds the hard shadow */
+  input.ans{
+    width:100%; font:inherit; font-weight:500; font-size:16px; padding:10px 14px;
+    background:var(--paper); color:var(--ink);
+    border:1px solid var(--ink); border-radius:4px; letter-spacing:-0.096px;
   }
-  .check { background:#6c63ff; color:#fff; }
-  .hintb { background:#ede9fe; color:#5b21b6; }
-  .showb { background:#f3f4f6; color:#4b5563; }
-  .hint {
-    margin-top:9px; font-size:14.5px; color:#5b21b6; background:#faf5ff;
-    border-left:4px solid #a78bfa; border-radius:0 7px 7px 0; padding:7px 11px;
+  input.ans::placeholder{ color:var(--steel); }
+  input.ans:focus{ outline:2px solid transparent; outline-offset:2px; box-shadow:2px 2px 0 0 var(--shadow); }
+  .btns{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  button.act{
+    border:1px solid var(--ink); border-radius:100px; padding:10px 20px;
+    font:inherit; font-weight:500; font-size:16px; color:var(--ink);
+    box-shadow:2px 2px 0 0 var(--shadow); cursor:pointer; letter-spacing:-0.096px;
   }
-  .hidden { display:none; }
-  .verdict { margin-top:8px; font-size:14px; font-weight:700; }
-  .verdict.ok  { color:#15803d; }
-  .verdict.bad { color:#b91c1c; }
-  footer { text-align:center; color:#9ca3af; font-size:12.5px; margin-top:22px; }
+  .check{ background:var(--lime); }          /* lime CTA = primary action */
+  .hintb{ background:var(--paper); }
+  .showb{ background:var(--paper); }
+  /* Pastel sticker info-card for the chunk hint */
+  .hint{
+    margin-top:16px; background:var(--lilac); border:1px solid var(--ink);
+    border-radius:12px; padding:16px; font-size:16px; font-weight:500; line-height:1.5;
+    box-shadow:2px 2px 0 0 var(--shadow); letter-spacing:-0.096px;
+  }
+  .hidden{ display:none; }
+  .verdict{ margin-top:12px; font-size:16px; font-weight:700; letter-spacing:-0.096px; }
+  footer{ text-align:center; color:var(--steel); font-size:14px; margin-top:40px; letter-spacing:-0.14px; }
+  @media (max-width:420px){ h1{ font-size:24px; letter-spacing:-0.216px; } .hero{ padding:20px 18px; } }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>Kiyan &middot; Spelling practice</h1>
+  <div class="hero">
+    <span class="eyebrow">Spelling practice</span>
+    <h1>Kiyan</h1>
     <div class="sub">Listen, type the word, then check it. Tap Chunks if you get stuck.</div>
-  </header>
+  </div>
   <div class="bar">
     <select id="dateSel"></select>
     <div class="score" id="score">0 / 0 correct</div>
