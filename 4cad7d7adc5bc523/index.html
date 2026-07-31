@@ -146,6 +146,7 @@
       inp.setAttribute('aria-label','type the word');
       card.appendChild(inp);
 
+      let shown=false;
       const v=document.createElement('div'); v.className='verdict hidden'; 
       const btns=document.createElement('div'); btns.className='btns';
 
@@ -160,10 +161,17 @@
         v.classList.toggle('ok',good); v.classList.toggle('bad',!good);
         v.textContent = good ? '✓ Correct' : '✗ Not yet, try again';
         done[i]=good; updateScore(date);
-        if(!good && it.g) hint.classList.remove('hidden');
       }
       cb.onclick=doCheck;
       inp.addEventListener('keydown',e=>{ if(e.key==='Enter') doCheck(); });
+      /* The chunks joined together spell the word, so they must not be readable WHILE he
+         writes: that turns the task into copying. Looking is fine, copying is not, so any
+         reveal closes as soon as he types. This is the "cover" step of look-cover-write. */
+      inp.addEventListener('input',()=>{
+        if(!hint.classList.contains('hidden')) hint.classList.add('hidden');
+        if(shown){ shown=false; mask.textContent=maskOf(it.w);
+                   mask.classList.remove('shown'); sb.textContent='Show me'; }
+      });
       btns.appendChild(cb);
 
       if(it.g){
@@ -175,7 +183,6 @@
          have another go (Dasha, 2026-07-30). Hiding also clears his previous attempt so
          the retry is genuine, and un-counts the card until he gets it right again. */
       const sb=document.createElement('button'); sb.className='act showb'; sb.textContent='Show me';
-      let shown=false;
       sb.onclick=()=>{
         shown=!shown;
         if(shown){
