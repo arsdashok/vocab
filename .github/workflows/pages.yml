@@ -1,0 +1,42 @@
+# Publishes the vocab site to GitHub Pages via Actions.
+#
+# Replaces the old "legacy" branch-based Pages builder, which sat in a shared queue and
+# stalled for hours during the 2026-08-06 Pages/Actions outage, silently failing to publish
+# two nightly updates while still serving the previous version. This path uploads the site
+# as an artifact and deploys it directly, so a failure is visible and re-runnable.
+#
+# The site is plain static HTML (one index.html per student token, plus the private hub),
+# so there is no build step. .nojekyll in the repo root keeps Jekyll out of it.
+
+name: Deploy vocab site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Queue nightly pushes rather than cancelling them: every push carries a different
+# student's vocabulary, so a cancelled run would drop that student's update.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
