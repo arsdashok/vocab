@@ -9,7 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   /* GSAP style — neon playground in midnight void (Admin/Design Styles/DESIGN gsap.md) */
-  :root { --void:#0e100f; --cream:#fffce1; --olive:#42433d; --ash:#7c7c6f; }
+  :root { --void:#0e100f; --cream:#fffce1; --olive:#42433d; --ash:#7c7c6f;
+    --q-bg:#151715; --q-fg:#fffce1; --q-line:#42433d; --q-accent:#d7ff3e; --q-onaccent:#0e100f;
+    --q-scrim:rgba(0,0,0,.72); }
   * { box-sizing:border-box; margin:0; padding:0; }
   body {
     font-family:'Inter Tight',ui-sans-serif,system-ui,-apple-system,sans-serif;
@@ -76,7 +78,7 @@
     <footer>{ Maksim · vocab review }</footer>
   </div>
 <script>
-  const DATA = {"2026-08-02": [{"w": "a jug", "g": "кувшин", "e": ""}, {"w": "your daily intake", "g": "ваше суточное потребление", "e": ""}, {"w": "at least half of it", "g": "как минимум половина", "e": ""}, {"w": "fizzy drinks", "g": "газированные напитки", "e": ""}, {"w": "artificial sweeteners", "g": "искусственные подсластители", "e": ""}, {"w": "she mentioned it", "g": "она это упомянула", "e": ""}, {"w": "they confuse it with steroids", "g": "они путают это со стероидами", "e": ""}, {"w": "it is controversial", "g": "это спорный вопрос", "e": ""}, {"w": "steer clear of it", "g": "держаться от этого подальше", "e": ""}, {"w": "according to some studies", "g": "согласно некоторым исследованиям", "e": ""}, {"w": "it contradicts last week's research", "g": "это противоречит исследованию прошлой недели", "e": ""}, {"w": "it can cut the risk of a heart attack", "g": "это может снизить риск инфаркта", "e": ""}, {"w": "liver disease", "g": "болезнь печени", "e": ""}, {"w": "high blood pressure", "g": "высокое давление", "e": ""}, {"w": "it can cause heart disease", "g": "это может вызвать болезнь сердца", "e": ""}, {"w": "especially for middle-aged men", "g": "особенно для мужчин среднего возраста", "e": ""}, {"w": "the tea leaves were soaked in juice", "g": "чайные листья пропитали соком", "e": ""}, {"w": "Have you got it?", "g": "есть ли у вас это?", "e": ""}, {"w": "last year", "g": "в прошлом году", "e": ""}], "2026-08-01": [{"w": "I can get the keys on Monday", "g": "я могу забрать ключи в понедельник", "e": ""}, {"w": "He can't give us the keys", "g": "он не может отдать нам ключи", "e": ""}, {"w": "Give her the bag", "g": "дай ей сумку", "e": ""}, {"w": "It's not going according to the plan", "g": "всё идёт не по плану", "e": ""}, {"w": "not at all", "g": "совсем нет, вообще нет", "e": ""}, {"w": "probably", "g": "наверное, вероятно", "e": ""}, {"w": "riverbank", "g": "берег реки", "e": ""}, {"w": "the shore", "g": "берег моря", "e": ""}, {"w": "a block of flats", "g": "многоквартирный дом", "e": ""}, {"w": "a house for one family", "g": "частный дом на одну семью", "e": ""}, {"w": "an embassy", "g": "посольство", "e": ""}, {"w": "a mansion", "g": "особняк", "e": ""}, {"w": "the outskirts", "g": "окраина", "e": ""}, {"w": "We would like to move somewhere calmer", "g": "мы хотели бы переехать куда-нибудь поспокойнее", "e": ""}, {"w": "to have a peek", "g": "заглянуть одним глазком", "e": ""}, {"w": "well looked-after houses", "g": "ухоженные дома", "e": ""}, {"w": "How long did it take you to walk 25 kilometres?", "g": "сколько времени у вас заняло пройти 25 километров?", "e": ""}], "2026-07-30": [{"w": "a drought", "g": "засуха", "e": ""}, {"w": "a hosepipe ban", "g": "запрет на полив из шланга", "e": ""}, {"w": "an outbreak", "g": "вспышка, о болезни", "e": ""}, {"w": "measles", "g": "корь", "e": ""}, {"w": "furnished", "g": "с мебелью", "e": ""}, {"w": "kitchen appliances", "g": "кухонная техника", "e": ""}, {"w": "a wardrobe", "g": "шкаф для одежды", "e": ""}, {"w": "a van", "g": "фургон", "e": ""}, {"w": "a truck", "g": "грузовик", "e": ""}, {"w": "nearby", "g": "поблизости, рядом", "e": ""}, {"w": "quiet", "g": "тихий", "e": ""}, {"w": "quite", "g": "довольно, достаточно", "e": ""}, {"w": "greenery", "g": "зелень, зелёные насаждения", "e": ""}, {"w": "the bank of the Danube", "g": "берег Дуная", "e": ""}, {"w": "I don't know if the flat is ready", "g": "я не знаю, готова ли квартира", "e": ""}, {"w": "What I like best about my city is how green it is", "g": "больше всего мне нравится в моём городе то, какой он зелёный", "e": ""}], "2026-07-26": [{"w": "in a week", "g": "через неделю", "e": ""}, {"w": "my belongings", "g": "мои вещи, всё что мне принадлежит", "e": ""}, {"w": "to pack", "g": "упаковать / распаковать", "e": ""}, {"w": "they will do it by themselves", "g": "они сделают это сами", "e": ""}, {"w": "I don't know if they will unpack", "g": "я не знаю, распакуют ли они", "e": ""}, {"w": "Is it furnished or unfurnished?", "g": "она с мебелью или без?", "e": ""}, {"w": "a wardrobe", "g": "шкаф для одежды", "e": ""}, {"w": "kitchen appliances", "g": "кухонная техника", "e": ""}, {"w": "a dishwasher", "g": "посудомоечная машина", "e": ""}, {"w": "a washing machine", "g": "стиральная машина", "e": ""}, {"w": "a fridge", "g": "холодильник", "e": ""}, {"w": "an air conditioner, an AC", "g": "кондиционер", "e": ""}, {"w": "something else", "g": "что-то ещё", "e": ""}, {"w": "further than our current flat", "g": "дальше, чем наша нынешняя квартира", "e": ""}, {"w": "a one-year term", "g": "срок на один год", "e": ""}, {"w": "a contrasting city", "g": "город контрастов", "e": ""}, {"w": "the bank of a river", "g": "берег реки", "e": ""}, {"w": "he broke his arm", "g": "он сломал руку", "e": ""}, {"w": "she twisted her ankle", "g": "она подвернула лодыжку", "e": ""}, {"w": "his leg hurts", "g": "у него болит нога", "e": ""}]}, DATES = ["2026-08-02", "2026-08-01", "2026-07-30", "2026-07-26"];
+  const DATA = {"2026-08-02": [{"w": "a jug", "g": "кувшин", "e": "", "q": "There's ___ of cold water in the fridge, help yourself."}, {"w": "your daily intake", "g": "ваше суточное потребление", "e": "", "q": "Doctors say sugar should be a small part of ___."}, {"w": "at least half of it", "g": "как минимум половина", "e": "", "q": "He drinks three cups of coffee a day and ___ is decaf."}, {"w": "fizzy drinks", "g": "газированные напитки", "e": "", "q": "I've stopped buying cola and lemonade because ___ are full of sugar."}, {"w": "artificial sweeteners", "g": "искусственные подсластители", "e": "", "q": "This yogurt has no sugar in it, but it does contain ___."}, {"w": "she mentioned it", "g": "она это упомянула", "e": "", "q": "I knew nothing about the new rule until ___ at the meeting."}, {"w": "they confuse it with steroids", "g": "они путают это со стероидами", "e": "", "q": "Creatine is not a dangerous drug, ___."}, {"w": "it is controversial", "g": "это спорный вопрос", "e": "", "q": "Not everyone agrees about this diet, ___."}, {"w": "steer clear of it", "g": "держаться от этого подальше", "e": "", "q": "If a drink has too much caffeine for you, it's better to ___."}, {"w": "according to some studies", "g": "согласно некоторым исследованиям", "e": "", "q": "___, green tea is good for your heart."}, {"w": "it contradicts last week's research", "g": "это противоречит исследованию прошлой недели", "e": "", "q": "This new report says the opposite, so ___."}, {"w": "it can cut the risk of a heart attack", "g": "это может снизить риск инфаркта", "e": "", "q": "Walking every day is worth it because ___."}, {"w": "liver disease", "g": "болезнь печени", "e": "", "q": "Drinking too much alcohol over the years can lead to ___."}, {"w": "high blood pressure", "g": "высокое давление", "e": "", "q": "Too much salt in your food can cause ___."}, {"w": "it can cause heart disease", "g": "это может вызвать болезнь сердца", "e": "", "q": "Smoking is dangerous because ___."}, {"w": "especially for middle-aged men", "g": "особенно для мужчин среднего возраста", "e": "", "q": "This check-up is useful for everyone, ___."}, {"w": "the tea leaves were soaked in juice", "g": "чайные листья пропитали соком", "e": "", "q": "The drink had a fruity taste because ___."}, {"w": "Have you got it?", "g": "есть ли у вас это?", "e": "", "q": "I sent you the file yesterday. ___"}, {"w": "last year", "g": "в прошлом году", "e": "", "q": "We moved into this flat ___, in August."}], "2026-08-01": [{"w": "I can get the keys on Monday", "g": "я могу забрать ключи в понедельник", "e": "", "q": "The agency is closed at the weekend, so ___."}, {"w": "He can't give us the keys", "g": "он не может отдать нам ключи", "e": "", "q": "The landlord is abroad this week, so ___."}, {"w": "Give her the bag", "g": "дай ей сумку", "e": "", "q": "My sister is waiting by the door. ___, please."}, {"w": "It's not going according to the plan", "g": "всё идёт не по плану", "e": "", "q": "We wanted to move in June, but ___."}, {"w": "not at all", "g": "совсем нет, вообще нет", "e": "", "q": "Was the journey difficult? ___, it was easy."}, {"w": "probably", "g": "наверное, вероятно", "e": "", "q": "I'm not sure yet, but we'll ___ sign the contract tomorrow."}, {"w": "riverbank", "g": "берег реки", "e": "", "q": "We cycled along the ___ from the bridge to the lake."}, {"w": "the shore", "g": "берег моря", "e": "", "q": "We swam in the sea and then lay on ___ in the sun."}, {"w": "a block of flats", "g": "многоквартирный дом", "e": "", "q": "They live on the fifth floor of ___ near the station."}, {"w": "a house for one family", "g": "частный дом на одну семью", "e": "", "q": "They didn't want neighbours above them, so they bought ___."}, {"w": "an embassy", "g": "посольство", "e": "", "q": "You'll need a visa, so go to ___ first."}, {"w": "a mansion", "g": "особняк", "e": "", "q": "The film star lives in a huge ___ with a swimming pool."}, {"w": "the outskirts", "g": "окраина", "e": "", "q": "It's much quieter on ___ than in the centre."}, {"w": "We would like to move somewhere calmer", "g": "мы хотели бы переехать куда-нибудь поспокойнее", "e": "", "q": "This street is very noisy at night. ___."}, {"w": "to have a peek", "g": "заглянуть одним глазком", "e": "", "q": "The door was open, so we stopped ___ inside."}, {"w": "well looked-after houses", "g": "ухоженные дома", "e": "", "q": "The street was lovely, full of tidy gardens and ___."}, {"w": "How long did it take you to walk 25 kilometres?", "g": "сколько времени у вас заняло пройти 25 километров?", "e": "", "q": "___ Six hours?"}], "2026-07-30": [{"w": "a drought", "g": "засуха", "e": "", "q": "There has been no rain here for two months, so there is ___."}, {"w": "a hosepipe ban", "g": "запрет на полив из шланга", "e": "", "q": "You can't water your garden this summer because of ___."}, {"w": "an outbreak", "g": "вспышка, о болезни", "e": "", "q": "The school closed for a week after ___ of flu."}, {"w": "measles", "g": "корь", "e": "", "q": "Children are given a vaccination against ___."}, {"w": "furnished", "g": "с мебелью", "e": "", "q": "We don't need to buy a sofa or a bed, the flat is ___."}, {"w": "kitchen appliances", "g": "кухонная техника", "e": "", "q": "The oven, the kettle and the microwave are all ___."}, {"w": "a wardrobe", "g": "шкаф для одежды", "e": "", "q": "I hang my shirts and coats in ___."}, {"w": "a van", "g": "фургон", "e": "", "q": "We hired ___ to move our boxes across town."}, {"w": "a truck", "g": "грузовик", "e": "", "q": "A big ___ full of sand was blocking the road."}, {"w": "nearby", "g": "поблизости, рядом", "e": "", "q": "There's a supermarket ___, just two minutes on foot."}, {"w": "quiet", "g": "тихий", "e": "", "q": "Please be ___, the baby is sleeping."}, {"w": "quite", "g": "довольно, достаточно", "e": "", "q": "The flat is ___ big, bigger than I expected."}, {"w": "greenery", "g": "зелень, зелёные насаждения", "e": "", "q": "I love this district because of all the trees and ___."}, {"w": "the bank of the Danube", "g": "берег Дуная", "e": "", "q": "We sat on ___ and watched the boats go past."}, {"w": "I don't know if the flat is ready", "g": "я не знаю, готова ли квартира", "e": "", "q": "I'll ring the agency, because ___."}, {"w": "What I like best about my city is how green it is", "g": "больше всего мне нравится в моём городе то, какой он зелёный", "e": "", "q": "There are parks on every corner. ___."}], "2026-07-26": [{"w": "in a week", "g": "через неделю", "e": "", "q": "We're moving ___, next Tuesday."}, {"w": "my belongings", "g": "мои вещи, всё что мне принадлежит", "e": "", "q": "I packed all ___ into six boxes."}, {"w": "to pack", "g": "упаковать / распаковать", "e": "", "q": "Before we move I need ___ all my books."}, {"w": "they will do it by themselves", "g": "они сделают это сами", "e": "", "q": "The movers don't need any help from us, ___."}, {"w": "I don't know if they will unpack", "g": "я не знаю, распакуют ли они", "e": "", "q": "I'll ask the company, because ___."}, {"w": "Is it furnished or unfurnished?", "g": "она с мебелью или без?", "e": "", "q": "___ Do we need to bring our own bed?"}, {"w": "a wardrobe", "g": "шкаф для одежды", "e": "", "q": "There's nowhere to hang our clothes, the bedroom has no ___."}, {"w": "kitchen appliances", "g": "кухонная техника", "e": "", "q": "The flat comes with all the ___ you need for cooking."}, {"w": "a dishwasher", "g": "посудомоечная машина", "e": "", "q": "I hate washing up, so I really want ___."}, {"w": "a washing machine", "g": "стиральная машина", "e": "", "q": "Without ___ I'd have to go to the laundrette."}, {"w": "a fridge", "g": "холодильник", "e": "", "q": "Put the milk in ___ before it goes off."}, {"w": "an air conditioner, an AC", "g": "кондиционер", "e": "", "q": "It gets to 35 degrees here in summer, so we need ___."}, {"w": "something else", "g": "что-то ещё", "e": "", "q": "I've finished this box. Can I do ___?"}, {"w": "further than our current flat", "g": "дальше, чем наша нынешняя квартира", "e": "", "q": "The new place is ___, so my journey to work will be longer."}, {"w": "a one-year term", "g": "срок на один год", "e": "", "q": "We signed the rental contract for ___."}, {"w": "a contrasting city", "g": "город контрастов", "e": "", "q": "Old churches stand next to glass towers, it's ___."}, {"w": "the bank of a river", "g": "берег реки", "e": "", "q": "Their house is right on ___, with a view of the water."}, {"w": "he broke his arm", "g": "он сломал руку", "e": "", "q": "He fell off his bike last week and ___."}, {"w": "she twisted her ankle", "g": "она подвернула лодыжку", "e": "", "q": "She stepped on a loose stone and ___."}, {"w": "his leg hurts", "g": "у него болит нога", "e": "", "q": "He can't play football today because ___."}]}, DATES = ["2026-08-02", "2026-08-01", "2026-07-30", "2026-07-26"];
   const GLOSS_LABEL = "перевод", GLOSS_DIR = "ltr";
   const ACC = ["#0ae448", "#fec5fb", "#ff8709", "#9d95ff", "#00bae2", "#abff84"];
 
@@ -102,6 +104,149 @@
     u.lang = vcVoice ? vcVoice.lang : 'en-GB'; u.rate=.9; u.pitch=1.0; if(vcVoice) u.voice=vcVoice;
     speechSynthesis.cancel(); speechSynthesis.speak(u); }
   function isImg(e){ return /^(https?:|data:)/i.test(e) || /\.(png|jpe?g|svg|webp|gif)(\?|$)/i.test(e); }
+
+  /* ---------------- Practise quiz ----------------------------------------------
+     Maksim's idea (2026-08-03): something to actually DRILL the lesson's words with.
+     Pick the word/phrase that fits the sentence. Only appears for a lesson whose
+     items carry a practice sentence (the " | ... ___ ..." field in the library), so
+     pages without sentences look exactly as before. Themed via --q-* vars. */
+  const qzStyle = document.createElement('style');
+  qzStyle.textContent = `
+    #qzOpen { font:inherit; font-size:14px; cursor:pointer; white-space:nowrap;
+      border:1px solid var(--q-line,#ccc); background:var(--q-accent,#111); color:var(--q-onaccent,#fff);
+      border-radius:100px; padding:9px 18px; }
+    #qzOpen[hidden] { display:none; }
+    #qz { position:fixed; inset:0; z-index:60; background:var(--q-scrim,rgba(0,0,0,.55));
+      display:flex; align-items:center; justify-content:center; padding:20px; }
+    #qz[hidden] { display:none; }
+    .qz-box { background:var(--q-bg,#fff); color:var(--q-fg,#222); border:1px solid var(--q-line,#ddd);
+      border-radius:16px; width:min(620px,100%); max-height:90vh; overflow:auto; padding:24px; }
+    .qz-top { display:flex; align-items:center; justify-content:space-between; gap:12px;
+      font-size:14px; opacity:.75; margin-bottom:18px; }
+    .qz-x { font:inherit; font-size:20px; line-height:1; cursor:pointer; background:none;
+      border:none; color:inherit; padding:4px 8px; }
+    .qz-q { font-size:20px; line-height:1.5; margin-bottom:20px; }
+    .qz-gap { display:inline-block; min-width:74px; border-bottom:2.5px solid var(--q-accent,#111);
+      margin:0 4px; text-align:center; font-weight:600; }
+    .qz-opts { display:grid; gap:10px; }
+    .qz-opt { font:inherit; font-size:17px; text-align:left; cursor:pointer; padding:13px 16px;
+      border:1px solid var(--q-line,#ddd); border-radius:10px; background:transparent; color:inherit; }
+    .qz-opt:hover:not(:disabled) { border-color:var(--q-accent,#111); }
+    .qz-opt:disabled { cursor:default; }
+    .qz-opt.right { border-color:#22a45d; background:rgba(34,164,93,.16); font-weight:600; }
+    .qz-opt.wrong { border-color:#e0574a; background:rgba(224,87,74,.14); }
+    .qz-next { font:inherit; font-size:15px; cursor:pointer; margin-top:20px; padding:11px 22px;
+      border-radius:100px; border:none; background:var(--q-accent,#111); color:var(--q-onaccent,#fff); }
+    .qz-said { margin-top:16px; font-size:16px; opacity:.8; cursor:pointer; }
+    .qz-score { font-size:40px; font-weight:600; margin:10px 0 6px; }
+  `;
+  document.head.appendChild(qzStyle);
+
+  const qzBtn = document.createElement('button');
+  qzBtn.id = 'qzOpen'; qzBtn.type = 'button'; qzBtn.hidden = true;
+  qzBtn.textContent = 'Practise these words';
+  sel.parentElement.appendChild(qzBtn);
+
+  const qz = document.createElement('div');
+  qz.id = 'qz'; qz.hidden = true;
+  qz.innerHTML = '<div class="qz-box"><div class="qz-top"><span id="qzProg"></span>'
+    + '<button class="qz-x" id="qzX" type="button" aria-label="Close">&times;</button></div>'
+    + '<div id="qzBody"></div></div>';
+  document.body.appendChild(qz);
+  const qzBody = document.getElementById('qzBody'), qzProg = document.getElementById('qzProg');
+
+  const qzItems = d => (DATA[d] || []).filter(it => it.q);
+  function syncPractise(d){ qzBtn.hidden = qzItems(d).length < 3; }
+  sel.addEventListener('change', () => syncPractise(sel.value));
+  setTimeout(() => syncPractise(sel.value), 0);
+
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+  let qzQs = [], qzAt = 0, qzScore = 0, qzRecent = [];
+
+  /* Options are shuffled per question, and a position is rejected if it would make a
+     run of three identical correct slots. Kids read the pattern, not the question. */
+  function qzOptions(correct, pool){
+    const bag = shuffle(pool.filter(w => w !== correct)).slice(0, 3);
+    let opts, at, tries = 0;
+    do {
+      opts = shuffle([correct, ...bag]);
+      at = opts.indexOf(correct);
+      tries++;
+    } while (tries < 15 && qzRecent.length >= 2 &&
+             qzRecent[qzRecent.length-1] === at && qzRecent[qzRecent.length-2] === at);
+    qzRecent.push(at);
+    return opts;
+  }
+
+  function qzStart(){
+    const items = qzItems(sel.value);
+    const pool = items.map(it => it.w);
+    qzQs = shuffle(items.slice()).map(it => ({ it, opts: qzOptions(it.w, pool) }));
+    qzAt = 0; qzScore = 0;
+    qz.hidden = false;
+    qzShow();
+  }
+
+  function qzShow(){
+    if (qzAt >= qzQs.length) return qzEnd();
+    const { it, opts } = qzQs[qzAt];
+    qzProg.textContent = (qzAt + 1) + ' / ' + qzQs.length;
+    const sentence = esc(it.q).split('___').join('<span class="qz-gap">?</span>');
+    qzBody.innerHTML = '<div class="qz-q">' + sentence + '</div><div class="qz-opts"></div>';
+    const box = qzBody.querySelector('.qz-opts');
+    opts.forEach(w => {
+      const b = document.createElement('button');
+      b.className = 'qz-opt'; b.type = 'button'; b.textContent = w;
+      b.onclick = () => qzAnswer(b, w, it);
+      box.appendChild(b);
+    });
+  }
+
+  function qzAnswer(btn, chosen, it){
+    const right = chosen === it.w;
+    if (right) qzScore++;
+    qzBody.querySelectorAll('.qz-opt').forEach(b => {
+      b.disabled = true;
+      if (b.textContent === it.w) b.classList.add('right');
+      else if (b === btn) b.classList.add('wrong');
+    });
+    // show the finished sentence and read it aloud, so the phrase is heard in context
+    const full = it.q.split('___').join(it.w);
+    qzBody.querySelector('.qz-q').innerHTML = esc(full).replace(esc(it.w),
+      '<span style="font-weight:600;border-bottom:2.5px solid var(--q-accent,#111)">' + esc(it.w) + '</span>');
+    const said = document.createElement('div');
+    said.className = 'qz-said';
+    said.textContent = (it.g ? it.g + '  ' : '') + '🔊';
+    said.onclick = () => speak(full);
+    qzBody.appendChild(said);
+    speak(full);
+    const next = document.createElement('button');
+    next.className = 'qz-next'; next.type = 'button';
+    next.textContent = qzAt + 1 >= qzQs.length ? 'See result' : 'Next';
+    next.onclick = () => { qzAt++; qzShow(); };
+    qzBody.appendChild(next);
+    next.focus();
+  }
+
+  function qzEnd(){
+    qzProg.textContent = 'Done';
+    qzBody.innerHTML = '<div class="qz-score">' + qzScore + ' / ' + qzQs.length + '</div>'
+      + '<div style="opacity:.75">' + (qzScore === qzQs.length ? 'Every one right.'
+        : qzScore * 2 >= qzQs.length ? 'Good going. Try the ones you missed again.'
+        : 'Worth another run through these.') + '</div>';
+    const again = document.createElement('button');
+    again.className = 'qz-next'; again.type = 'button'; again.textContent = 'Try again';
+    again.onclick = qzStart;
+    qzBody.appendChild(again);
+  }
+
+  function qzClose(){ qz.hidden = true; if('speechSynthesis' in window) speechSynthesis.cancel(); }
+  qzBtn.onclick = qzStart;
+  document.getElementById('qzX').onclick = qzClose;
+  qz.addEventListener('click', e => { if (e.target === qz) qzClose(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !qz.hidden) qzClose(); });
 
   const SPK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/><path d="M16 8.5a5 5 0 0 1 0 7"/><path d="M18.8 6a8 8 0 0 1 0 12"/></svg>`;
   const EYE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>`;
