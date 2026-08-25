@@ -247,9 +247,11 @@
     said.className = 'qz-said';
     // when the sentence used an inflected form, remind them of the dictionary form
     said.textContent = (it.qa ? it.w + ' — ' : '') + (it.g ? it.g + '  ' : '') + '🔊';
+    /* NEVER speak on its own here. Dasha, 2026-08-25: the finished sentence must be
+       read ONLY when the pupil asks for it by tapping 🔊 — an automatic voice fires
+       while she is still talking in the lesson. */
     said.onclick = () => speak(full);
     qzBody.appendChild(said);
-    speak(full);
     const next = document.createElement('button');
     next.className = 'qz-next'; next.type = 'button';
     next.textContent = qzAt + 1 >= qzQs.length ? 'See result' : 'Next';
