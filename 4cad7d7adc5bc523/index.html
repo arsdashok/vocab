@@ -133,9 +133,33 @@
       vs.find(v => /^en/i.test(v.lang)) || null;
   }
   if('speechSynthesis' in window){ vcLoad(); speechSynthesis.onvoiceschanged = vcLoad; }
-  function speak(t){ if(!('speechSynthesis'in window))return; const u=new SpeechSynthesisUtterance(t);
-    u.lang = vcVoice ? vcVoice.lang : 'en-GB'; u.rate=.9; u.pitch=1.0; if(vcVoice) u.voice=vcVoice;
-    speechSynthesis.cancel(); speechSynthesis.speak(u); }
+  /* Chrome drops an utterance queued in the SAME tick as cancel(), and parks the
+     queue when the tab has been idle — that is why the quiz sentence stayed silent
+     until you tapped 🔊 (Dasha, 2026-08-25). resume() + a tick of delay fixes both.
+     If no voice has loaded yet, wait for voiceschanged once rather than speaking
+     into the void. */
+  function speak(t){
+    if(!('speechSynthesis'in window)) return;
+    const go = () => {
+      const u = new SpeechSynthesisUtterance(t);
+      u.lang = vcVoice ? vcVoice.lang : 'en-GB'; u.rate=.9; u.pitch=1.0;
+      if(vcVoice) u.voice = vcVoice;
+      speechSynthesis.cancel();
+      setTimeout(() => {
+        try { speechSynthesis.resume(); } catch(e){}
+        speechSynthesis.speak(u);
+      }, 60);
+    };
+    if(!vcVoice && speechSynthesis.getVoices().length === 0){
+      speechSynthesis.addEventListener('voiceschanged', function once(){
+        speechSynthesis.removeEventListener('voiceschanged', once);
+        vcLoad(); go();
+      });
+      setTimeout(go, 500);   // safety net if the event never fires
+      return;
+    }
+    go();
+  }
   function isImg(e){ return /^(https?:|data:)/i.test(e) || /\.(png|jpe?g|svg|webp|gif)(\?|$)/i.test(e); }
 
   /* ---------------- Practise quiz ----------------------------------------------
