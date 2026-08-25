@@ -183,8 +183,10 @@
 
   function qzStart(){
     const items = qzItems(sel.value);
-    const pool = items.map(it => it.w);
-    qzQs = shuffle(items.slice()).map(it => ({ it, opts: qzOptions(it.w, pool) }));
+    /* qa = the form the word takes in THIS sentence ("to flirt" on the card,
+       "flirt" after "did not"). Falls back to the dictionary form. */
+    const pool = items.map(it => it.qa || it.w);
+    qzQs = shuffle(items.slice()).map(it => ({ it, opts: qzOptions(it.qa || it.w, pool) }));
     qzAt = 0; qzScore = 0;
     qz.hidden = false;
     qzShow();
@@ -206,20 +208,22 @@
   }
 
   function qzAnswer(btn, chosen, it){
-    const right = chosen === it.w;
+    const ans = it.qa || it.w;
+    const right = chosen === ans;
     if (right) qzScore++;
     qzBody.querySelectorAll('.qz-opt').forEach(b => {
       b.disabled = true;
-      if (b.textContent === it.w) b.classList.add('right');
+      if (b.textContent === ans) b.classList.add('right');
       else if (b === btn) b.classList.add('wrong');
     });
     // show the finished sentence and read it aloud, so the phrase is heard in context
-    const full = it.q.split('___').join(it.w);
-    qzBody.querySelector('.qz-q').innerHTML = esc(full).replace(esc(it.w),
-      '<span style="font-weight:600;border-bottom:2.5px solid var(--q-accent,#111)">' + esc(it.w) + '</span>');
+    const full = it.q.split('___').join(ans);
+    qzBody.querySelector('.qz-q').innerHTML = esc(full).replace(esc(ans),
+      '<span style="font-weight:600;border-bottom:2.5px solid var(--q-accent,#111)">' + esc(ans) + '</span>');
     const said = document.createElement('div');
     said.className = 'qz-said';
-    said.textContent = (it.g ? it.g + '  ' : '') + '🔊';
+    // when the sentence used an inflected form, remind them of the dictionary form
+    said.textContent = (it.qa ? it.w + ' — ' : '') + (it.g ? it.g + '  ' : '') + '🔊';
     said.onclick = () => speak(full);
     qzBody.appendChild(said);
     speak(full);

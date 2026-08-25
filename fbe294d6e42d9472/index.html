@@ -79,7 +79,7 @@
   <div id="grid"></div>
   <footer>Milana · vocab review</footer>
 <script>
-  const DATA = {"2026-08-25": [{"w": "the outskirts", "g": "окраина, примерно как пригород", "e": "", "q": "Our camp was not in the centre, it was on ___ of the city."}, {"w": "a suburb", "g": "пригород", "e": "", "q": "They do not live in the city, they live in ___ twenty minutes away."}, {"w": "an air conditioner", "g": "кондиционер, можно сказать короче the AC", "e": "❄️", "q": "It was very cold on the plane because ___ was too strong."}, {"w": "Polish", "g": "польский; страна Poland, а люди и вещи Polish", "e": "🇵🇱", "q": "My friend is from Poland, so she is ___."}, {"w": "I was friends with her", "g": "я дружила с ней", "e": "👫", "q": "We met on the first day and ___ all month."}, {"w": "a bench", "g": "лавочка, скамейка", "e": "", "q": "We sat on ___ in the park and ate our sandwiches."}, {"w": "he came up to me", "g": "он подошёл ко мне", "e": "🙋", "q": "I was sitting alone and then ___ and said hello."}, {"w": "He has a girlfriend", "g": "у него есть девушка; I have, you have, но he has", "e": "", "q": "She has a boyfriend and ___ too."}, {"w": "to flirt", "g": "флиртовать", "e": "", "q": "He was friendly with everybody, but he never tried ___ with anyone."}]}, DATES = ["2026-08-25"];
+  const DATA = {"2026-08-25": [{"w": "the outskirts", "g": "окраина, примерно как пригород", "e": "", "q": "Our camp was not in the centre, it was on ___ of the city."}, {"w": "a suburb", "g": "пригород", "e": "", "q": "They do not live in the city, they live in ___ twenty minutes away."}, {"w": "an air conditioner", "g": "кондиционер, можно сказать короче the AC", "e": "❄️", "q": "It was very cold on the plane because ___ was too strong."}, {"w": "Polish", "g": "польский; страна Poland, а люди и вещи Polish", "e": "🇵🇱", "q": "My friend is from Poland, so she is ___."}, {"w": "I was friends with her", "g": "я дружила с ней", "e": "👫", "q": "We met on the first day and ___ all month."}, {"w": "a bench", "g": "лавочка, скамейка", "e": "", "q": "We sat on ___ in the park and ate our sandwiches."}, {"w": "he came up to me", "g": "он подошёл ко мне", "e": "🙋", "q": "I was sitting alone and then ___ and said hello."}, {"w": "He has a girlfriend", "g": "у него есть девушка; I have, you have, но he has", "e": "", "q": "She has a boyfriend and ___ too."}, {"w": "to flirt", "g": "флиртовать", "e": "", "q": "He was friendly with everybody, but he did not ___ with anyone.", "qa": "flirt"}]}, DATES = ["2026-08-25"];
   const GLOSS_LABEL = "перевод", GLOSS_DIR = "ltr";
   const ACC = ["#ff6b6b", "#20b3a2", "#f4a534", "#9b5de5", "#3ab34a", "#ff5da2", "#4d96ff", "#e5643e"];
 
@@ -183,8 +183,10 @@
 
   function qzStart(){
     const items = qzItems(sel.value);
-    const pool = items.map(it => it.w);
-    qzQs = shuffle(items.slice()).map(it => ({ it, opts: qzOptions(it.w, pool) }));
+    /* qa = the form the word takes in THIS sentence ("to flirt" on the card,
+       "flirt" after "did not"). Falls back to the dictionary form. */
+    const pool = items.map(it => it.qa || it.w);
+    qzQs = shuffle(items.slice()).map(it => ({ it, opts: qzOptions(it.qa || it.w, pool) }));
     qzAt = 0; qzScore = 0;
     qz.hidden = false;
     qzShow();
@@ -206,20 +208,22 @@
   }
 
   function qzAnswer(btn, chosen, it){
-    const right = chosen === it.w;
+    const ans = it.qa || it.w;
+    const right = chosen === ans;
     if (right) qzScore++;
     qzBody.querySelectorAll('.qz-opt').forEach(b => {
       b.disabled = true;
-      if (b.textContent === it.w) b.classList.add('right');
+      if (b.textContent === ans) b.classList.add('right');
       else if (b === btn) b.classList.add('wrong');
     });
     // show the finished sentence and read it aloud, so the phrase is heard in context
-    const full = it.q.split('___').join(it.w);
-    qzBody.querySelector('.qz-q').innerHTML = esc(full).replace(esc(it.w),
-      '<span style="font-weight:600;border-bottom:2.5px solid var(--q-accent,#111)">' + esc(it.w) + '</span>');
+    const full = it.q.split('___').join(ans);
+    qzBody.querySelector('.qz-q').innerHTML = esc(full).replace(esc(ans),
+      '<span style="font-weight:600;border-bottom:2.5px solid var(--q-accent,#111)">' + esc(ans) + '</span>');
     const said = document.createElement('div');
     said.className = 'qz-said';
-    said.textContent = (it.g ? it.g + '  ' : '') + '🔊';
+    // when the sentence used an inflected form, remind them of the dictionary form
+    said.textContent = (it.qa ? it.w + ' — ' : '') + (it.g ? it.g + '  ' : '') + '🔊';
     said.onclick = () => speak(full);
     qzBody.appendChild(said);
     speak(full);
