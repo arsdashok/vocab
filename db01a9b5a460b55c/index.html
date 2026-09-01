@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aahan — words we learned</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#3a2e2a;
+    --q-bg:#fffdf6; --q-fg:#3a2e2a; --q-line:#e6d3a8; --q-accent:#c2410c; --q-onaccent:#fff;
+    --q-scrim:rgba(58,46,42,.55); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'Fredoka','Segoe UI',system-ui,sans-serif; color:var(--ink);
+    background:#fdf0d5;
+    background-image: radial-gradient(#f6d9a0 1.4px, transparent 1.4px);
+    background-size: 22px 22px;
+    padding:22px 16px; min-height:100vh;
+  }
+  .top {
+    max-width:960px; margin:0 auto 20px; display:flex; flex-wrap:wrap;
+    align-items:center; justify-content:space-between; gap:12px;
+  }
+  h1 { font-size:30px; font-weight:700; letter-spacing:.3px; }
+  h1 .emo { font-size:30px; }
+  .datepill {
+    display:flex; align-items:center; gap:8px; background:#fff; border:3px solid var(--ink);
+    border-radius:40px; padding:6px 8px 6px 16px; font-weight:600; font-size:15px;
+    box-shadow:4px 4px 0 rgba(58,46,42,.85);
+  }
+  #dateSel {
+    font:inherit; font-weight:700; font-size:15px; border:none; background:#ffdf9e;
+    color:var(--ink); border-radius:30px; padding:6px 12px; cursor:pointer;
+  }
+  .hint { max-width:960px; margin:0 auto 18px; text-align:center; color:#8a6d4b; font-size:14px; }
+  #grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
+    gap:16px; max-width:960px; margin:0 auto;
+  }
+  .card {
+    background:#fff; border:3px solid var(--ink); border-radius:20px;
+    padding:16px 12px 14px; text-align:center;
+    box-shadow:5px 6px 0 rgba(58,46,42,.9);
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+  }
+  .pic {
+    width:76px; height:76px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:42px; line-height:1; border:3px solid var(--ink); overflow:hidden;
+  }
+  .pic .letter { font-family:'Andika',sans-serif; font-weight:700; font-size:38px; color:#fff; }
+  .picimg { width:72%; height:72%; object-fit:contain; display:block; margin:auto; }
+  .word {
+    font-family:'Andika','Comic Sans MS',sans-serif; font-weight:700; font-size:24px;
+    line-height:1.12; cursor:pointer; user-select:none; padding:3px 6px; border-radius:10px;
+    transition:transform .08s;
+  }
+  .word:active { transform:scale(.93); }
+  .word .spk { font-size:15px; opacity:.55; }
+  .reveal {
+    font:inherit; font-weight:600; font-size:13px; border:2px solid var(--ink);
+    background:#fff; color:var(--ink); border-radius:30px; padding:4px 14px; cursor:pointer;
+  }
+  .reveal:active { transform:translateY(1px); }
+  .gloss { font-family:'Fredoka',sans-serif; font-size:16px; color:#6b4f36; min-height:19px; font-weight:500; }
+  .gloss[dir="rtl"] { text-align:right; direction:rtl; }
+  .gloss.hidden { visibility:hidden; }
+  footer { text-align:center; color:#b79b74; font-size:12px; margin-top:26px; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <h1><span class="emo">🎒</span> Words we learned</h1>
+    <div class="datepill"><span>Lesson</span><select id="dateSel"></select></div>
+  </div>
+  <p class="hint">Tap a word to hear it 🔊 &nbsp;·&nbsp; tap «definition» to check the meaning</p>
+  <div id="grid"></div>
+  <footer>Aahan · vocab review</footer>
+<script>
+  const DATA = {"2026-09-19": [{"w": "rejuvenate", "g": "make fresh, healthy or energetic again", "e": "", "q": "The council is going to ___ the run-down market square and bring the whole area back to life."}, {"w": "flourish", "g": "grow or develop successfully", "e": "", "q": "With good soil and plenty of water, the tiny seeds will ___ into tall, healthy sunflowers."}, {"w": "vibrant", "g": "full of strong colour, energy or life", "e": "", "q": "The carnival filled the grey street with ___ colours and loud music."}, {"w": "permeate", "g": "spread through every part", "e": "", "q": "The smell of fresh bread began to ___ every corner of the house."}, {"w": "a ripple effect", "g": "consequences spreading outward from one action", "e": "", "q": "One kind act can create ___ that spreads through the whole school."}], "2026-09-12": [{"w": "hardened", "g": "made less sympathetic by difficult experience", "e": "", "q": "Years of hardship had ___ him, and he no longer felt sorry for anyone."}, {"w": "furtive", "g": "secretive because one wants to avoid notice", "e": "", "q": "Hoping nobody would notice him, the boy gave the guard a ___ glance and slipped back into the shadows."}, {"w": "vulnerable", "g": "open to harm because protection is limited", "e": "", "q": "The lost kitten looked small and ___ as it sat alone in the dark."}, {"w": "reluctant", "g": "unwilling and hesitant", "e": "", "q": "He was ___ to jump into the freezing lake, and stood at the edge for a whole minute."}, {"w": "obligation", "g": "something you are morally or legally bound to do", "e": "", "q": "As a doctor, she felt a moral ___ to help every patient who walked in."}], "2026-09-05": [{"w": "muted", "g": "softened, not bright", "e": "", "q": "The thick curtains kept the noise of the busy road ___ and distant."}, {"w": "desolate", "g": "empty, bleak and lonely", "e": "", "q": "The mining town was ___ after the last families left: empty streets, closed shops, not a person in sight."}, {"w": "debris", "g": "scattered waste or broken remains", "e": "", "q": "After the storm, the garden was covered with ___ such as broken branches, roof tiles and shattered glass."}, {"w": "congested", "g": "overcrowded or blocked, often a road or city", "e": "", "q": "We were late because the road into the city was ___ with slow, bumper-to-bumper traffic."}, {"w": "foreboding", "g": "a feeling that trouble may come", "e": "", "q": "As the sky turned black, a growing sense of ___ warned the sailors that a storm was coming."}]}, DATES = ["2026-09-19", "2026-09-12", "2026-09-05"];
+  const GLOSS_LABEL = "definition", GLOSS_DIR = "ltr";
+  const ACC = ["#ff6b6b", "#20b3a2", "#f4a534", "#9b5de5", "#3ab34a", "#ff5da2", "#4d96ff", "#e5643e"];
+
+  const sel = document.getElementById('dateSel'), grid = document.getElementById('grid');
+  /* Show dates as "29 July 2026" but keep the ISO string as the option value (the DATA key). */
+  const _MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function fmtDate(iso){ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(iso); return m ? (+m[3])+' '+_MONTHS[+m[2]-1]+' '+m[1] : iso; }
+  DATES.forEach(d => { const o=document.createElement('option'); o.value=d; o.textContent=fmtDate(d); sel.appendChild(o); });
+
+  /* Voice locked to Google UK English Female (same as Space Lotto / Dino Squad) */
+  let vcVoice = null;
+  function vcLoad(){
+    const vs = speechSynthesis.getVoices();
+    vcVoice =
+      vs.find(v => v.name === 'Google UK English Female') ||
+      vs.find(v => /google/i.test(v.name) && /en-GB/i.test(v.lang)) ||
+      vs.find(v => /en-GB/i.test(v.lang) && /female|samantha|kate|serena|stephanie/i.test(v.name)) ||
+      vs.find(v => /en-GB/i.test(v.lang)) ||
+      vs.find(v => /^en/i.test(v.lang)) || null;
+  }
+  if('speechSynthesis' in window){ vcLoad(); speechSynthesis.onvoiceschanged = vcLoad; }
+  /* Chrome drops an utterance queued in the SAME tick as cancel(), and parks the
+     queue when the tab has been idle — that is why the quiz sentence stayed silent
+     until you tapped 🔊 (Dasha, 2026-08-25). resume() + a tick of delay fixes both.
+     If no voice has loaded yet, wait for voiceschanged once rather than speaking
+     into the void. */
+  function speak(t){
+    if(!('speechSynthesis'in window)) return;
+    const go = () => {
+      const u = new SpeechSynthesisUtterance(t);
+      u.lang = vcVoice ? vcVoice.lang : 'en-GB'; u.rate=.9; u.pitch=1.0;
+      if(vcVoice) u.voice = vcVoice;
+      speechSynthesis.cancel();
+      setTimeout(() => {
+        try { speechSynthesis.resume(); } catch(e){}
+        speechSynthesis.speak(u);
+      }, 60);
+    };
+    if(!vcVoice && speechSynthesis.getVoices().length === 0){
+      speechSynthesis.addEventListener('voiceschanged', function once(){
+        speechSynthesis.removeEventListener('voiceschanged', once);
+        vcLoad(); go();
+      });
+      setTimeout(go, 500);   // safety net if the event never fires
+      return;
+    }
+    go();
+  }
+  function isImg(e){ return /^(https?:|data:)/i.test(e) || /\.(png|jpe?g|svg|webp|gif)(\?|$)/i.test(e); }
+
+  /* ---------------- Practise quiz ----------------------------------------------
+     Maksim's idea (2026-08-03): something to actually DRILL the lesson's words with.
+     Pick the word/phrase that fits the sentence. Only appears for a lesson whose
+     items carry a practice sentence (the " | ... ___ ..." field in the library), so
+     pages without sentences look exactly as before. Themed via --q-* vars. */
+  const qzStyle = document.createElement('style');
+  qzStyle.textContent = `
+    #qzOpen { font:inherit; font-size:14px; cursor:pointer; white-space:nowrap;
+      border:1px solid var(--q-line,#ccc); background:var(--q-accent,#111); color:var(--q-onaccent,#fff);
+      border-radius:100px; padding:9px 18px; }
+    #qzOpen[hidden] { display:none; }
+    #qz { position:fixed; inset:0; z-index:60; background:var(--q-scrim,rgba(0,0,0,.55));
+      display:flex; align-items:center; justify-content:center; padding:20px; }
+    #qz[hidden] { display:none; }
+    .qz-box { background:var(--q-bg,#fff); color:var(--q-fg,#222); border:1px solid var(--q-line,#ddd);
+      border-radius:16px; width:min(620px,100%); max-height:90vh; overflow:auto; padding:24px; }
+    .qz-top { display:flex; align-items:center; justify-content:space-between; gap:12px;
+      font-size:14px; opacity:.75; margin-bottom:18px; }
+    .qz-x { font:inherit; font-size:20px; line-height:1; cursor:pointer; background:none;
+      border:none; color:inherit; padding:4px 8px; }
+    .qz-q { font-size:20px; line-height:1.5; margin-bottom:20px; }
+    .qz-gap { display:inline-block; min-width:74px; border-bottom:2.5px solid var(--q-accent,#111);
+      margin:0 4px; text-align:center; font-weight:600; }
+    .qz-opts { display:grid; gap:10px; }
+    .qz-opt { font:inherit; font-size:17px; text-align:left; cursor:pointer; padding:13px 16px;
+      border:1px solid var(--q-line,#ddd); border-radius:10px; background:transparent; color:inherit; }
+    .qz-opt:hover:not(:disabled) { border-color:var(--q-accent,#111); }
+    .qz-opt:disabled { cursor:default; }
+    .qz-opt.right { border-color:#22a45d; background:rgba(34,164,93,.16); font-weight:600; }
+    .qz-opt.wrong { border-color:#e0574a; background:rgba(224,87,74,.14); }
+    .qz-next { font:inherit; font-size:15px; cursor:pointer; margin-top:20px; padding:11px 22px;
+      border-radius:100px; border:none; background:var(--q-accent,#111); color:var(--q-onaccent,#fff); }
+    .qz-said { margin-top:16px; font-size:16px; opacity:.8; cursor:pointer; }
+    .qz-score { font-size:40px; font-weight:600; margin:10px 0 6px; }
+  `;
+  document.head.appendChild(qzStyle);
+
+  const qzBtn = document.createElement('button');
+  qzBtn.id = 'qzOpen'; qzBtn.type = 'button'; qzBtn.hidden = true;
+  qzBtn.textContent = 'Practise these words';
+  sel.parentElement.appendChild(qzBtn);
+
+  const qz = document.createElement('div');
+  qz.id = 'qz'; qz.hidden = true;
+  qz.innerHTML = '<div class="qz-box"><div class="qz-top"><span id="qzProg"></span>'
+    + '<button class="qz-x" id="qzX" type="button" aria-label="Close">&times;</button></div>'
+    + '<div id="qzBody"></div></div>';
+  document.body.appendChild(qz);
+  const qzBody = document.getElementById('qzBody'), qzProg = document.getElementById('qzProg');
+
+  const qzItems = d => (DATA[d] || []).filter(it => it.q);
+  function syncPractise(d){ qzBtn.hidden = qzItems(d).length < 3; }
+  sel.addEventListener('change', () => syncPractise(sel.value));
+  setTimeout(() => syncPractise(sel.value), 0);
+
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+  let qzQs = [], qzAt = 0, qzScore = 0, qzRecent = [];
+
+  /* Options are shuffled per question, and a position is rejected if it would make a
+     run of three identical correct slots. Kids read the pattern, not the question. */
+  function qzOptions(correct, pool){
+    const bag = shuffle(pool.filter(w => w !== correct)).slice(0, 3);
+    let opts, at, tries = 0;
+    do {
+      opts = shuffle([correct, ...bag]);
+      at = opts.indexOf(correct);
+      tries++;
+    } while (tries < 15 && qzRecent.length >= 2 &&
+             qzRecent[qzRecent.length-1] === at && qzRecent[qzRecent.length-2] === at);
+    qzRecent.push(at);
+    return opts;
+  }
+
+  function qzStart(){
+    const items = qzItems(sel.value);
+    /* qa = the form the word takes in THIS sentence ("to flirt" on the card,
+       "flirt" after "did not"). Falls back to the dictionary form. */
+    const pool = items.map(it => it.qa || it.w);
+    qzQs = shuffle(items.slice()).map(it => ({ it, opts: qzOptions(it.qa || it.w, pool) }));
+    qzAt = 0; qzScore = 0;
+    qz.hidden = false;
+    qzShow();
+  }
+
+  function qzShow(){
+    if (qzAt >= qzQs.length) return qzEnd();
+    const { it, opts } = qzQs[qzAt];
+    qzProg.textContent = (qzAt + 1) + ' / ' + qzQs.length;
+    const sentence = esc(it.q).split('___').join('<span class="qz-gap">?</span>');
+    qzBody.innerHTML = '<div class="qz-q">' + sentence + '</div><div class="qz-opts"></div>';
+    const box = qzBody.querySelector('.qz-opts');
+    opts.forEach(w => {
+      const b = document.createElement('button');
+      b.className = 'qz-opt'; b.type = 'button'; b.textContent = w;
+      b.onclick = () => qzAnswer(b, w, it);
+      box.appendChild(b);
+    });
+  }
+
+  function qzAnswer(btn, chosen, it){
+    const ans = it.qa || it.w;
+    const right = chosen === ans;
+    if (right) qzScore++;
+    qzBody.querySelectorAll('.qz-opt').forEach(b => {
+      b.disabled = true;
+      if (b.textContent === ans) b.classList.add('right');
+      else if (b === btn) b.classList.add('wrong');
+    });
+    // show the finished sentence and read it aloud, so the phrase is heard in context
+    const full = it.q.split('___').join(ans);
+    qzBody.querySelector('.qz-q').innerHTML = esc(full).replace(esc(ans),
+      '<span style="font-weight:600;border-bottom:2.5px solid var(--q-accent,#111)">' + esc(ans) + '</span>');
+    const said = document.createElement('div');
+    said.className = 'qz-said';
+    // when the sentence used an inflected form, remind them of the dictionary form
+    said.textContent = (it.qa ? it.w + ' — ' : '') + (it.g ? it.g + '  ' : '') + '🔊';
+    /* NEVER speak on its own here. Dasha, 2026-08-25: the finished sentence must be
+       read ONLY when the pupil asks for it by tapping 🔊 — an automatic voice fires
+       while she is still talking in the lesson. */
+    said.onclick = () => speak(full);
+    qzBody.appendChild(said);
+    const next = document.createElement('button');
+    next.className = 'qz-next'; next.type = 'button';
+    next.textContent = qzAt + 1 >= qzQs.length ? 'See result' : 'Next';
+    next.onclick = () => { qzAt++; qzShow(); };
+    qzBody.appendChild(next);
+    next.focus();
+  }
+
+  function qzEnd(){
+    qzProg.textContent = 'Done';
+    qzBody.innerHTML = '<div class="qz-score">' + qzScore + ' / ' + qzQs.length + '</div>'
+      + '<div style="opacity:.75">' + (qzScore === qzQs.length ? 'Every one right.'
+        : qzScore * 2 >= qzQs.length ? 'Good going. Try the ones you missed again.'
+        : 'Worth another run through these.') + '</div>';
+    const again = document.createElement('button');
+    again.className = 'qz-next'; again.type = 'button'; again.textContent = 'Try again';
+    again.onclick = qzStart;
+    qzBody.appendChild(again);
+  }
+
+  function qzClose(){ qz.hidden = true; if('speechSynthesis' in window) speechSynthesis.cancel(); }
+  qzBtn.onclick = qzStart;
+  document.getElementById('qzX').onclick = qzClose;
+  qz.addEventListener('click', e => { if (e.target === qz) qzClose(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !qz.hidden) qzClose(); });
+
+  function render(date){
+    grid.innerHTML='';
+    (DATA[date]||[]).forEach((it,i)=>{
+      const acc = ACC[i % ACC.length];
+      const card=document.createElement('div'); card.className='card';
+      card.style.transform = 'rotate('+((i%2)?1.1:-1.1)+'deg)';
+
+      const pic=document.createElement('div'); pic.className='pic';
+      if(it.e){ pic.style.background=acc+'33';
+        if(isImg(it.e)){ const im=document.createElement('img'); im.className='picimg'; im.src=it.e; im.alt=''; pic.appendChild(im); }
+        else { pic.textContent=it.e; } }
+      else { pic.style.background=acc; pic.innerHTML='<span class="letter">'+(it.w[0]||'?').toUpperCase()+'</span>'; }
+      card.appendChild(pic);
+
+      const w=document.createElement('div'); w.className='word'; w.style.color=acc;
+      w.innerHTML=it.w+' <span class="spk">🔊</span>'; w.onclick=()=>speak(it.w);
+      card.appendChild(w);
+
+      if(it.g){
+        const gl=document.createElement('div'); gl.className='gloss hidden'; gl.textContent=it.g;
+        gl.dir = GLOSS_DIR; if(GLOSS_DIR==='rtl') gl.style.textAlign='right';
+        const b=document.createElement('button'); b.className='reveal'; b.textContent=GLOSS_LABEL;
+        b.style.borderColor=acc; b.style.color=acc; b.onclick=()=>gl.classList.toggle('hidden');
+        card.appendChild(gl); card.appendChild(b);
+      }
+      grid.appendChild(card);
+    });
+  }
+  sel.onchange=()=>render(sel.value);
+  if(DATES.length){ sel.value=DATES[0]; render(DATES[0]); }
+  else grid.innerHTML='<p style="text-align:center;color:#b79b74">No words yet.</p>';
+</script>
+</body>
+</html>
