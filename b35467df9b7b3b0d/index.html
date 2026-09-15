@@ -65,6 +65,11 @@
   tr:last-child td { border-bottom: none; }
   td.num { width: 34px; color: var(--accent); font-weight: 700; font-size: 13px; }
   td.date { color: #374151; }
+  .tag {
+    display: inline-block; margin-left: 8px; padding: 1px 8px;
+    border-radius: 999px; background: #fef3c7; color: #92400e;
+    font-size: 12px; font-weight: 600; vertical-align: 1px;
+  }
   td.who { color: #6b7280; text-align: right; font-size: 13px; }
   td.empty, td.more { color: #9ca3af; text-align: center; padding: 14px 0; font-size: 13px; }
 
@@ -111,7 +116,7 @@
         <tr><th>№</th><th>Дата</th><th style="text-align:right">Ученик</th></tr>
       </thead>
       <tbody>
-        <tr><td class="num">16</td><td class="date">15 сентября 2026</td><td class="who">Кристина</td></tr>
+        <tr><td class="num">16</td><td class="date">15 сентября 2026 <span class="tag">пропуск</span></td><td class="who">Кристина</td></tr>
 <tr><td class="num">15</td><td class="date">10 сентября 2026</td><td class="who">Кристина</td></tr>
 <tr><td class="num">14</td><td class="date">9 сентября 2026</td><td class="who">Милана</td></tr>
 <tr><td class="num">13</td><td class="date">4 сентября 2026</td><td class="who">Милана</td></tr>
