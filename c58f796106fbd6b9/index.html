@@ -4,84 +4,54 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Roman — words we learned</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Andika:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#3a2e2a;
-    --q-bg:#fffdf6; --q-fg:#3a2e2a; --q-line:#e6d3a8; --q-accent:#c2410c; --q-onaccent:#fff;
-    --q-scrim:rgba(58,46,42,.55); }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body {
-    font-family:'Fredoka','Segoe UI',system-ui,sans-serif; color:var(--ink);
-    background:#fdf0d5;
-    background-image: radial-gradient(#f6d9a0 1.4px, transparent 1.4px);
-    background-size: 22px 22px;
-    padding:22px 16px; min-height:100vh;
-  }
-  .top {
-    max-width:960px; margin:0 auto 20px; display:flex; flex-wrap:wrap;
-    align-items:center; justify-content:space-between; gap:12px;
-  }
-  h1 { font-size:30px; font-weight:700; letter-spacing:.3px; }
-  h1 .emo { font-size:30px; }
-  .datepill {
-    display:flex; align-items:center; gap:8px; background:#fff; border:3px solid var(--ink);
-    border-radius:40px; padding:6px 8px 6px 16px; font-weight:600; font-size:15px;
-    box-shadow:4px 4px 0 rgba(58,46,42,.85);
-  }
-  #dateSel {
-    font:inherit; font-weight:700; font-size:15px; border:none; background:#ffdf9e;
-    color:var(--ink); border-radius:30px; padding:6px 12px; cursor:pointer;
-  }
-  .hint { max-width:960px; margin:0 auto 18px; text-align:center; color:#8a6d4b; font-size:14px; }
-  #grid {
-    display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
-    gap:16px; max-width:960px; margin:0 auto;
-  }
-  .card {
-    background:#fff; border:3px solid var(--ink); border-radius:20px;
-    padding:16px 12px 14px; text-align:center;
-    box-shadow:5px 6px 0 rgba(58,46,42,.9);
-    display:flex; flex-direction:column; align-items:center; gap:10px;
-  }
-  .pic {
-    width:76px; height:76px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:42px; line-height:1; border:3px solid var(--ink); overflow:hidden;
-  }
-  .pic .letter { font-family:'Andika',sans-serif; font-weight:700; font-size:38px; color:#fff; }
-  .picimg { width:72%; height:72%; object-fit:contain; display:block; margin:auto; }
-  .word {
-    font-family:'Andika','Comic Sans MS',sans-serif; font-weight:700; font-size:24px;
-    line-height:1.12; cursor:pointer; user-select:none; padding:3px 6px; border-radius:10px;
-    transition:transform .08s;
-  }
-  .word:active { transform:scale(.93); }
-  .word .spk { font-size:15px; opacity:.55; }
-  .reveal {
-    font:inherit; font-weight:600; font-size:13px; border:2px solid var(--ink);
-    background:#fff; color:var(--ink); border-radius:30px; padding:4px 14px; cursor:pointer;
-  }
-  .reveal:active { transform:translateY(1px); }
-  .gloss { font-family:'Fredoka',sans-serif; font-size:16px; color:#6b4f36; min-height:19px; font-weight:500; }
-  .gloss[dir="rtl"] { text-align:right; direction:rtl; }
-  .gloss.hidden { visibility:hidden; }
-  footer { text-align:center; color:#b79b74; font-size:12px; margin-top:26px; }
+:root{--ink:#253a34;--muted:#626a62;--line:#d8ddd3;--paper:#f4f2ec;--accent:#31594b;
+--q-bg:#fffefa;--q-fg:#253a34;--q-line:#ced5ca;--q-accent:#31594b;--q-onaccent:#fff;--q-scrim:rgba(28,40,34,.48)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;min-height:100vh;padding:54px 24px 32px;border-top:5px solid var(--accent)}
+.wrap{max-width:960px;margin:auto}
+.masthead{display:flex;justify-content:space-between;align-items:center;padding-bottom:19px;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:1.7px;text-transform:uppercase;color:var(--muted)}
+.masthead strong{color:var(--accent);font-size:13px;font-weight:600}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:44px;line-height:1.17;font-weight:400;letter-spacing:-.7px;margin:34px 0 13px}
+.hint{font-size:15px;line-height:1.6;color:var(--muted);margin-bottom:30px}
+.top{margin-bottom:18px}
+.datepill{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.datepill label{font-size:13px;font-weight:600;color:var(--muted)}
+#dateSel{font:inherit;font-size:14px;color:var(--ink);background:#fffefa;border:1px solid var(--line);border-radius:4px;padding:11px 34px 11px 12px;min-height:44px;cursor:pointer}
+.classic #qzOpen{margin-left:auto;border-radius:4px;padding:12px 20px;min-height:44px;font-weight:600}
+#grid{background:#fffefa;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.card{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:18px;align-items:center;padding:24px 28px;border-bottom:1px solid var(--line)}
+.card:last-child{border-bottom:0}
+.number{font-size:12px;color:#797c72;font-variant-numeric:tabular-nums;align-self:start;padding-top:10px}
+.word{display:inline-flex;align-items:center;gap:14px;font-family:Georgia,'Times New Roman',serif;font-size:27px;line-height:1.35;text-align:left;border:0;border-radius:3px;background:transparent;color:var(--ink);cursor:pointer;padding:0;max-width:100%;overflow-wrap:anywhere}
+.word:hover{color:var(--accent)}
+.word svg{width:20px;height:20px;flex-shrink:0;color:#567665}
+.reveal{font:inherit;font-size:13px;line-height:1.3;border:1px solid var(--line);border-radius:4px;padding:10px 14px;min-height:44px;color:var(--accent);background:transparent;cursor:pointer}
+.reveal:hover{background:#eff2eb;border-color:#8ea696}
+.gloss{font-size:16px;line-height:1.6;color:var(--muted);margin-top:9px}
+.gloss[hidden]{display:none}
+button:focus-visible,select:focus-visible{outline:3px solid #a48042;outline-offset:4px}
+footer{display:flex;justify-content:space-between;gap:16px;font-size:12px;line-height:1.5;color:var(--muted);margin-top:22px}
+.classic .qz-box{border-radius:6px;padding:30px;box-shadow:0 16px 65px #1c282222}
+.classic .qz-opt,.classic .qz-next{border-radius:4px}
+.classic .qz-q{font-family:Georgia,'Times New Roman',serif;font-size:25px;line-height:1.5}
+.classic .qz-x{min-width:44px;min-height:44px}
+@media(max-width:600px){body{padding:28px 16px 24px}h1{font-size:34px;margin-top:26px}.masthead{font-size:10px;letter-spacing:1.2px}.hint{font-size:14px;margin-bottom:23px}.datepill{gap:10px}.classic #qzOpen{margin-left:0;width:100%}.card{padding:21px 17px;grid-template-columns:24px minmax(0,1fr);gap:11px}.word{font-size:24px;gap:10px}.reveal{grid-column:2;justify-self:start}.number{padding-top:7px}.gloss{font-size:15px}.classic .qz-box{padding:21px}.classic .qz-q{font-size:22px}footer{font-size:11px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 </style>
 </head>
-<body>
-  <div class="top">
-    <h1><span class="emo">🎒</span> Words we learned</h1>
-    <div class="datepill"><span>Lesson</span><select id="dateSel"></select></div>
-  </div>
-  <p class="hint">Tap a word to hear it 🔊 &nbsp;·&nbsp; tap «перевод» to check the meaning</p>
-  <div id="grid"></div>
-  <footer>Roman · vocab review</footer>
+<body class="classic">
+<main class="wrap">
+<header><div class="masthead"><strong>Roman</strong><span>English notebook</span></div>
+<h1>Words from our lessons</h1><p class="hint">Listen to each phrase. Reveal the translation when you need it.</p></header>
+<div class="top"><div class="datepill"><label for="dateSel">Lesson</label><select id="dateSel"></select></div></div>
+<div id="grid" aria-label="Vocabulary"></div>
+<footer><span>Roman · Vocabulary</span><span id="wordCount"></span></footer>
+</main>
 <script>
-  const DATA = {"2026-09-15": [{"w": "I feel challenged", "g": "мне это даётся непросто, это вызов", "e": "🧗", "q": "English grammar is hard for me, so sometimes ___ when I speak."}, {"w": "a range of emotions", "g": "целая гамма эмоций", "e": "🎭", "q": "Learning a language can bring ___: joy, stress and sometimes boredom."}, {"w": "an acquaintance", "g": "знакомый, не друг", "e": "🤝", "q": "He isn't really my friend, he's just ___ from work."}, {"w": "misleading", "g": "вводящий в заблуждение", "e": "⚠️", "q": "The photo on the menu was ___: the real dish was much smaller."}, {"w": "I've lived here for three years", "g": "я живу здесь три года", "e": "3️⃣", "q": "I moved to Madrid in 2023, so ___."}]}, DATES = ["2026-09-15"];
-  const GLOSS_LABEL = "перевод", GLOSS_DIR = "ltr";
-  const ACC = ["#ff6b6b", "#20b3a2", "#f4a534", "#9b5de5", "#3ab34a", "#ff5da2", "#4d96ff", "#e5643e"];
+const DATA = {"2026-09-15": [{"w": "I feel challenged", "g": "мне это даётся непросто, это вызов", "e": "", "q": "English grammar is hard for me, so sometimes ___ when I speak."}, {"w": "a range of emotions", "g": "целая гамма эмоций", "e": "", "q": "Learning a language can bring ___: joy, stress and sometimes boredom."}, {"w": "an acquaintance", "g": "знакомый, не друг", "e": "", "q": "He isn't really my friend, he's just ___ from work."}, {"w": "misleading", "g": "вводящий в заблуждение", "e": "", "q": "The photo on the menu was ___: the real dish was much smaller."}, {"w": "I've lived here for three years", "g": "я живу здесь три года", "e": "", "q": "I moved to Madrid in 2023, so ___."}]}, DATES = ["2026-09-15"];
+const GLOSS_LABEL = "перевод", GLOSS_DIR = "ltr";
+const ACC = ["#31594b"];
 
   const sel = document.getElementById('dateSel'), grid = document.getElementById('grid');
   /* Show dates as "29 July 2026" but keep the ISO string as the option value (the DATA key). */
@@ -279,37 +249,29 @@
   qz.addEventListener('click', e => { if (e.target === qz) qzClose(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !qz.hidden) qzClose(); });
 
-  function render(date){
-    grid.innerHTML='';
-    (DATA[date]||[]).forEach((it,i)=>{
-      const acc = ACC[i % ACC.length];
-      const card=document.createElement('div'); card.className='card';
-      card.style.transform = 'rotate('+((i%2)?1.1:-1.1)+'deg)';
-
-      const pic=document.createElement('div'); pic.className='pic';
-      if(it.e){ pic.style.background=acc+'33';
-        if(isImg(it.e)){ const im=document.createElement('img'); im.className='picimg'; im.src=it.e; im.alt=''; pic.appendChild(im); }
-        else { pic.textContent=it.e; } }
-      else { pic.style.background=acc; pic.innerHTML='<span class="letter">'+(it.w[0]||'?').toUpperCase()+'</span>'; }
-      card.appendChild(pic);
-
-      const w=document.createElement('div'); w.className='word'; w.style.color=acc;
-      w.innerHTML=it.w+' <span class="spk">🔊</span>'; w.onclick=()=>speak(it.w);
-      card.appendChild(w);
-
-      if(it.g){
-        const gl=document.createElement('div'); gl.className='gloss hidden'; gl.textContent=it.g;
-        gl.dir = GLOSS_DIR; if(GLOSS_DIR==='rtl') gl.style.textAlign='right';
-        const b=document.createElement('button'); b.className='reveal'; b.textContent=GLOSS_LABEL;
-        b.style.borderColor=acc; b.style.color=acc; b.onclick=()=>gl.classList.toggle('hidden');
-        card.appendChild(gl); card.appendChild(b);
-      }
-      grid.appendChild(card);
-    });
+function render(date){
+ grid.innerHTML='';
+ const items=DATA[date]||[];
+ items.forEach((it,i)=>{
+  const card=document.createElement('article');card.className='card';
+  const num=document.createElement('span');num.className='number';num.textContent=String(i+1).padStart(2,'0');num.setAttribute('aria-hidden','true');card.appendChild(num);
+  const content=document.createElement('div');
+  const word=document.createElement('button');word.className='word';word.type='button';word.setAttribute('aria-label','Listen: '+it.w);
+  const label=document.createElement('span');label.textContent=it.w;word.appendChild(label);
+  word.insertAdjacentHTML('beforeend','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>');
+  word.onclick=()=>speak(it.w);content.appendChild(word);card.appendChild(content);
+  if(it.g){
+   const gl=document.createElement('p');gl.className='gloss';gl.id='meaning-'+i;gl.hidden=true;gl.dir=GLOSS_DIR;gl.textContent=it.g;content.appendChild(gl);
+   const b=document.createElement('button');b.className='reveal';b.type='button';b.textContent=GLOSS_LABEL;b.setAttribute('aria-controls',gl.id);b.setAttribute('aria-expanded','false');
+   b.onclick=()=>{gl.hidden=!gl.hidden;b.setAttribute('aria-expanded',String(!gl.hidden));};card.appendChild(b);
   }
-  sel.onchange=()=>render(sel.value);
-  if(DATES.length){ sel.value=DATES[0]; render(DATES[0]); }
-  else grid.innerHTML='<p style="text-align:center;color:#b79b74">No words yet.</p>';
+  grid.appendChild(card);
+ });
+ document.getElementById('wordCount').textContent=items.length+' words & phrases';
+ if(!items.length)grid.textContent='No words yet.';
+}
+sel.onchange=()=>render(sel.value);
+if(DATES.length){sel.value=DATES[0];render(DATES[0]);}
 </script>
 </body>
 </html>
