@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Masha's Warm-Up Spinner</title>
+<style>
+  @font-face { font-family:'Rubik'; src:local('Rubik'); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'Rubik','Segoe UI',Arial,sans-serif;
+    min-height:100vh; color:#1f3b4d;
+    background:
+      radial-gradient(circle at 12% 18%, #dff6f0 0, transparent 42%),
+      radial-gradient(circle at 88% 82%, #fde7f3 0, transparent 46%),
+      #f6fbfb;
+    display:flex; flex-direction:column; align-items:center;
+    padding:16px 14px 34px;
+  }
+  h1 { font-size:26px; color:#0f766e; margin-bottom:2px; }
+  .tag { font-size:14px; color:#5b7f8c; margin-bottom:14px; }
+
+  .stage { display:flex; gap:26px; flex-wrap:wrap; justify-content:center; align-items:flex-start; width:100%; max-width:920px; }
+
+  .wheel-wrap { position:relative; width:340px; height:340px; flex:none; }
+  .pointer {
+    position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+    width:0; height:0; border-left:16px solid transparent; border-right:16px solid transparent;
+    border-top:26px solid #f97316; z-index:5;
+  }
+  .wheel {
+    width:340px; height:340px; border-radius:50%;
+    border:8px solid #fff; box-shadow:0 8px 26px rgba(15,118,110,.25);
+    transition:transform 3.6s cubic-bezier(.17,.67,.16,1);
+    position:relative;
+  }
+  .wheel .lbl {
+    position:absolute; top:50%; left:50%; width:96px; margin-left:-48px; margin-top:-16px;
+    text-align:center; font-size:13px; font-weight:700; color:#fff; line-height:1.15;
+    text-shadow:0 1px 2px rgba(0,0,0,.35); pointer-events:none;
+  }
+  .wheel .lbl .e { display:block; font-size:22px; }
+  .hub {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:58px; height:58px; border-radius:50%; background:#fff; z-index:4;
+    box-shadow:0 2px 8px rgba(0,0,0,.2); display:flex; align-items:center; justify-content:center;
+    font-size:26px;
+  }
+  .spinBtn {
+    display:block; margin:16px auto 0; font-family:inherit; font-weight:800; font-size:19px;
+    color:#fff; border:none; border-radius:16px; padding:13px 30px; cursor:pointer;
+    background:linear-gradient(135deg,#0d9488,#14b8a6); box-shadow:0 4px 0 #0f766e;
+  }
+  .spinBtn:active { transform:translateY(2px); box-shadow:0 2px 0 #0f766e; }
+  .spinBtn:disabled { opacity:.6; cursor:default; }
+
+  .panel {
+    flex:1 1 340px; min-width:300px; max-width:460px; min-height:340px;
+    background:#fff; border:3px solid #ccece6; border-radius:20px; padding:18px 20px;
+    box-shadow:0 6px 20px rgba(15,118,110,.10);
+  }
+  .panel.idle { display:flex; align-items:center; justify-content:center; text-align:center; color:#8fb3b0; font-size:17px; }
+  .head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .head .e { font-size:32px; }
+  .head .name { font-size:22px; font-weight:800; color:#0f766e; }
+  .q { font-size:20px; font-weight:700; color:#1f3b4d; line-height:1.35; margin-bottom:12px; }
+
+  .menu { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .opt {
+    font-family:inherit; background:#f0faf8; border:2px solid #ccece6; border-radius:14px;
+    padding:10px 8px; cursor:pointer; text-align:center; color:#1f3b4d; font-size:15px; font-weight:600;
+  }
+  .opt .big { display:block; font-size:34px; line-height:1.1; margin-bottom:4px; }
+  .opt.on { background:#ccfbf1; border-color:#0d9488; }
+
+  .more { margin-top:14px; display:none; }
+  .more.show { display:block; }
+  .more .cap, .words .cap { font-size:12px; text-transform:uppercase; letter-spacing:1px; color:#7aa3a0; margin-bottom:6px; }
+  .more li { list-style:none; font-size:17px; line-height:1.45; padding:5px 0 5px 24px; position:relative; }
+  .more li::before { content:"💬"; position:absolute; left:0; top:6px; font-size:14px; }
+  .words { margin-top:12px; }
+  .chip {
+    display:inline-block; background:#fff7ed; border:1.5px solid #fed7aa; color:#9a3412;
+    border-radius:20px; padding:4px 12px; margin:3px 4px 3px 0; font-size:14px; font-weight:600;
+  }
+  .moreBtn {
+    margin-top:12px; font-family:inherit; font-weight:700; font-size:15px; color:#0f766e;
+    background:#fff; border:2px dashed #99d6cc; border-radius:12px; padding:7px 14px; cursor:pointer;
+  }
+  .foot { margin-top:16px; font-size:12.5px; color:#8fb3b0; text-align:center; }
+</style>
+</head>
+<body>
+  <h1>🎨 Masha's Warm-Up</h1>
+  <div class="tag">Spin the wheel. Pick one, then say it in English!</div>
+
+  <div class="stage">
+    <div>
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel"></div>
+        <div class="hub">🌀</div>
+      </div>
+      <button class="spinBtn" id="spinBtn">Spin! 🎡</button>
+    </div>
+    <div class="panel idle" id="panel">Spin to start! 👉</div>
+  </div>
+
+  <div class="foot">Tap your answer, then say it in a full sentence.</div>
+
+<script>
+/* Every sector is a CLOSED MENU about something that has already happened:
+   she picks first, says the sentence, then "What else?" opens the follow-ups. */
+const TOPICS = [
+  { e:'🍳', name:'Breakfast', color:'#f59e0b',
+    q:'What did you have for breakfast today?',
+    opts:[['🥣','cereal'],['🍳','eggs'],['🥪','a sandwich'],['🥞','pancakes']],
+    more:['What did you drink?','Who made it?','Do you have the same breakfast every day?'],
+    words:['I had…','I drank…','my mum made it','every day','sometimes'] },
+  { e:'🌦️', name:'Riga weather', color:'#0ea5e9',
+    q:'What is the weather like in Riga today?',
+    opts:[['☀️','sunny'],['☁️','cloudy'],['🌧️','rainy'],['💨','windy']],
+    more:['Is it warm or cold?','What are you wearing today?','What was the weather like yesterday?'],
+    words:["It's…",'It was…',"I'm wearing…",'a jacket','a jumper'] },
+  { e:'📚', name:'School', color:'#8b5cf6',
+    q:'Which subjects did you have yesterday?',
+    opts:[['🔢','Maths'],['🇩🇪','German'],['🎨','Art'],['⚽','PE']],
+    more:['Which one was the longest?','What did you do in German?','How many lessons did you have?'],
+    words:['I had…','we did…','the longest was…','lessons','German'] },
+  { e:'🎒', name:'My bag', color:'#ec4899',
+    q:'Which of these are in your school bag?',
+    opts:[['✏️','a pencil case'],['📏','a ruler'],['💧','a water bottle'],['📓','a notebook']],
+    more:['What colour is it?','What else is in your bag?','Is your bag heavy?'],
+    words:["There's a…",'There are…',"I've got…",'my','heavy'] },
+  { e:'🖌️', name:'Drawing', color:'#14b8a6',
+    q:'What did you draw with this week?',
+    opts:[['✏️','pencils'],['🖍️','felt-tips'],['🎨','watercolour'],['🖌️','acrylic']],
+    more:['How long did it take?','Was it big or small?','How many pictures did you finish?'],
+    words:['I used…','it took…','big','small','I finished…'] },
+  { e:'🎹', name:'After school', color:'#6366f1',
+    q:'What did you do after school this week?',
+    opts:[['🎹','piano practice'],['📝','homework'],['🚶','a walk'],['📺','TV']],
+    more:['How often do you do it?','Who did you do it with?','Where do you do it?'],
+    words:['I did…','I went for a walk','every day','twice a week','at home'] },
+  { e:'🎮', name:'Games', color:'#22c55e',
+    q:'Which game did you play this week?',
+    opts:[['🚕','Taxi Boss'],['⛏️','Minecraft'],['🎲','a new game'],['🙅','no games']],
+    more:['What level are you on?','How many coins or gems have you got?','Did you play with a friend?'],
+    words:['I played…',"I'm on level…","I've got…",'coins','gems'] },
+  { e:'📖', name:'Books', color:'#f97316',
+    q:'Which book did you read this week?',
+    opts:[['📓','Wimpy Kid'],['🐲','a fantasy book'],['🏫','a school book'],['🙅','no book']],
+    more:['How many pages did you read?','Who is your favourite character?','Is it funny or exciting?'],
+    words:['I read…','pages','my favourite character is…','funny','exciting'] },
+  { e:'🤔', name:'This or that', color:'#ef4444', pairs:true,
+    q:'Which one would you choose?',
+    list:[[['🐉','a pet dragon'],['🐺','a pet wolf']],
+          [['⛏️','Minecraft'],['🎮','Roblox']],
+          [['🏖️','a day at the sea'],['🏔️','a day in the mountains']],
+          [['🍕','pizza every day'],['🍦','ice cream every day']],
+          [['🇬🇧','a trip to London'],['🇩🇪','a trip to Berlin']]],
+    more:['Have you tried it?','Which one does your friend choose?'],
+    words:["I'd choose…",'the dragon','Minecraft','the sea','pizza'] }
+];
+
+const n = TOPICS.length, seg = 360 / n;
+const wheel = document.getElementById('wheel');
+const panel = document.getElementById('panel');
+const spinBtn = document.getElementById('spinBtn');
+
+wheel.style.background = `conic-gradient(${TOPICS.map((t,i)=>`${t.color} ${i*seg}deg ${(i+1)*seg}deg`).join(',')})`;
+TOPICS.forEach((t,i)=>{
+  const mid = i*seg + seg/2, d = document.createElement('div');
+  d.className = 'lbl';
+  d.innerHTML = `<span class="e">${t.e}</span>${t.name}`;
+  d.style.transform = `rotate(${mid}deg) translateY(-118px) rotate(${-mid}deg)`;
+  wheel.appendChild(d);
+});
+
+let rotation = 0, spinning = false, lastIdx = -1;
+const randInt = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+function pickIdx(){ let i; do { i = randInt(0, n-1); } while(i === lastIdx); lastIdx = i; return i; }
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=randInt(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function showTopic(i){
+  const t = TOPICS[i];
+  const opts = t.pairs ? t.list[randInt(0, t.list.length-1)] : shuffle(t.opts);
+  panel.classList.remove('idle');
+  panel.innerHTML = `
+    <div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div>
+    <div class="q">${t.q}</div>
+    <div class="menu">${opts.map(o=>`<button class="opt"><span class="big">${o[0]}</span>${o[1]}</button>`).join('')}</div>
+    <div class="words"><div class="cap">Helpful words</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div>
+    <button class="moreBtn" id="moreBtn">What else? ➕</button>
+    <div class="more" id="more"><div class="cap">Next questions</div><ul>${t.more.map(q=>`<li>${q}</li>`).join('')}</ul></div>`;
+  panel.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
+    panel.querySelectorAll('.opt').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+  }));
+  document.getElementById('moreBtn').addEventListener('click', () => {
+    document.getElementById('more').classList.add('show');
+    document.getElementById('moreBtn').style.display = 'none';
+  });
+}
+
+function spin(){
+  if(spinning) return;
+  spinning = true; spinBtn.disabled = true;
+  const i = pickIdx();
+  const targetMod = (360 - (i*seg + seg/2) + 360) % 360;
+  const currentMod = ((rotation % 360) + 360) % 360;
+  rotation += 360*5 + (targetMod - currentMod + 360) % 360;
+  wheel.style.transform = `rotate(${rotation}deg)`;
+  wheel.addEventListener('transitionend', () => {
+    showTopic(i);
+    spinning = false; spinBtn.disabled = false;
+    spinBtn.textContent = 'Spin again 🎡';
+  }, { once:true });
+}
+spinBtn.addEventListener('click', spin);
+</script>
+</body>
+</html>
