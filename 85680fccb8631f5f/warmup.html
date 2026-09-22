@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maria's Warm-Up Spinner</title>
+<style>
+  @font-face { font-family:'Rubik'; src:local('Rubik'); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'Rubik','Segoe UI',Arial,sans-serif;
+    min-height:100vh; color:#1f3b4d;
+    background:
+      radial-gradient(circle at 12% 18%, #eee7fb 0, transparent 42%),
+      radial-gradient(circle at 88% 82%, #fde7f3 0, transparent 46%),
+      #faf8fe;
+    display:flex; flex-direction:column; align-items:center;
+    padding:16px 14px 34px;
+  }
+  h1 { font-size:26px; color:#6b46b8; margin-bottom:2px; }
+  .tag { font-size:14px; color:#5b7f8c; margin-bottom:14px; }
+
+  .stage { display:flex; gap:26px; flex-wrap:wrap; justify-content:center; align-items:flex-start; width:100%; max-width:920px; }
+
+  .wheel-wrap { position:relative; width:340px; height:340px; flex:none; }
+  .pointer {
+    position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+    width:0; height:0; border-left:16px solid transparent; border-right:16px solid transparent;
+    border-top:26px solid #f97316; z-index:5;
+  }
+  .wheel {
+    width:340px; height:340px; border-radius:50%;
+    border:8px solid #fff; box-shadow:0 8px 26px rgba(15,118,110,.25);
+    transition:transform 3.6s cubic-bezier(.17,.67,.16,1);
+    position:relative;
+  }
+  .wheel .lbl {
+    position:absolute; top:50%; left:50%; width:96px; margin-left:-48px; margin-top:-16px;
+    text-align:center; font-size:13px; font-weight:700; color:#fff; line-height:1.15;
+    text-shadow:0 1px 2px rgba(0,0,0,.35); pointer-events:none;
+  }
+  .wheel .lbl .e { display:block; font-size:22px; }
+  .hub {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:58px; height:58px; border-radius:50%; background:#fff; z-index:4;
+    box-shadow:0 2px 8px rgba(0,0,0,.2); display:flex; align-items:center; justify-content:center;
+    font-size:26px;
+  }
+  .spinBtn {
+    display:block; margin:16px auto 0; font-family:inherit; font-weight:800; font-size:19px;
+    color:#fff; border:none; border-radius:16px; padding:13px 30px; cursor:pointer;
+    background:linear-gradient(135deg,#7957c7,#9b7bd4); box-shadow:0 4px 0 #6b46b8;
+  }
+  .spinBtn:active { transform:translateY(2px); box-shadow:0 2px 0 #6b46b8; }
+  .spinBtn:disabled { opacity:.6; cursor:default; }
+
+  .panel {
+    flex:1 1 340px; min-width:300px; max-width:460px; min-height:340px;
+    background:#fff; border:3px solid #ddd2f0; border-radius:20px; padding:18px 20px;
+    box-shadow:0 6px 20px rgba(15,118,110,.10);
+  }
+  .panel.idle { display:flex; align-items:center; justify-content:center; text-align:center; color:#8fb3b0; font-size:17px; }
+  .head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .head .e { font-size:32px; }
+  .head .name { font-size:22px; font-weight:800; color:#6b46b8; }
+  .q { font-size:20px; font-weight:700; color:#1f3b4d; line-height:1.35; margin-bottom:12px; }
+
+  .menu { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .opt {
+    font-family:inherit; background:#f5f0fc; border:2px solid #ddd2f0; border-radius:14px;
+    padding:10px 8px; cursor:pointer; text-align:center; color:#1f3b4d; font-size:15px; font-weight:600;
+  }
+  .opt .big { display:block; font-size:34px; line-height:1.1; margin-bottom:4px; }
+  .opt.on { background:#e9ddfa; border-color:#7957c7; }
+
+  .more { margin-top:14px; display:none; }
+  .more.show { display:block; }
+  .more .cap, .words .cap { font-size:12px; text-transform:uppercase; letter-spacing:1px; color:#7aa3a0; margin-bottom:6px; }
+  .more li { list-style:none; font-size:17px; line-height:1.45; padding:5px 0 5px 24px; position:relative; }
+  .more li::before { content:"💬"; position:absolute; left:0; top:6px; font-size:14px; }
+  .words { margin-top:12px; }
+  .chip {
+    display:inline-block; background:#fff7ed; border:1.5px solid #fed7aa; color:#9a3412;
+    border-radius:20px; padding:4px 12px; margin:3px 4px 3px 0; font-size:14px; font-weight:600;
+  }
+  .moreBtn {
+    margin-top:12px; font-family:inherit; font-weight:700; font-size:15px; color:#6b46b8;
+    background:#fff; border:2px dashed #baa0df; border-radius:12px; padding:7px 14px; cursor:pointer;
+  }
+  .ownBtn { border-style:solid; font-weight:500; }
+  details { max-width:790px; width:100%; margin-top:22px; color:#576675; font-size:14px; line-height:1.6; }
+  details p { padding-top:8px; }
+  summary { cursor:pointer; }
+  @media(max-width:390px) { .wheel-wrap,.wheel { width:300px; height:300px; } .wheel .lbl { font-size:12px; width:88px; margin-left:-44px; } .panel { min-width:0; width:100%; } }
+  @media(prefers-reduced-motion:reduce) { .wheel { transition:none; } }
+  .foot { margin-top:16px; font-size:12.5px; color:#8fb3b0; text-align:center; }
+</style>
+</head>
+<body>
+  <h1>🐉 Maria's Warm-Up</h1>
+  <div class="tag">Spin, choose and chat!</div>
+
+  <div class="stage">
+    <div>
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel"></div>
+        <div class="hub">🌀</div>
+      </div>
+      <button class="spinBtn" id="spinBtn">Spin! 🎡</button>
+    </div>
+    <div class="panel idle" id="panel" aria-live="polite">Spin to start! 👉</div>
+  </div>
+
+  <div class="foot">Choose an idea or give your own. Say a sentence, then ask Dasha!</div>
+
+<details><summary>Teacher notes</summary><p>Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today’s date. Offer a choice, then wait for her own sentence. Keep the sentence starters visible. Reveal the next questions only when she is ready. If she needs a verb, offer two possibilities and let her build the sentence. A personal answer does not have to match a button. Invite her to ask you a question too.</p></details>
+<script>
+const TOPICS = [
+  {
+    "e": "📚",
+    "name": "Books",
+    "color": "#7957c7",
+    "q": "Which book do you want to talk about?",
+    "opts": [
+      [
+        "🐶",
+        "Dog Man"
+      ],
+      [
+        "🐉",
+        "Wings of Fire"
+      ],
+      [
+        "🐈",
+        "Cats and Dragon"
+      ],
+      [
+        "📖",
+        "another book"
+      ]
+    ],
+    "more": [
+      "Who do you like in this book?",
+      "What do you like about them?"
+    ],
+    "words": [
+      "I want to talk about...",
+      "I like...",
+      "because..."
+    ]
+  },
+  {
+    "e": "🎭",
+    "name": "Characters",
+    "color": "#bc5090",
+    "q": "Choose someone from a story. What are they like?",
+    "opts": [
+      [
+        "💛",
+        "kind"
+      ],
+      [
+        "😂",
+        "funny"
+      ],
+      [
+        "💪",
+        "brave"
+      ],
+      [
+        "💭",
+        "a dreamer"
+      ]
+    ],
+    "more": [
+      "Who are you thinking of?",
+      "What do they do in the story?"
+    ],
+    "words": [
+      "I'm thinking of...",
+      "He's / She's...",
+      "a bit..."
+    ]
+  },
+  {
+    "e": "🦅",
+    "name": "Animals",
+    "color": "#188c87",
+    "q": "Which animal do you want to learn more about?",
+    "opts": [
+      [
+        "🦅",
+        "a falcon"
+      ],
+      [
+        "🐋",
+        "a whale"
+      ],
+      [
+        "🦉",
+        "an owl"
+      ],
+      [
+        "🐅",
+        "a tiger"
+      ]
+    ],
+    "more": [
+      "Why this animal?",
+      "What can it do?"
+    ],
+    "words": [
+      "I want to learn about...",
+      "It can...",
+      "because it's..."
+    ]
+  },
+  {
+    "e": "🩰",
+    "name": "Free time",
+    "color": "#ce5b84",
+    "q": "Which do you like doing after school?",
+    "opts": [
+      [
+        "🩰",
+        "dancing"
+      ],
+      [
+        "📚",
+        "reading"
+      ],
+      [
+        "🧶",
+        "knitting"
+      ],
+      [
+        "🎮",
+        "playing games"
+      ]
+    ],
+    "more": [
+      "How often do you do it?",
+      "Do you do it alone or with someone?"
+    ],
+    "words": [
+      "I like...",
+      "I usually...",
+      "once / twice a week"
+    ]
+  },
+  {
+    "e": "🧶",
+    "name": "Make it",
+    "color": "#c17b12",
+    "q": "What do you want to make next?",
+    "opts": [
+      [
+        "🐋",
+        "a woolly whale"
+      ],
+      [
+        "🐉",
+        "a dragon drawing"
+      ],
+      [
+        "❓",
+        "a quiz"
+      ],
+      [
+        "🖍️",
+        "a comic"
+      ]
+    ],
+    "more": [
+      "Who is it for?",
+      "What colours or ideas do you want to use?"
+    ],
+    "words": [
+      "I want to make...",
+      "It's for...",
+      "I need..."
+    ]
+  },
+  {
+    "e": "🎒",
+    "name": "School",
+    "color": "#4872b5",
+    "q": "Which part of school do you like best?",
+    "opts": [
+      [
+        "🎨",
+        "art"
+      ],
+      [
+        "🔢",
+        "maths"
+      ],
+      [
+        "⚽",
+        "PE"
+      ],
+      [
+        "👭",
+        "break time"
+      ]
+    ],
+    "more": [
+      "What do you like about it?",
+      "What do you do then?"
+    ],
+    "words": [
+      "I like... best",
+      "We...",
+      "because..."
+    ]
+  },
+  {
+    "e": "🏠",
+    "name": "My room",
+    "color": "#9562bd",
+    "q": "Choose something you can see in your room.",
+    "opts": [
+      [
+        "📚",
+        "books"
+      ],
+      [
+        "🖼️",
+        "a picture"
+      ],
+      [
+        "🧸",
+        "a toy"
+      ],
+      [
+        "🪴",
+        "a plant"
+      ]
+    ],
+    "more": [
+      "Where is it? / Where are they?",
+      "What do you like about it or them?"
+    ],
+    "words": [
+      "There's...",
+      "There are...",
+      "on / under / next to"
+    ]
+  },
+  {
+    "e": "🪖",
+    "name": "Rules",
+    "color": "#168978",
+    "q": "Where do you want to make the rules?",
+    "opts": [
+      [
+        "🩰",
+        "a dance class"
+      ],
+      [
+        "🏫",
+        "a school"
+      ],
+      [
+        "🐉",
+        "a dragon's home"
+      ],
+      [
+        "📚",
+        "a library"
+      ]
+    ],
+    "more": [
+      "What must people do there?",
+      "What mustn’t people do?"
+    ],
+    "words": [
+      "You must...",
+      "You mustn't...",
+      "because..."
+    ]
+  },
+  {
+    "e": "🤔",
+    "name": "This or that",
+    "color": "#c25751",
+    "pairs": true,
+    "q": "Which do you prefer?",
+    "list": [
+      [
+        [
+          "🐉",
+          "meet a dragon"
+        ],
+        [
+          "🐋",
+          "see a whale"
+        ]
+      ],
+      [
+        [
+          "🦅",
+          "fly like a falcon"
+        ],
+        [
+          "🐬",
+          "swim like a dolphin"
+        ]
+      ],
+      [
+        [
+          "📖",
+          "read a comic"
+        ],
+        [
+          "🖍️",
+          "make a comic"
+        ]
+      ],
+      [
+        [
+          "🩰",
+          "dance on stage"
+        ],
+        [
+          "❓",
+          "make a quiz"
+        ]
+      ],
+      [
+        [
+          "🌊",
+          "explore the sea"
+        ],
+        [
+          "🌳",
+          "explore a forest"
+        ]
+      ]
+    ],
+    "more": [
+      "Why?",
+      "Ask Dasha the same question."
+    ],
+    "words": [
+      "I prefer to...",
+      "because...",
+      "What about you?"
+    ]
+  }
+];
+
+const n = TOPICS.length, seg = 360 / n;
+const wheel = document.getElementById('wheel');
+const panel = document.getElementById('panel');
+const spinBtn = document.getElementById('spinBtn');
+
+wheel.style.background = `conic-gradient(${TOPICS.map((t,i)=>`${t.color} ${i*seg}deg ${(i+1)*seg}deg`).join(',')})`;
+TOPICS.forEach((t,i)=>{
+  const mid = i*seg + seg/2, d = document.createElement('div');
+  d.className = 'lbl';
+  d.innerHTML = `<span class="e">${t.e}</span>${t.name}`;
+  d.style.transform = `rotate(${mid}deg) translateY(${window.innerWidth < 391 ? -101 : -118}px) rotate(${-mid}deg)`;
+  wheel.appendChild(d);
+});
+
+let rotation = 0, spinning = false, lastIdx = -1;
+const randInt = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+function pickIdx(){ let i; do { i = randInt(0, n-1); } while(i === lastIdx); lastIdx = i; return i; }
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=randInt(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function showTopic(i){
+  const t = TOPICS[i];
+  const opts = t.pairs ? t.list[randInt(0, t.list.length-1)] : shuffle(t.opts);
+  panel.classList.remove('idle');
+  panel.innerHTML = `
+    <div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div>
+    <div class="q">${t.q}</div>
+    <div class="menu">${opts.map(o=>`<button class="opt"><span class="big">${o[0]}</span>${o[1]}</button>`).join('')}</div>
+    <button class="moreBtn ownBtn" id="ownBtn">My own answer</button>
+    <div class="words"><div class="cap">Sentence starters</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div>
+    <button class="moreBtn" id="moreBtn">What else? ➕</button>
+    <div class="more" id="more"><div class="cap">Next questions</div><ul>${t.more.map(q=>`<li>${q}</li>`).join('')}</ul></div>`;
+  panel.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
+    panel.querySelectorAll('.opt').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById('ownBtn').textContent = 'My own answer';
+  }));
+  document.getElementById('ownBtn').addEventListener('click', () => {
+    panel.querySelectorAll('.opt').forEach(x => x.classList.remove('on'));
+    document.getElementById('ownBtn').textContent = 'Tell me your idea!';
+  });
+  document.getElementById('moreBtn').addEventListener('click', () => {
+    document.getElementById('more').classList.add('show');
+    document.getElementById('moreBtn').style.display = 'none';
+  });
+}
+
+function spin(){
+  if(spinning) return;
+  spinning = true; spinBtn.disabled = true;
+  const i = pickIdx();
+  const targetMod = (360 - (i*seg + seg/2) + 360) % 360;
+  const currentMod = ((rotation % 360) + 360) % 360;
+  rotation += 360*5 + (targetMod - currentMod + 360) % 360;
+  wheel.style.transform = `rotate(${rotation}deg)`;
+  let completed = false;
+  const done = () => {
+    if (completed) return;
+    completed = true;
+    wheel.removeEventListener('transitionend', done);
+    showTopic(i);
+    spinning = false; spinBtn.disabled = false;
+    spinBtn.textContent = 'Spin again 🎡';
+  };
+  wheel.addEventListener('transitionend', done, { once:true });
+  setTimeout(done, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3900);
+}
+spinBtn.addEventListener('click', spin);
+</script>
+</body>
+</html>
