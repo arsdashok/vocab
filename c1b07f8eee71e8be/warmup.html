@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emma's Warm-Up Spinner</title>
+<style>
+  @font-face { font-family:'Rubik'; src:local('Rubik'); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'Rubik','Segoe UI',Arial,sans-serif;
+    min-height:100vh; color:#3a2a63;
+    background:
+      radial-gradient(circle at 12% 18%, #ede9fe 0, transparent 42%),
+      radial-gradient(circle at 88% 82%, #e0e7ff 0, transparent 46%),
+      #f7f5ff;
+    display:flex; flex-direction:column; align-items:center;
+    padding:16px 14px 34px;
+  }
+  h1 { font-size:26px; color:#5b21b6; margin-bottom:2px; }
+  h1 .em { font-size:26px; }
+  .tag { font-size:13.5px; color:#7c6aa8; margin-bottom:14px; }
+
+  .stage { display:flex; gap:26px; flex-wrap:wrap; justify-content:center; align-items:flex-start; width:100%; max-width:900px; }
+
+  /* Wheel */
+  .wheel-wrap { position:relative; width:340px; height:340px; flex:none; }
+  .pointer {
+    position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+    width:0; height:0; border-left:16px solid transparent; border-right:16px solid transparent;
+    border-top:26px solid #f59e0b; z-index:5; filter:drop-shadow(0 2px 2px rgba(0,0,0,.25));
+  }
+  .wheel {
+    width:340px; height:340px; border-radius:50%;
+    border:8px solid #fff; box-shadow:0 8px 26px rgba(91,33,182,.28);
+    transition:transform 3.6s cubic-bezier(.17,.67,.16,1);
+    position:relative;
+  }
+  .wheel .lbl {
+    position:absolute; top:50%; left:50%; width:96px; margin-left:-48px; margin-top:-16px;
+    text-align:center; font-size:13px; font-weight:700; color:#fff; line-height:1.15;
+    text-shadow:0 1px 2px rgba(0,0,0,.35); pointer-events:none;
+  }
+  .wheel .lbl .e { display:block; font-size:22px; }
+  .hub {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:58px; height:58px; border-radius:50%; background:#fff; z-index:4;
+    box-shadow:0 2px 8px rgba(0,0,0,.2); display:flex; align-items:center; justify-content:center;
+    font-size:26px;
+  }
+  .spinBtn {
+    display:block; margin:16px auto 0; font-family:inherit; font-weight:800; font-size:19px;
+    color:#fff; border:none; border-radius:16px; padding:13px 30px; cursor:pointer;
+    background:linear-gradient(135deg,#7c3aed,#a855f7); box-shadow:0 4px 0 #5b21b6;
+  }
+  .spinBtn:active { transform:translateY(2px); box-shadow:0 2px 0 #5b21b6; }
+  .spinBtn:disabled { opacity:.6; cursor:default; }
+
+  /* Panel */
+  .panel {
+    flex:1 1 320px; min-width:300px; max-width:420px; min-height:340px;
+    background:#fff; border:3px solid #ddd6fe; border-radius:20px; padding:18px 20px;
+    box-shadow:0 6px 20px rgba(91,33,182,.12);
+  }
+  .panel.idle { display:flex; align-items:center; justify-content:center; text-align:center; color:#a99cc9; font-size:17px; }
+  .panel .head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .panel .head .e { font-size:34px; }
+  .panel .head .name { font-size:23px; font-weight:800; color:#5b21b6; }
+  .panel ul { list-style:none; }
+  .panel li { font-size:17px; line-height:1.5; padding:7px 0 7px 26px; position:relative; border-bottom:1px dashed #ede9fe; }
+  .panel li::before { content:"💬"; position:absolute; left:0; top:7px; font-size:15px; }
+  .panel .words { margin-top:14px; }
+  .panel .words .cap { font-size:12px; text-transform:uppercase; letter-spacing:1px; color:#9b8bc4; margin-bottom:6px; }
+  .chip {
+    display:inline-block; background:#f3f0ff; border:1.5px solid #ddd6fe; color:#5b21b6;
+    border-radius:20px; padding:4px 12px; margin:3px 4px 3px 0; font-size:14px; font-weight:600;
+  }
+  .wyr-q { font-size:20px; font-weight:800; color:#7c3aed; line-height:1.4; }
+  .wyr-why { margin-top:10px; font-size:15px; color:#7c6aa8; }
+  .foot { margin-top:16px; font-size:12px; color:#a99cc9; text-align:center; }
+
+  .wheel-wrap { width:min(340px,90vw); height:min(340px,90vw); }
+  .wheel { width:100%; height:100%; }
+  .wheel .lbl { width:88px; margin-left:-44px; font-size:12px; }
+  .panel { min-width:min(300px,100%); }
+  .panel li { font-size:20px; }
+  .topic-menu { max-width:780px; width:100%; margin-top:22px; text-align:center; }
+  .topic-menu summary { cursor:pointer; padding:10px; font-size:14px; }
+  .topic-menu button { font:inherit; font-size:14px; border:1px solid #d7c8ed; border-radius:18px; background:white; color:#5b21b6; padding:8px 12px; margin:4px; cursor:pointer; }
+  button:focus-visible,summary:focus-visible { outline:3px solid #f59e0b; outline-offset:4px; }
+  .swap { margin-top:16px; color:#695185; font-size:15px; }
+  @media(prefers-reduced-motion:reduce) { .wheel { transition:none; } }
+</style>
+</head>
+<body>
+  <h1><span class="em">🎮</span> Emma's Warm-Up</h1>
+  <div class="tag">Spin the wheel. Talk about it in English!</div>
+
+  <div class="stage">
+    <div>
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel"></div>
+        <div class="hub">🌀</div>
+      </div>
+      <button class="spinBtn" id="spinBtn">Spin! 🎡</button>
+    </div>
+
+    <div class="panel idle" id="panel" aria-live="polite">Spin to start! 👉</div>
+  </div>
+
+  <details class="topic-menu"><summary>Choose a topic</summary><div id="topicChoices"></div></details><div class="foot">Try a short sentence. Then ask your teacher!</div>
+
+<script>
+const TOPICS = [
+  {
+    "e": "🎮",
+    "name": "Roblox",
+    "qs": [
+      "What games do you play?",
+      "Do you play with Erin?",
+      "What do you like in the game?"
+    ],
+    "words": [
+      "I play...",
+      "Yes, I do.",
+      "No, I don't.",
+      "I like..."
+    ],
+    "color": "#7552B5"
+  },
+  {
+    "e": "🧸",
+    "name": "Squishies",
+    "qs": [
+      "Show me a squishy. What is it?",
+      "What colour is it?",
+      "Is it big or small?"
+    ],
+    "words": [
+      "This is my...",
+      "It's a...",
+      "It's pink.",
+      "It's small."
+    ],
+    "color": "#9B4598"
+  },
+  {
+    "e": "🍕",
+    "name": "Food",
+    "qs": [
+      "What food do you like?",
+      "What food don't you like?",
+      "Do you drink milk?"
+    ],
+    "words": [
+      "I like...",
+      "I don't like...",
+      "I drink...",
+      "pizza / fish / ice cream"
+    ],
+    "color": "#B94C70"
+  },
+  {
+    "e": "🏫",
+    "name": "School",
+    "qs": [
+      "Do you like your school?",
+      "Who is your friend at school?",
+      "What do you play at school?"
+    ],
+    "words": [
+      "Yes, I do.",
+      "No, I don't.",
+      "My friend is...",
+      "We play..."
+    ],
+    "color": "#B26629"
+  },
+  {
+    "e": "👭",
+    "name": "Friends",
+    "qs": [
+      "Who do you play with?",
+      "What do you play together?",
+      "Does your friend like Roblox?"
+    ],
+    "words": [
+      "I play with...",
+      "We play...",
+      "Yes, she does.",
+      "No, she doesn't.",
+      "he / she"
+    ],
+    "color": "#3C8063"
+  },
+  {
+    "e": "🎵",
+    "name": "Music",
+    "qs": [
+      "Do you like singing?",
+      "What songs do you like?",
+      "Do you sing with Mia?"
+    ],
+    "words": [
+      "Yes, I do.",
+      "No, I don't.",
+      "I like...",
+      "We sing..."
+    ],
+    "color": "#287A9C"
+  },
+  {
+    "e": "🐱",
+    "name": "Animals",
+    "qs": [
+      "What animals do you like?",
+      "Do you like cats?",
+      "Choose an animal. Is it big or small?"
+    ],
+    "words": [
+      "I like...",
+      "I don't like...",
+      "It's big.",
+      "It's small.",
+      "cats / dogs / fish"
+    ],
+    "color": "#536CB2"
+  },
+  {
+    "e": "🤔",
+    "name": "Pick one",
+    "qs": [
+      "Pizza or ice cream?",
+      "A cat or a dog?",
+      "Roblox or singing?"
+    ],
+    "words": [
+      "I choose...",
+      "I like...",
+      "It's fun.",
+      "It's cute."
+    ],
+    "color": "#9455AC"
+  }
+];
+
+const n=TOPICS.length, seg=360/n;
+const wheel=document.getElementById('wheel'), panel=document.getElementById('panel'), spinBtn=document.getElementById('spinBtn');
+wheel.style.background=`conic-gradient(${TOPICS.map((t,i)=>`${t.color} ${i*seg}deg ${(i+1)*seg}deg`).join(',')})`;
+TOPICS.forEach((t,i)=>{
+ const mid=i*seg+seg/2,d=document.createElement('div');d.className='lbl';
+ d.innerHTML=`<span class="e">${t.e}</span>${t.name}`;
+ d.style.transform=`rotate(${mid}deg) translateY(calc(-1 * min(118px, 31vw))) rotate(${-mid}deg)`;wheel.appendChild(d);
+ const b=document.createElement('button');b.type='button';b.textContent=t.e+' '+t.name;
+ b.onclick=()=>{if(!spinning){lastIdx=i;rotation+=(360-i*seg-seg/2-(rotation%360)+360)%360;wheel.style.transition='none';wheel.style.transform=`rotate(${rotation}deg)`;orientLabels();showTopic(i);}};
+ document.getElementById('topicChoices').appendChild(b);
+});
+let rotation=0,spinning=false,lastIdx=-1;
+function orientLabels(){wheel.querySelectorAll('.lbl').forEach((d,i)=>{const mid=i*seg+seg/2;d.style.transform=`rotate(${mid}deg) translateY(calc(-1 * min(118px, 31vw))) rotate(${-mid-rotation}deg)`;});}
+function showTopic(i){
+ const t=TOPICS[i];panel.classList.remove('idle');
+ panel.innerHTML=`<div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div><ul>${t.qs.map(q=>`<li>${q}</li>`).join('')}</ul><div class="words"><div class="cap">Try saying</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div><p class="swap">Your turn: ask your teacher one question!</p>`;
+}
+function spin(){
+ if(spinning)return;spinning=true;spinBtn.disabled=true;
+ let i;do{i=Math.floor(Math.random()*n);}while(i===lastIdx);lastIdx=i;
+ const target=(360-i*seg-seg/2+360)%360,delta=(target-rotation%360+360)%360;
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ wheel.style.transition=reduce?'none':'';rotation+=360*5+delta;wheel.style.transform=`rotate(${rotation}deg)`;
+ let timer,finished=false;
+ function done(e){if(e&&e.target!==wheel)return;if(finished)return;finished=true;clearTimeout(timer);wheel.removeEventListener('transitionend',done);orientLabels();showTopic(i);spinning=false;spinBtn.disabled=false;spinBtn.textContent='Spin again 🎡';}
+ wheel.addEventListener('transitionend',done);timer=setTimeout(done,reduce?0:3900);
+}
+spinBtn.addEventListener('click',spin);
+
+</script>
+</body>
+</html>
