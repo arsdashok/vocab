@@ -73,6 +73,12 @@
   td.who { color: #6b7280; text-align: right; font-size: 13px; }
   td.empty, td.more { color: #9ca3af; text-align: center; padding: 14px 0; font-size: 13px; }
 
+  details.past { border-top: 1px solid #f3f0ff; padding: 10px 0; font-size: 14px; }
+  details.past:first-of-type { border-top: none; }
+  details.past summary { cursor: pointer; color: #4b5563; list-style: revert; }
+  details.past table { margin-top: 8px; }
+  details.past td.num { color: #9ca3af; }
+
   footer { text-align: center; font-size: 12px; color: #9ca3af; margin-top: 22px; }
 
   @media (max-width: 420px) {
@@ -96,43 +102,43 @@
 
     <div class="bar"><span></span></div>
     <div class="bar-labels">
-      <span>Проведено: 21</span>
-      <span>Оплачено: 40</span>
+      <span>Проведено: 1 из 20</span>
+      <span>Пакет №2, оплачен 6 октября 2026</span>
     </div>
-    <div class="dots-cap">Текущий пакет №2: использовано 1 из 20</div>
   </div>
 
   <div class="card">
-    <h2>Оплаченные пакеты</h2>
-    <ul class="blocks">
-      <li><b>20 уроков</b><span>оплачено 26 августа 2026</span></li>
-<li><b>20 уроков</b><span>оплачено 6 октября 2026</span></li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2>Проведённые уроки</h2>
+    <h2>Уроки текущего пакета</h2>
     <table>
       <thead>
         <tr><th>№</th><th>Дата</th><th style="text-align:right">Ученик</th></tr>
       </thead>
       <tbody>
-        <tr><td class="num">21</td><td class="date">6 октября 2026</td><td class="who">Кристина</td></tr>
-<tr><td class="num">20</td><td class="date">2 октября 2026</td><td class="who">Кристина</td></tr>
+        <tr><td class="num">1</td><td class="date">6 октября 2026</td><td class="who">Кристина</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card"><h2>Предыдущие пакеты</h2><details class="past"><summary><b>Пакет №1</b> · 20 уроков, оплачен 26 августа 2026 · проведено 20 из 20</summary><table><tbody><tr><td class="num">20</td><td class="date">2 октября 2026</td><td class="who">Кристина</td></tr>
 <tr><td class="num">19</td><td class="date">1 октября 2026</td><td class="who">Кристина</td></tr>
 <tr><td class="num">18</td><td class="date">29 сентября 2026</td><td class="who">Кристина</td></tr>
 <tr><td class="num">17</td><td class="date">17 сентября 2026</td><td class="who">Кристина</td></tr>
 <tr><td class="num">16</td><td class="date">15 сентября 2026 <span class="tag">пропуск</span></td><td class="who">Кристина</td></tr>
 <tr><td class="num">15</td><td class="date">10 сентября 2026</td><td class="who">Кристина</td></tr>
 <tr><td class="num">14</td><td class="date">9 сентября 2026</td><td class="who">Милана</td></tr>
-<tr><td class="num">13</td><td class="date">4 сентября 2026</td><td class="who">Милана</td></tr>
-<tr><td class="num">12</td><td class="date">4 сентября 2026</td><td class="who">Кристина</td></tr>
-<tr><td class="num">11</td><td class="date">3 сентября 2026</td><td class="who">Милана</td></tr>
-<tr><td class="num">10</td><td class="date">3 сентября 2026</td><td class="who">Кристина</td></tr>
-<tr><td colspan="3" class="more">и ещё 9 ранее</td></tr>
-      </tbody>
-    </table>
-  </div>
+<tr><td class="num">13</td><td class="date">4 сентября 2026</td><td class="who">Кристина</td></tr>
+<tr><td class="num">12</td><td class="date">4 сентября 2026</td><td class="who">Милана</td></tr>
+<tr><td class="num">11</td><td class="date">3 сентября 2026</td><td class="who">Кристина</td></tr>
+<tr><td class="num">10</td><td class="date">3 сентября 2026</td><td class="who">Милана</td></tr>
+<tr><td class="num">9</td><td class="date">2 сентября 2026</td><td class="who">Милана</td></tr>
+<tr><td class="num">8</td><td class="date">1 сентября 2026</td><td class="who">Кристина</td></tr>
+<tr><td class="num">7</td><td class="date">1 сентября 2026</td><td class="who">Милана</td></tr>
+<tr><td class="num">6</td><td class="date">28 августа 2026</td><td class="who">Милана</td></tr>
+<tr><td class="num">5</td><td class="date">28 августа 2026</td><td class="who">Кристина</td></tr>
+<tr><td class="num">4</td><td class="date">27 августа 2026</td><td class="who">Милана</td></tr>
+<tr><td class="num">3</td><td class="date">26 августа 2026</td><td class="who">Кристина</td></tr>
+<tr><td class="num">2</td><td class="date">25 августа 2026</td><td class="who">Милана</td></tr>
+<tr><td class="num">1</td><td class="date">25 августа 2026</td><td class="who">Кристина</td></tr></tbody></table></details></div>
 
   <footer>Обновлено 6 октября 2026</footer>
 
