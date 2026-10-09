@@ -63,6 +63,12 @@
   .gloss[dir="rtl"] { text-align:right; }
   .gloss.hidden { display:none; }
   footer { color:var(--ash); font-size:13px; margin-top:44px; }
+  #grid{align-items:start}
+  .ctl-txt{font:inherit;font-size:13px;font-weight:600;letter-spacing:.02em;width:auto;padding:0 14px}
+  .colls{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .colls.hidden{display:none}
+  .collcap{width:100%;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
+  .coll{border:1px solid;border-radius:100px;padding:6px 12px;font-size:15px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -317,6 +323,16 @@
         rev.setAttribute('aria-label',GLOSS_LABEL); rev.innerHTML=EYE_SVG;
         rev.onclick=()=>{ gl.classList.toggle('hidden'); rev.classList.toggle('open'); };
         grp.appendChild(rev);
+      }
+      if(it.c && it.c.length){
+        const cl=document.createElement('div'); cl.className='colls hidden';
+        const cap=document.createElement('div'); cap.className='collcap'; cap.textContent='collocations'; cl.appendChild(cap);
+        it.c.forEach(c=>{ const ch=document.createElement('span'); ch.className='coll'; ch.textContent=c; ch.style.borderColor=acc; ch.onclick=()=>speak(c); cl.appendChild(ch); });
+        card.appendChild(cl);
+        const cb=document.createElement('button'); cb.className='ctl ctl-txt'; cb.title='collocations';
+        cb.setAttribute('aria-label','collocations'); cb.textContent='with';
+        cb.onclick=()=>{ cl.classList.toggle('hidden'); cb.classList.toggle('open'); };
+        grp.appendChild(cb);
       }
       grid.appendChild(card);
     });

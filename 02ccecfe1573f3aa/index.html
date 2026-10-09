@@ -63,6 +63,12 @@
   .gloss[dir="rtl"] { text-align:right; }
   .gloss.hidden { display:none; }
   footer { color:var(--ash); font-size:13px; margin-top:44px; }
+  #grid{align-items:start}
+  .ctl-txt{font:inherit;font-size:13px;font-weight:600;letter-spacing:.02em;width:auto;padding:0 14px}
+  .colls{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .colls.hidden{display:none}
+  .collcap{width:100%;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
+  .coll{border:1px solid;border-radius:100px;padding:6px 12px;font-size:15px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -72,14 +78,14 @@
       <h1>Words we learned</h1>
       <div class="datepill"><span>Lesson</span><select id="dateSel"></select></div>
     </div>
-    <p class="hint">Tap a word to hear it &nbsp;·&nbsp; tap the eye for the translation</p>
+    <p class="hint">Tap a word to hear it &nbsp;·&nbsp; tap the eye for the meaning &nbsp;·&nbsp; tap «with» for the words it goes with</p>
     <div class="rule"></div>
     <div id="grid"></div>
     <footer>{ Vlad · vocab review }</footer>
   </div>
 <script>
-  const DATA = {"2026-10-08": [{"w": "nice and even", "g": "ровно, равномерно", "e": "", "q": "Spread the butter across the pan so it melts ___."}, {"w": "ultimately", "g": "в конечном счёте", "e": "", "q": "We test a lot of ideas, but ___ the users decide what stays."}, {"w": "it makes a difference", "g": "это имеет значение, это влияет", "e": "", "q": "One extra review before release ___: we catch half the bugs there."}, {"w": "metacognition", "g": "метапознание, умение учиться", "e": "", "q": "Knowing how you learn best is called ___."}, {"w": "to foster", "g": "развивать, поддерживать", "e": "", "q": "Good managers ___ trust in the team.", "qa": "foster"}, {"w": "to crave", "g": "очень хотеть, тянет на", "e": "", "q": "After a week of sausages I was ___ fish.", "qa": "craving"}, {"w": "a spatula", "g": "лопатка", "e": "", "q": "Turn the pancake over with ___."}, {"w": "fine dining", "g": "ресторанная высокая кухня", "e": "", "q": "It's not a café, it's ___: five courses and a long wine list."}, {"w": "wine and dine", "g": "угощать, водить по ресторанам", "e": "", "q": "Some companies ___ their clients before a big deal."}, {"w": "off the top of my head", "g": "навскидку, не проверяя", "e": "", "q": "How many users? Hmm, ___, I'd say about two million."}]}, DATES = ["2026-10-08"];
-  const GLOSS_LABEL = "перевод", GLOSS_DIR = "ltr";
+  const DATA = {"2026-10-08": [{"w": "nice and even", "g": "smooth and regular, with no lumps or gaps; «nice and» + adjective is a warm way to say «very»", "e": "", "c": ["nice and warm", "nice and easy", "nice and slow", "nice and early"], "q": "Spread the butter across the pan so it melts ___."}, {"w": "ultimately", "g": "in the end; when everything has been considered", "e": "", "c": ["Ultimately, it's your decision", "ultimately responsible for", "it ultimately depends on"], "q": "We test a lot of ideas, but ___ the users decide what stays."}, {"w": "to make a difference", "g": "to have an important effect", "e": "", "c": ["make a big difference", "make all the difference", "make a difference to something", "it makes no difference"], "q": "One extra review before release can really ___: we catch half the bugs there.", "qa": "make a difference"}, {"w": "metacognition", "g": "thinking about your own thinking; knowing how you learn best", "e": "", "c": ["develop metacognition", "foster metacognition", "metacognitive skills"], "q": "Knowing which study methods work for you is called ___."}, {"w": "to foster something", "g": "to help something develop over time", "e": "", "c": ["foster trust", "foster collaboration", "foster innovation", "foster a culture of feedback"], "q": "Good managers ___ trust in the team.", "qa": "foster"}, {"w": "to crave something", "g": "to want something very strongly, often food", "e": "", "c": ["crave sugar", "crave attention", "a craving for something", "satisfy a craving"], "q": "After a week of sausages I was ___ fish.", "qa": "craving"}, {"w": "a spatula", "g": "a kitchen tool with a wide flat blade, for lifting, turning or spreading", "e": "", "c": ["a wooden spatula", "flip it with a spatula", "scrape the bowl with a spatula"], "q": "Turn the pancake over with ___."}, {"w": "fine dining", "g": "expensive, high-quality restaurant food and service", "e": "", "c": ["a fine-dining restaurant", "a fine-dining experience", "Michelin-starred fine dining"], "q": "It's not a café, it's ___: five courses and a long wine list."}, {"w": "to wine and dine someone", "g": "to take someone out for good food and drink, often to win their support", "e": "", "c": ["wine and dine clients", "wine and dine investors", "be wined and dined"], "q": "Before the deal, the sales team ___ the new client in Munich.", "qa": "wined and dined"}, {"w": "off the top of my head", "g": "without checking or thinking about it carefully", "e": "", "c": ["I can't remember off the top of my head", "Off the top of my head, I'd say…"], "q": "How many users? Hmm, ___, I'd say about two million."}]}, DATES = ["2026-10-08"];
+  const GLOSS_LABEL = "definition", GLOSS_DIR = "ltr";
   const ACC = ["#0ae448", "#fec5fb", "#ff8709", "#9d95ff", "#00bae2", "#abff84"];
 
   const sel = document.getElementById('dateSel'), grid = document.getElementById('grid');
@@ -317,6 +323,16 @@
         rev.setAttribute('aria-label',GLOSS_LABEL); rev.innerHTML=EYE_SVG;
         rev.onclick=()=>{ gl.classList.toggle('hidden'); rev.classList.toggle('open'); };
         grp.appendChild(rev);
+      }
+      if(it.c && it.c.length){
+        const cl=document.createElement('div'); cl.className='colls hidden';
+        const cap=document.createElement('div'); cap.className='collcap'; cap.textContent='collocations'; cl.appendChild(cap);
+        it.c.forEach(c=>{ const ch=document.createElement('span'); ch.className='coll'; ch.textContent=c; ch.style.borderColor=acc; ch.onclick=()=>speak(c); cl.appendChild(ch); });
+        card.appendChild(cl);
+        const cb=document.createElement('button'); cb.className='ctl ctl-txt'; cb.title='collocations';
+        cb.setAttribute('aria-label','collocations'); cb.textContent='with';
+        cb.onclick=()=>{ cl.classList.toggle('hidden'); cb.classList.toggle('open'); };
+        grp.appendChild(cb);
       }
       grid.appendChild(card);
     });
