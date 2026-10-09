@@ -4,54 +4,83 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vlad — words we learned</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#253a34;--muted:#626a62;--line:#d8ddd3;--paper:#f4f2ec;--accent:#31594b;
---q-bg:#fffefa;--q-fg:#253a34;--q-line:#ced5ca;--q-accent:#31594b;--q-onaccent:#fff;--q-scrim:rgba(28,40,34,.48)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;min-height:100vh;padding:54px 24px 32px;border-top:5px solid var(--accent)}
-.wrap{max-width:960px;margin:auto}
-.masthead{display:flex;justify-content:space-between;align-items:center;padding-bottom:19px;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:1.7px;text-transform:uppercase;color:var(--muted)}
-.masthead strong{color:var(--accent);font-size:13px;font-weight:600}
-h1{font-family:Georgia,'Times New Roman',serif;font-size:44px;line-height:1.17;font-weight:400;letter-spacing:-.7px;margin:34px 0 13px}
-.hint{font-size:15px;line-height:1.6;color:var(--muted);margin-bottom:30px}
-.top{margin-bottom:18px}
-.datepill{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.datepill label{font-size:13px;font-weight:600;color:var(--muted)}
-#dateSel{font:inherit;font-size:14px;color:var(--ink);background:#fffefa;border:1px solid var(--line);border-radius:4px;padding:11px 34px 11px 12px;min-height:44px;cursor:pointer}
-.classic #qzOpen{margin-left:auto;border-radius:4px;padding:12px 20px;min-height:44px;font-weight:600}
-#grid{background:#fffefa;border:1px solid var(--line);border-radius:6px;overflow:hidden}
-.card{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:18px;align-items:center;padding:24px 28px;border-bottom:1px solid var(--line)}
-.card:last-child{border-bottom:0}
-.number{font-size:12px;color:#797c72;font-variant-numeric:tabular-nums;align-self:start;padding-top:10px}
-.word{display:inline-flex;align-items:center;gap:14px;font-family:Georgia,'Times New Roman',serif;font-size:27px;line-height:1.35;text-align:left;border:0;border-radius:3px;background:transparent;color:var(--ink);cursor:pointer;padding:0;max-width:100%;overflow-wrap:anywhere}
-.word:hover{color:var(--accent)}
-.word svg{width:20px;height:20px;flex-shrink:0;color:#567665}
-.reveal{font:inherit;font-size:13px;line-height:1.3;border:1px solid var(--line);border-radius:4px;padding:10px 14px;min-height:44px;color:var(--accent);background:transparent;cursor:pointer}
-.reveal:hover{background:#eff2eb;border-color:#8ea696}
-.gloss{font-size:16px;line-height:1.6;color:var(--muted);margin-top:9px}
-.gloss[hidden]{display:none}
-button:focus-visible,select:focus-visible{outline:3px solid #a48042;outline-offset:4px}
-footer{display:flex;justify-content:space-between;gap:16px;font-size:12px;line-height:1.5;color:var(--muted);margin-top:22px}
-.classic .qz-box{border-radius:6px;padding:30px;box-shadow:0 16px 65px #1c282222}
-.classic .qz-opt,.classic .qz-next{border-radius:4px}
-.classic .qz-q{font-family:Georgia,'Times New Roman',serif;font-size:25px;line-height:1.5}
-.classic .qz-x{min-width:44px;min-height:44px}
-@media(max-width:600px){body{padding:28px 16px 24px}h1{font-size:34px;margin-top:26px}.masthead{font-size:10px;letter-spacing:1.2px}.hint{font-size:14px;margin-bottom:23px}.datepill{gap:10px}.classic #qzOpen{margin-left:0;width:100%}.card{padding:21px 17px;grid-template-columns:24px minmax(0,1fr);gap:11px}.word{font-size:24px;gap:10px}.reveal{grid-column:2;justify-self:start}.number{padding-top:7px}.gloss{font-size:15px}.classic .qz-box{padding:21px}.classic .qz-q{font-size:22px}footer{font-size:11px}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+  /* GSAP style — neon playground in midnight void (Admin/Design Styles/DESIGN gsap.md) */
+  :root { --void:#0e100f; --cream:#fffce1; --olive:#42433d; --ash:#7c7c6f;
+    --q-bg:#151715; --q-fg:#fffce1; --q-line:#42433d; --q-accent:#d7ff3e; --q-onaccent:#0e100f;
+    --q-scrim:rgba(0,0,0,.72); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'Inter Tight',ui-sans-serif,system-ui,-apple-system,sans-serif;
+    background:var(--void); color:var(--cream); letter-spacing:-0.01em;
+    padding:40px 24px 64px; min-height:100vh; -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:1100px; margin:0 auto; }
+  .tag { font-size:14px; color:var(--cream); opacity:.85; margin-bottom:16px; }
+  .top {
+    display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
+    gap:20px; margin-bottom:18px;
+  }
+  h1 { font-size:clamp(38px,8vw,72px); font-weight:400; line-height:.95;
+       letter-spacing:-0.03em; color:var(--cream); }
+  .datepill { display:flex; align-items:center; gap:10px; font-size:15px; color:var(--cream); }
+  #dateSel {
+    font:inherit; font-size:15px; color:var(--cream); background:transparent;
+    border:1px solid var(--cream); border-radius:100px; padding:9px 18px; cursor:pointer;
+    letter-spacing:-0.01em;
+  }
+  #dateSel option { background:var(--void); color:var(--cream); }
+  .hint { font-size:16px; color:var(--ash); margin-bottom:26px; }
+  .rule { height:1px; background:var(--olive); width:100%; margin-bottom:32px; }
+  #grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:16px; }
+  .card {
+    background:var(--void); border:1px solid var(--olive); border-radius:8px;
+    padding:20px 22px; display:flex; flex-direction:column; align-items:flex-start;
+    gap:12px; min-height:120px;
+  }
+  .crow { display:flex; align-items:center; justify-content:space-between; width:100%; gap:10px; }
+  .meta { font-size:14px; }
+  .ctl-group { display:flex; align-items:center; gap:8px; }  /* matched controls, top-right */
+  .ctl {
+    width:32px; height:32px; border-radius:100px; border:1px solid var(--olive);
+    background:transparent; color:var(--racc); cursor:pointer; padding:0;
+    display:inline-flex; align-items:center; justify-content:center; transition:.15s;
+  }
+  .ctl svg { width:17px; height:17px; display:block; }
+  .ctl:hover { border-color:var(--racc); }
+  .ctl.open { background:var(--racc); color:var(--void); border-color:var(--racc); }
+  .pic { font-size:34px; line-height:1; }
+  .picimg { width:46px; height:46px; object-fit:contain; display:block; }
+  .word {
+    font-size:23px; font-weight:500; line-height:1.15; letter-spacing:-0.015em;
+    cursor:pointer; user-select:none;
+  }
+  .word:active { opacity:.6; }
+  .gloss { font-size:16px; color:var(--cream); line-height:1.35; }
+  .gloss[dir="rtl"] { text-align:right; }
+  .gloss.hidden { display:none; }
+  footer { color:var(--ash); font-size:13px; margin-top:44px; }
 </style>
 </head>
-<body class="classic">
-<main class="wrap">
-<header><div class="masthead"><strong>Vlad</strong><span>English notebook</span></div>
-<h1>Words from our lessons</h1><p class="hint">Listen to each phrase. Reveal the translation when you need it.</p></header>
-<div class="top"><div class="datepill"><label for="dateSel">Lesson</label><select id="dateSel"></select></div></div>
-<div id="grid" aria-label="Vocabulary"></div>
-<footer><span>Vlad · Vocabulary</span><span id="wordCount"></span></footer>
-</main>
+<body>
+  <div class="wrap">
+    <div class="tag">{ vocab review }</div>
+    <div class="top">
+      <h1>Words we learned</h1>
+      <div class="datepill"><span>Lesson</span><select id="dateSel"></select></div>
+    </div>
+    <p class="hint">Tap a word to hear it &nbsp;·&nbsp; tap the eye for the translation</p>
+    <div class="rule"></div>
+    <div id="grid"></div>
+    <footer>{ Vlad · vocab review }</footer>
+  </div>
 <script>
-const DATA = {"2026-10-08": [{"w": "nice and even", "g": "ровно, равномерно", "e": "", "q": "Spread the butter across the pan so it melts ___."}, {"w": "ultimately", "g": "в конечном счёте", "e": "", "q": "We test a lot of ideas, but ___ the users decide what stays."}, {"w": "it makes a difference", "g": "это имеет значение, это влияет", "e": "", "q": "One extra review before release ___: we catch half the bugs there."}, {"w": "metacognition", "g": "метапознание, умение учиться", "e": "", "q": "Knowing how you learn best is called ___."}, {"w": "to foster", "g": "развивать, поддерживать", "e": "", "q": "Good managers ___ trust in the team.", "qa": "foster"}, {"w": "to crave", "g": "очень хотеть, тянет на", "e": "", "q": "After a week of sausages I was ___ fish.", "qa": "craving"}, {"w": "a spatula", "g": "лопатка", "e": "", "q": "Turn the pancake over with ___."}, {"w": "fine dining", "g": "ресторанная высокая кухня", "e": "", "q": "It's not a café, it's ___: five courses and a long wine list."}, {"w": "wine and dine", "g": "угощать, водить по ресторанам", "e": "", "q": "Some companies ___ their clients before a big deal."}, {"w": "off the top of my head", "g": "навскидку, не проверяя", "e": "", "q": "How many users? Hmm, ___, I'd say about two million."}]}, DATES = ["2026-10-08"];
-const GLOSS_LABEL = "перевод", GLOSS_DIR = "ltr";
-const ACC = ["#31594b"];
+  const DATA = {"2026-10-08": [{"w": "nice and even", "g": "ровно, равномерно", "e": "", "q": "Spread the butter across the pan so it melts ___."}, {"w": "ultimately", "g": "в конечном счёте", "e": "", "q": "We test a lot of ideas, but ___ the users decide what stays."}, {"w": "it makes a difference", "g": "это имеет значение, это влияет", "e": "", "q": "One extra review before release ___: we catch half the bugs there."}, {"w": "metacognition", "g": "метапознание, умение учиться", "e": "", "q": "Knowing how you learn best is called ___."}, {"w": "to foster", "g": "развивать, поддерживать", "e": "", "q": "Good managers ___ trust in the team.", "qa": "foster"}, {"w": "to crave", "g": "очень хотеть, тянет на", "e": "", "q": "After a week of sausages I was ___ fish.", "qa": "craving"}, {"w": "a spatula", "g": "лопатка", "e": "", "q": "Turn the pancake over with ___."}, {"w": "fine dining", "g": "ресторанная высокая кухня", "e": "", "q": "It's not a café, it's ___: five courses and a long wine list."}, {"w": "wine and dine", "g": "угощать, водить по ресторанам", "e": "", "q": "Some companies ___ their clients before a big deal."}, {"w": "off the top of my head", "g": "навскидку, не проверяя", "e": "", "q": "How many users? Hmm, ___, I'd say about two million."}]}, DATES = ["2026-10-08"];
+  const GLOSS_LABEL = "перевод", GLOSS_DIR = "ltr";
+  const ACC = ["#0ae448", "#fec5fb", "#ff8709", "#9d95ff", "#00bae2", "#abff84"];
 
   const sel = document.getElementById('dateSel'), grid = document.getElementById('grid');
   /* Show dates as "29 July 2026" but keep the ISO string as the option value (the DATA key). */
@@ -249,29 +278,52 @@ const ACC = ["#31594b"];
   qz.addEventListener('click', e => { if (e.target === qz) qzClose(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !qz.hidden) qzClose(); });
 
-function render(date){
- grid.innerHTML='';
- const items=DATA[date]||[];
- items.forEach((it,i)=>{
-  const card=document.createElement('article');card.className='card';
-  const num=document.createElement('span');num.className='number';num.textContent=String(i+1).padStart(2,'0');num.setAttribute('aria-hidden','true');card.appendChild(num);
-  const content=document.createElement('div');
-  const word=document.createElement('button');word.className='word';word.type='button';word.setAttribute('aria-label','Listen: '+it.w);
-  const label=document.createElement('span');label.textContent=it.w;word.appendChild(label);
-  word.insertAdjacentHTML('beforeend','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>');
-  word.onclick=()=>speak(it.w);content.appendChild(word);card.appendChild(content);
-  if(it.g){
-   const gl=document.createElement('p');gl.className='gloss';gl.id='meaning-'+i;gl.hidden=true;gl.dir=GLOSS_DIR;gl.textContent=it.g;content.appendChild(gl);
-   const b=document.createElement('button');b.className='reveal';b.type='button';b.textContent=GLOSS_LABEL;b.setAttribute('aria-controls',gl.id);b.setAttribute('aria-expanded','false');
-   b.onclick=()=>{gl.hidden=!gl.hidden;b.setAttribute('aria-expanded',String(!gl.hidden));};card.appendChild(b);
+  const SPK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/><path d="M16 8.5a5 5 0 0 1 0 7"/><path d="M18.8 6a8 8 0 0 1 0 12"/></svg>`;
+  const EYE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  function render(date){
+    grid.innerHTML='';
+    (DATA[date]||[]).forEach((it,i)=>{
+      const acc = ACC[i % ACC.length];
+      const card=document.createElement('div'); card.className='card';
+      card.style.borderColor = acc; card.style.setProperty('--racc', acc);
+
+      const top=document.createElement('div'); top.className='crow';
+      const meta=document.createElement('div'); meta.className='meta';
+      meta.textContent = '{ '+String(i+1).padStart(2,'0')+' }'; meta.style.color = acc;
+      top.appendChild(meta);
+
+      const grp=document.createElement('div'); grp.className='ctl-group';
+      const spk=document.createElement('button'); spk.className='ctl'; spk.title='listen';
+      spk.setAttribute('aria-label','listen'); spk.innerHTML=SPK_SVG; spk.onclick=()=>speak(it.w);
+      grp.appendChild(spk);
+      top.appendChild(grp);
+      card.appendChild(top);
+
+      if(it.e){
+        const pic=document.createElement('div'); pic.className='pic';
+        if(isImg(it.e)){ const im=document.createElement('img'); im.className='picimg'; im.src=it.e; im.alt=''; pic.appendChild(im); }
+        else { pic.textContent=it.e; }
+        card.appendChild(pic);
+      }
+
+      const w=document.createElement('div'); w.className='word'; w.style.color=acc;
+      w.textContent=it.w; w.onclick=()=>speak(it.w);
+      card.appendChild(w);
+
+      if(it.g){
+        const gl=document.createElement('div'); gl.className='gloss hidden'; gl.textContent=it.g;
+        card.appendChild(gl);
+        const rev=document.createElement('button'); rev.className='ctl'; rev.title=GLOSS_LABEL;
+        rev.setAttribute('aria-label',GLOSS_LABEL); rev.innerHTML=EYE_SVG;
+        rev.onclick=()=>{ gl.classList.toggle('hidden'); rev.classList.toggle('open'); };
+        grp.appendChild(rev);
+      }
+      grid.appendChild(card);
+    });
   }
-  grid.appendChild(card);
- });
- document.getElementById('wordCount').textContent=items.length+' words & phrases';
- if(!items.length)grid.textContent='No words yet.';
-}
-sel.onchange=()=>render(sel.value);
-if(DATES.length){sel.value=DATES[0];render(DATES[0]);}
+  sel.onchange=()=>render(sel.value);
+  if(DATES.length){ sel.value=DATES[0]; render(DATES[0]); }
+  else grid.innerHTML='<p style="color:var(--ash)">No words yet.</p>';
 </script>
 </body>
 </html>
