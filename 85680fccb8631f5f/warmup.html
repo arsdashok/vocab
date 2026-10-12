@@ -89,6 +89,8 @@
     background:#fff; border:2px dashed #baa0df; border-radius:12px; padding:7px 14px; cursor:pointer;
   }
   .ownBtn { border-style:solid; font-weight:500; }
+  .q.say { font-style:italic; color:#9a3412; }
+  .more.help li::before { content:"✅"; }
   details { max-width:790px; width:100%; margin-top:22px; color:#576675; font-size:14px; line-height:1.6; }
   details p { padding-top:8px; }
   summary { cursor:pointer; }
@@ -115,340 +117,90 @@
 
   <div class="foot">Choose an idea or give your own. Say a sentence, then ask Dasha!</div>
 
-<details><summary>Teacher notes</summary><p>Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today’s date. Offer a choice, then wait for her own sentence. Keep the sentence starters visible. Reveal the next questions only when she is ready. If she needs a verb, offer two possibilities and let her build the sentence. A personal answer does not have to match a button. Invite her to ask you a question too.</p></details>
+<details><summary>Teacher notes</summary><p>Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today’s date. Five topics are the oral questions of the Collège Sylvain Menu test (About me, Why join?, Countries, Culture, Last film): play the examiner, wait for her answer, then ask one follow-up from «What else?». Right now, Interests and English way practise the French-style forms from her lessons and homework (has … years old, in this moment, one language more, interested with / by, they original, to can, other persons). Keep the sentence starters visible. «Help 💡» shows the correct version: open it only after she has tried, and let her say the whole sentence again herself. In English way, «at the moment» repairs her «in this moment»; «right now» is also fine. If mechanic or favourite comes up, ask her to spell it aloud. A personal answer does not have to match a button. Invite her to ask you a question too.</p></details>
 <script>
 const TOPICS = [
   {
-    "e": "📚",
-    "name": "Books",
-    "color": "#7957c7",
+    "e": "🙋", "name": "About me", "color": "#7957c7",
+    "q": "The examiner says: “Introduce yourself and your family.” Who do you want to start with?",
+    "opts": [["🙋", "me"], ["👩", "my mum"], ["👨", "my dad"], ["🐶", "my dog"]],
+    "words": ["My name is...", "I'm ... years old.", "He's / She's ... years old.", "He's / She's interested in..."],
+    "more": ["How old is he or she?", "What's he or she interested in?", "Now tell me about one more person."],
+    "help": ["My name is ..., I'm ... years old and I'm very interested in books and animals."]
+  },
+  {
+    "e": "⏰", "name": "Right now", "color": "#188c87",
+    "q": "What's happening right now? Choose one.",
+    "opts": [["🙋", "me"], ["🏠", "my family at home"], ["🐶", "my dog"], ["🪟", "outside my window"]],
+    "words": ["Right now I'm...", "At the moment he's / she's...", "I think they're..."],
+    "more": ["What book are you reading at the moment?", "What are you making at the moment?"]
+  },
+  {
+    "e": "🏫", "name": "Why join?", "color": "#bc5090",
+    "q": "The examiner asks: “Why do you want to join the international section?” Choose a reason to start.",
+    "opts": [["🗣️", "learn one more language"], ["📖", "read books in their original language"], ["✈️", "visit other countries"], ["👫", "meet other people"]],
+    "words": ["I want to join the international section because...", "I'd like to...", "and be able to..."],
+    "more": ["How many languages do you speak now?", "Which other language would you like to learn? Why?"],
+    "help": ["I want to join the international section because I'd like to learn one more language, read books in their original language and visit other countries."]
+  },
+  {
+    "e": "🔧", "name": "English way", "color": "#c17b12",
+    "q": "Say it the English way!",
+    "rounds": [
+      ["“This puppy has two years old.”", "This puppy is two years old."],
+      ["“Lucy's brother has ten years old.”", "Lucy's brother is ten years old."],
+      ["“In this moment my mum is cooking dinner.”", "At the moment my mum is cooking dinner."],
+      ["“In this moment I'm reading a book about bats.”", "At the moment I'm reading a book about bats."],
+      ["“I'd like to learn one language more.”", "I'd like to learn one more language."],
+      ["“Can I have one biscuit more, please?”", "Can I have one more biscuit, please?"],
+      ["“He's interested with dinosaurs.”", "He's interested in dinosaurs."],
+      ["“Sam is interested by horses.”", "Sam is interested in horses."],
+      ["“I want to read these books in they original language.”", "I want to read these books in their original language."],
+      ["“I'm learning English to can read books in English.”", "I'm learning English to be able to read books in English."],
+      ["“At camp we met lots of other persons.”", "At camp we met lots of other people."]
+    ]
+  },
+  {
+    "e": "🗺️", "name": "Countries", "color": "#4872b5",
+    "q": "The examiner asks: “Have you ever visited an English-speaking country?” Which one have you visited, or would you like to visit?",
+    "opts": [["🏰", "Scotland"], ["💂", "England"], ["☘️", "Ireland"], ["🗽", "the USA"]],
+    "words": ["Yes, I've been to...", "No, I haven't, but I'd like to visit...", "because I want to see..."],
+    "more": ["What did you see there? / What do you want to see there?", "Who would you like to go with?"]
+  },
+  {
+    "e": "🔍", "name": "Interests", "color": "#ce5b84",
+    "q": "What are you interested in? Choose one.",
+    "opts": [["🦇", "animals"], ["📚", "books"], ["🧶", "knitting"], ["💃", "flamenco"]],
+    "words": ["I'm interested in...", "My friend is interested in...", "I like it because..."],
+    "more": ["Tell me one more thing about it.", "Is someone in your family interested in it too?"]
+  },
+  {
+    "e": "🎃", "name": "Culture", "color": "#168978",
+    "q": "The examiner asks: “What do you enjoy about English-speaking culture?”",
+    "opts": [["📚", "the books"], ["🎬", "the films"], ["🎃", "Halloween"], ["🏰", "the castles"]],
+    "words": ["I really enjoy...", "My favourite ... is...", "because..."],
+    "more": ["Which one is your favourite? Why?", "Do you have it in France too?"]
+  },
+  {
+    "e": "📚", "name": "Books", "color": "#9562bd",
     "q": "Which book do you want to talk about?",
-    "opts": [
-      [
-        "🐶",
-        "Dog Man"
-      ],
-      [
-        "🐉",
-        "Wings of Fire"
-      ],
-      [
-        "🐈",
-        "Cats and Dragon"
-      ],
-      [
-        "📖",
-        "another book"
-      ]
-    ],
-    "more": [
-      "Who do you like in this book?",
-      "What do you like about them?"
-    ],
-    "words": [
-      "I want to talk about...",
-      "I like...",
-      "because..."
-    ]
+    "opts": [["🐉", "Wings of Fire"], ["🐈", "Warrior Cats"], ["📖", "Matilda"], ["🐲", "Cats and Dragon"]],
+    "words": ["It's about...", "My favourite character is...", "He's / She's a bit..."],
+    "more": ["What's your favourite character like?", "What language did you read it in? Would you like to read it in English?"]
   },
   {
-    "e": "🎭",
-    "name": "Characters",
-    "color": "#bc5090",
-    "q": "Choose someone from a story. What are they like?",
-    "opts": [
-      [
-        "💛",
-        "kind"
-      ],
-      [
-        "😂",
-        "funny"
-      ],
-      [
-        "💪",
-        "brave"
-      ],
-      [
-        "💭",
-        "a dreamer"
-      ]
-    ],
-    "more": [
-      "Who are you thinking of?",
-      "What do they do in the story?"
-    ],
-    "words": [
-      "I'm thinking of...",
-      "He's / She's...",
-      "a bit..."
-    ]
+    "e": "🎬", "name": "Last film", "color": "#c25751",
+    "q": "The examiner asks: “What's the last film you watched?” Where did you watch it?",
+    "opts": [["🍿", "at the cinema"], ["📺", "at home"], ["💻", "on a tablet"], ["👫", "at a friend's house"]],
+    "words": ["The last film I watched was...", "I watched it...", "It's about...", "I liked it because..."],
+    "more": ["Who did you watch it with?", "Who was your favourite character? Why?"]
   },
   {
-    "e": "🦅",
-    "name": "Animals",
-    "color": "#188c87",
-    "q": "Which animal do you want to learn more about?",
-    "opts": [
-      [
-        "🦅",
-        "a falcon"
-      ],
-      [
-        "🐋",
-        "a whale"
-      ],
-      [
-        "🦉",
-        "an owl"
-      ],
-      [
-        "🐅",
-        "a tiger"
-      ]
-    ],
-    "more": [
-      "Why this animal?",
-      "What can it do?"
-    ],
-    "words": [
-      "I want to learn about...",
-      "It can...",
-      "because it's..."
-    ]
-  },
-  {
-    "e": "🩰",
-    "name": "Free time",
-    "color": "#ce5b84",
-    "q": "Which do you like doing after school?",
-    "opts": [
-      [
-        "🩰",
-        "dancing"
-      ],
-      [
-        "📚",
-        "reading"
-      ],
-      [
-        "🧶",
-        "knitting"
-      ],
-      [
-        "🎮",
-        "playing games"
-      ]
-    ],
-    "more": [
-      "How often do you do it?",
-      "Do you do it alone or with someone?"
-    ],
-    "words": [
-      "I like...",
-      "I usually...",
-      "once / twice a week"
-    ]
-  },
-  {
-    "e": "🧶",
-    "name": "Make it",
-    "color": "#c17b12",
-    "q": "What do you want to make next?",
-    "opts": [
-      [
-        "🐋",
-        "a woolly whale"
-      ],
-      [
-        "🐉",
-        "a dragon drawing"
-      ],
-      [
-        "❓",
-        "a quiz"
-      ],
-      [
-        "🖍️",
-        "a comic"
-      ]
-    ],
-    "more": [
-      "Who is it for?",
-      "What colours or ideas do you want to use?"
-    ],
-    "words": [
-      "I want to make...",
-      "It's for...",
-      "I need..."
-    ]
-  },
-  {
-    "e": "🎒",
-    "name": "School",
-    "color": "#4872b5",
-    "q": "Which part of school do you like best?",
-    "opts": [
-      [
-        "🎨",
-        "art"
-      ],
-      [
-        "🔢",
-        "maths"
-      ],
-      [
-        "⚽",
-        "PE"
-      ],
-      [
-        "👭",
-        "break time"
-      ]
-    ],
-    "more": [
-      "What do you like about it?",
-      "What do you do then?"
-    ],
-    "words": [
-      "I like... best",
-      "We...",
-      "because..."
-    ]
-  },
-  {
-    "e": "🏠",
-    "name": "My room",
-    "color": "#9562bd",
-    "q": "Choose something you can see in your room.",
-    "opts": [
-      [
-        "📚",
-        "books"
-      ],
-      [
-        "🖼️",
-        "a picture"
-      ],
-      [
-        "🧸",
-        "a toy"
-      ],
-      [
-        "🪴",
-        "a plant"
-      ]
-    ],
-    "more": [
-      "Where is it? / Where are they?",
-      "What do you like about it or them?"
-    ],
-    "words": [
-      "There's...",
-      "There are...",
-      "on / under / next to"
-    ]
-  },
-  {
-    "e": "🪖",
-    "name": "Rules",
-    "color": "#168978",
-    "q": "Where do you want to make the rules?",
-    "opts": [
-      [
-        "🩰",
-        "a dance class"
-      ],
-      [
-        "🏫",
-        "a school"
-      ],
-      [
-        "🐉",
-        "a dragon's home"
-      ],
-      [
-        "📚",
-        "a library"
-      ]
-    ],
-    "more": [
-      "What must people do there?",
-      "What mustn’t people do?"
-    ],
-    "words": [
-      "You must...",
-      "You mustn't...",
-      "because..."
-    ]
-  },
-  {
-    "e": "🤔",
-    "name": "This or that",
-    "color": "#c25751",
-    "pairs": true,
-    "q": "Which do you prefer?",
-    "list": [
-      [
-        [
-          "🐉",
-          "meet a dragon"
-        ],
-        [
-          "🐋",
-          "see a whale"
-        ]
-      ],
-      [
-        [
-          "🦅",
-          "fly like a falcon"
-        ],
-        [
-          "🐬",
-          "swim like a dolphin"
-        ]
-      ],
-      [
-        [
-          "📖",
-          "read a comic"
-        ],
-        [
-          "🖍️",
-          "make a comic"
-        ]
-      ],
-      [
-        [
-          "🩰",
-          "dance on stage"
-        ],
-        [
-          "❓",
-          "make a quiz"
-        ]
-      ],
-      [
-        [
-          "🌊",
-          "explore the sea"
-        ],
-        [
-          "🌳",
-          "explore a forest"
-        ]
-      ]
-    ],
-    "more": [
-      "Why?",
-      "Ask Dasha the same question."
-    ],
-    "words": [
-      "I prefer to...",
-      "because...",
-      "What about you?"
-    ]
+    "e": "🏠", "name": "My room", "color": "#5b6fd6",
+    "q": "Describe a room. Which one?",
+    "opts": [["🛏️", "my bedroom"], ["🏫", "my classroom"]],
+    "words": ["In my ... there's...", "There are...", "on / under / next to"],
+    "more": ["What's your favourite thing in it? Why?", "What would you like to have in it?"]
   }
 ];
 
@@ -470,32 +222,46 @@ let rotation = 0, spinning = false, lastIdx = -1;
 const randInt = (a,b) => a + Math.floor(Math.random()*(b-a+1));
 function pickIdx(){ let i; do { i = randInt(0, n-1); } while(i === lastIdx); lastIdx = i; return i; }
 function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=randInt(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+// "English way" rounds: go through every sentence in a shuffled order before any repeats.
+function nextRound(t){ if(!t._deck || !t._deck.length) t._deck = shuffle(t.rounds); return t._deck.pop(); }
 
 function showTopic(i){
   const t = TOPICS[i];
-  const opts = t.pairs ? t.list[randInt(0, t.list.length-1)] : shuffle(t.opts);
+  const round = t.rounds ? nextRound(t) : null;
+  const opts = round ? [] : (t.pairs ? t.list[randInt(0, t.list.length-1)] : shuffle(t.opts));
+  const help = round ? [round[1]] : (t.help || []);
+  const words = t.words || [], more = t.more || [];
   panel.classList.remove('idle');
   panel.innerHTML = `
     <div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div>
     <div class="q">${t.q}</div>
-    <div class="menu">${opts.map(o=>`<button class="opt"><span class="big">${o[0]}</span>${o[1]}</button>`).join('')}</div>
-    <button class="moreBtn ownBtn" id="ownBtn">My own answer</button>
-    <div class="words"><div class="cap">Sentence starters</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div>
-    <button class="moreBtn" id="moreBtn">What else? ➕</button>
-    <div class="more" id="more"><div class="cap">Next questions</div><ul>${t.more.map(q=>`<li>${q}</li>`).join('')}</ul></div>`;
+    ${round ? `<div class="q say">${round[0]}</div>` : ''}
+    ${opts.length ? `<div class="menu">${opts.map(o=>`<button class="opt"><span class="big">${o[0]}</span>${o[1]}</button>`).join('')}</div>
+    <button class="moreBtn ownBtn" id="ownBtn">My own answer</button>` : ''}
+    ${words.length ? `<div class="words"><div class="cap">Sentence starters</div>${words.map(w=>`<span class="chip">${w}</span>`).join('')}</div>` : ''}
+    ${help.length ? `<button class="moreBtn" id="helpBtn">Help 💡</button>
+    <div class="more help" id="help"><div class="cap">Say it like this</div><ul>${help.map(h=>`<li>${h}</li>`).join('')}</ul></div>` : ''}
+    ${more.length ? `<button class="moreBtn" id="moreBtn">What else? ➕</button>
+    <div class="more" id="more"><div class="cap">Next questions</div><ul>${more.map(q=>`<li>${q}</li>`).join('')}</ul></div>` : ''}
+    ${round ? `<button class="moreBtn ownBtn" id="nextBtn">Another one ➡️</button>` : ''}`;
   panel.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
     panel.querySelectorAll('.opt').forEach(x => x.classList.remove('on'));
     b.classList.add('on');
     document.getElementById('ownBtn').textContent = 'My own answer';
   }));
-  document.getElementById('ownBtn').addEventListener('click', () => {
+  const own = document.getElementById('ownBtn');
+  if (own) own.addEventListener('click', () => {
     panel.querySelectorAll('.opt').forEach(x => x.classList.remove('on'));
-    document.getElementById('ownBtn').textContent = 'Tell me your idea!';
+    own.textContent = 'Tell me your idea!';
   });
-  document.getElementById('moreBtn').addEventListener('click', () => {
-    document.getElementById('more').classList.add('show');
-    document.getElementById('moreBtn').style.display = 'none';
-  });
+  const reveal = (btnId, boxId) => {
+    const b = document.getElementById(btnId);
+    if (b) b.addEventListener('click', () => { document.getElementById(boxId).classList.add('show'); b.style.display = 'none'; });
+  };
+  reveal('helpBtn', 'help');
+  reveal('moreBtn', 'more');
+  const next = document.getElementById('nextBtn');
+  if (next) next.addEventListener('click', () => showTopic(i));
 }
 
 function spin(){

@@ -89,6 +89,9 @@
   .topic-menu button { font:inherit; font-size:14px; border:1px solid #d7c8ed; border-radius:18px; background:white; color:#5b21b6; padding:8px 12px; margin:4px; cursor:pointer; }
   button:focus-visible,summary:focus-visible { outline:3px solid #f59e0b; outline-offset:4px; }
   .swap { margin-top:16px; color:#695185; font-size:15px; }
+  .tnote { margin-top:14px; font-size:12px; color:#a99cc9; }
+  .tnote summary { cursor:pointer; }
+  .tnote p { margin-top:6px; font-size:14px; color:#695185; }
   @media(prefers-reduced-motion:reduce) { .wheel { transition:none; } }
 </style>
 </head>
@@ -117,15 +120,15 @@ const TOPICS = [
     "e": "🎮",
     "name": "Roblox",
     "qs": [
-      "What games do you play?",
-      "Do you play with Erin?",
-      "What do you like in the game?"
+      "Blade Ball or Pet Forest? Which game do you like?",
+      "What do you do in the game?",
+      "Does Erin play it too?"
     ],
     "words": [
-      "I play...",
-      "Yes, I do.",
-      "No, I don't.",
-      "I like..."
+      "I like...",
+      "In the game I...",
+      "Yes, she does.",
+      "No, she doesn't."
     ],
     "color": "#7552B5"
   },
@@ -133,31 +136,32 @@ const TOPICS = [
     "e": "🧸",
     "name": "Squishies",
     "qs": [
-      "Show me a squishy. What is it?",
-      "What colour is it?",
-      "Is it big or small?"
+      "Show me one squishy. What colour is it?",
+      "Now show me two squishies. Tell me about them.",
+      "How many squishies do you have? More than fifty?"
     ],
     "words": [
-      "This is my...",
-      "It's a...",
       "It's pink.",
-      "It's small."
+      "They are small.",
+      "I have ... squishies.",
+      "fifteen / fifty",
+      "nineteen / ninety"
     ],
     "color": "#9B4598"
   },
   {
-    "e": "🍕",
-    "name": "Food",
+    "e": "🍝",
+    "name": "Meals",
     "qs": [
-      "What food do you like?",
-      "What food don't you like?",
-      "Do you drink milk?"
+      "Breakfast, lunch or dinner: which is your favourite?",
+      "What did you have for breakfast today?",
+      "What did you have for dinner yesterday?"
     ],
     "words": [
-      "I like...",
-      "I don't like...",
-      "I drink...",
-      "pizza / fish / ice cream"
+      "My favourite is...",
+      "I had ... for breakfast.",
+      "I had ... for dinner.",
+      "breakfast / lunch / dinner"
     ],
     "color": "#B94C70"
   },
@@ -165,65 +169,61 @@ const TOPICS = [
     "e": "🏫",
     "name": "School",
     "qs": [
-      "Do you like your school?",
-      "Who is your friend at school?",
-      "What do you play at school?"
+      "Did you have your spelling test? Was it easy or hard?",
+      "Dasha says a word. Spell it.",
+      "Which word is hard for you?"
     ],
     "words": [
-      "Yes, I do.",
-      "No, I don't.",
-      "My friend is...",
-      "We play..."
+      "It was easy.",
+      "It was hard.",
+      "I think..."
     ],
-    "color": "#B26629"
+    "color": "#B26629",
+    "note": "Words to say: journey, danger, village, continue, prefer. If she drops a vowel, build it by syllables: jour-ney, dan-ger."
   },
   {
-    "e": "👭",
-    "name": "Friends",
+    "e": "👪",
+    "name": "Family",
     "qs": [
-      "Who do you play with?",
-      "What do you play together?",
-      "Does your friend like Roblox?"
+      "How old is your cousin now? Fifteen or fifty?",
+      "Did your dad bring presents from Italy?",
+      "What did he bring?"
     ],
     "words": [
-      "I play with...",
-      "We play...",
-      "Yes, she does.",
-      "No, she doesn't.",
-      "he / she"
+      "He is fifteen.",
+      "Yes, he did.",
+      "No, he didn't.",
+      "He brought..."
     ],
     "color": "#3C8063"
   },
   {
-    "e": "🎵",
-    "name": "Music",
+    "e": "🧹",
+    "name": "My desk",
     "qs": [
-      "Do you like singing?",
-      "What songs do you like?",
-      "Do you sing with Mia?"
+      "Is your desk clean or dirty?",
+      "Did you tidy up your desk this week?",
+      "Is your room big or small?"
     ],
     "words": [
-      "Yes, I do.",
-      "No, I don't.",
-      "I like...",
-      "We sing..."
+      "It's clean.",
+      "It isn't clean.",
+      "I tidied up my...",
+      "It's big. / It isn't big."
     ],
     "color": "#287A9C"
   },
   {
-    "e": "🐱",
-    "name": "Animals",
+    "e": "🔎",
+    "name": "Guess it!",
     "qs": [
-      "What animals do you like?",
-      "Do you like cats?",
-      "Choose an animal. Is it big or small?"
+      "I'm thinking of an animal. Ask me questions!",
+      "Ask me one more question.",
+      "Now you think of an animal. I ask!"
     ],
     "words": [
-      "I like...",
-      "I don't like...",
-      "It's big.",
-      "It's small.",
-      "cats / dogs / fish"
+      "Is it ___? big / small / grey",
+      "Does it ___? swim / eat fish / have a long tail"
     ],
     "color": "#536CB2"
   },
@@ -231,15 +231,14 @@ const TOPICS = [
     "e": "🤔",
     "name": "Pick one",
     "qs": [
-      "Pizza or ice cream?",
-      "A cat or a dog?",
-      "Roblox or singing?"
+      "Tea or hot chocolate? Which do you prefer?",
+      "A mountain or a river?",
+      "A village or a big city?"
     ],
     "words": [
-      "I choose...",
-      "I like...",
-      "It's fun.",
-      "It's cute."
+      "I prefer...",
+      "I prefer ... because it's ...",
+      "big / small / fun / cold"
     ],
     "color": "#9455AC"
   }
@@ -260,7 +259,7 @@ let rotation=0,spinning=false,lastIdx=-1;
 function orientLabels(){wheel.querySelectorAll('.lbl').forEach((d,i)=>{const mid=i*seg+seg/2;d.style.transform=`rotate(${mid}deg) translateY(calc(-1 * min(118px, 31vw))) rotate(${-mid-rotation}deg)`;});}
 function showTopic(i){
  const t=TOPICS[i];panel.classList.remove('idle');
- panel.innerHTML=`<div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div><ul>${t.qs.map(q=>`<li>${q}</li>`).join('')}</ul><div class="words"><div class="cap">Try saying</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div><p class="swap">Your turn: ask your teacher one question!</p>`;
+ panel.innerHTML=`<div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div><ul>${t.qs.map(q=>`<li>${q}</li>`).join('')}</ul><div class="words"><div class="cap">Try saying</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div><p class="swap">Your turn: ask your teacher one question!</p>${t.note?`<details class="tnote"><summary>For Dasha</summary><p>${t.note}</p></details>`:''}`;
 }
 function spin(){
  if(spinning)return;spinning=true;spinBtn.disabled=true;

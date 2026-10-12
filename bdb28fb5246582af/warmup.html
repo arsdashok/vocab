@@ -102,37 +102,38 @@
 <script>
 const TOPICS = [
   { e:'🏄‍♀️', name:'Surfing', color:'#7c3aed',
-    qs:['Did you surf today?','Were the waves big or small?','Was the water cold?'],
-    words:['I surfed…','the waves were…','I fell off','it was cold','it was fun'] },
+    qs:['Do you surf with a group or by yourself?','Were the waves big or small this week?','What do you like about surfing?'],
+    words:['I surf by myself','I surf with…','the waves were…','I know how to…','I fell off'] },
   { e:'🎮', name:'Roblox', color:'#a855f7',
-    qs:['What game did you play?','Who did you play with?','Did you win or lose?'],
-    words:['I played…','I found…','level','I won / I lost'] },
+    qs:['Did you play Pet Store Tycoon or a new game?','How many customers did you have?','What do you do in the game?'],
+    words:['I played…','I serve the customers','I found…',"I had … customers",'fish flakes'] },
   { e:'👭', name:'Emma', color:'#ec4899',
-    qs:['What did you do with Emma?','Did she sleep over?','What did you play together?'],
-    words:['we played…','we made…','sleepover','slime'] },
-  { e:'🐶', name:'My dog', color:'#f59e0b',
-    qs:["What's your dog doing now?",'Is your dog big or small?',"What's your dog called?"],
-    words:["he's / she's sleeping",'running','cute','my dog'] },
+    qs:['Do you and Emma play Roblox or go shopping?','Did you have a sleepover this week?','What do you and Emma bake?'],
+    words:['we play Roblox','we go shopping','we bake…','a sleepover','we make…'] },
+  { e:'🎂', name:'Birthdays', color:'#f59e0b',
+    qs:['Is your birthday in summer or in autumn?',"When is your birthday? And Emma's?",'What do you do on your birthday: a party or a sleepover?'],
+    words:['My birthday is on the … of …','the 1st / the 2nd / the 3rd','on my birthday','a party',"I'd like…"] },
   { e:'🍌', name:'Squishies', color:'#22c55e',
-    qs:['How many squishies have you got?',"What colour's your favourite?",'Did you make slime?'],
-    words:["I've got…",'soft','my favourite is…','slime'] },
+    qs:['Which is your favourite: the dumpling, the eye or the banana?','Is it soft or stretchy?',"How many squishies have you got now?"],
+    words:['my favourite is…',"it's stretchy","it's soft","I've got … squishies"] },
   { e:'🌤️', name:'Weather', color:'#0ea5e9',
-    qs:["What's the weather like today?",'Is it hot or cold?','How many degrees?'],
-    words:["it's hot",'sunny','rain','degrees'] },
+    qs:['Is it chilly or hot today?','Is it sunny or cloudy?','Is it still hot where you live?'],
+    words:["it's chilly","it's cloudy","it's sunny",'… degrees',"it's still hot"] },
   { e:'🪼', name:'Animals', color:'#14b8a6',
-    qs:['Did you see an animal today?',"What's your favourite animal? Why?",'Are you scared of any animal?'],
-    words:['jellyfish','it stung me','shark','scary','cute'] },
-  { e:'🏠', name:'My room', color:'#8b5cf6',
-    qs:["What's in your room?",'Have you got a surfboard?',"What's on your wall?"],
-    words:["there's a…",'there are…','posters','a big TV','surfboard'] },
+    qs:['Which pet is the best: a dog, a cat or a rabbit?','Are you scared of snakes or spiders?','Which animal is the scariest? Why?'],
+    words:['I think … is the best','… is the scariest because…',"I'm scared of…",'stray cats','a mouse / two mice','jellyfish'] },
+  { e:'💇‍♀️', name:'Hair and eyes', color:'#8b5cf6',
+    qs:["Is Emma's hair long or short?",'Is your hair curly, wavy or straight?',"Tell me about your mum's hair and eyes."],
+    words:["Emma's hair is…","She's got … hair",'size, shape, colour','My eyes are…','Her eyes are…'] },
   { e:'🤔', name:'Would you rather', color:'#ef4444', wyr:true,
-    words:["because it's…",'more fun','scary','I like…',"I don't like…"],
-    pairs:[['surf a huge wave','ride a fast skateboard'],
-           ['have a pet dragon','have a pet shark'],
+    words:["I'd rather…","because it's…","it's too … to…",'more fun','scary'],
+    pairs:[['go outside in the rain','fly in the rain'],
+           ['live in the coldest country','live in the hottest country'],
+           ['live in a palace','live on a houseboat'],
+           ['go to the USA','go to Japan'],
            ['play Roblox all day','watch films all day'],
-           ['go back to Porto','go somewhere new'],
-           ['make slime','make squishies'],
-           ['live at the beach','live in a big city']] }
+           ['have curly hair','have straight hair'],
+           ['get lost in a maze','get stuck in a bookshop']] }
 ];
 
 const n = TOPICS.length;
@@ -168,7 +169,7 @@ function showTopic(i){
     panel.innerHTML = `
       <div class="head"><span class="e">${t.e}</span><span class="name">${t.name}…</span></div>
       <div class="wyr-q">${p[0]}<br>&nbsp;&nbsp;or<br>${p[1]}?</div>
-      <div class="wyr-why">Pick one and say <b>why</b>. 🙂</div>
+      <div class="wyr-why">Pick one and say <b>why</b>: I'd rather … because it's … 🙂</div>
       <div class="words"><div class="cap">Helpful words</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div>`;
     return;
   }
