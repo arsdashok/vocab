@@ -170,7 +170,7 @@ const TOPICS = [
     "name": "School",
     "qs": [
       "Did you have your spelling test? Was it easy or hard?",
-      "Dasha says a word. Spell it.",
+      "I say a word. Spell it.",
       "Which word is hard for you?"
     ],
     "words": [
@@ -259,7 +259,7 @@ let rotation=0,spinning=false,lastIdx=-1;
 function orientLabels(){wheel.querySelectorAll('.lbl').forEach((d,i)=>{const mid=i*seg+seg/2;d.style.transform=`rotate(${mid}deg) translateY(calc(-1 * min(118px, 31vw))) rotate(${-mid-rotation}deg)`;});}
 function showTopic(i){
  const t=TOPICS[i];panel.classList.remove('idle');
- panel.innerHTML=`<div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div><ul>${t.qs.map(q=>`<li>${q}</li>`).join('')}</ul><div class="words"><div class="cap">Try saying</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div><p class="swap">Your turn: ask your teacher one question!</p>${t.note?`<details class="tnote"><summary>For Dasha</summary><p>${t.note}</p></details>`:''}`;
+ panel.innerHTML=`<div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div><ul>${t.qs.map(q=>`<li>${q}</li>`).join('')}</ul><div class="words"><div class="cap">Try saying</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div><p class="swap">Your turn: ask your teacher one question!</p>${t.note?`<details class="tnote"><summary>Teacher notes</summary><p>${t.note}</p></details>`:''}`;
 }
 function spin(){
  if(spinning)return;spinning=true;spinBtn.disabled=true;
