@@ -114,7 +114,21 @@
    Refreshed 12 Oct: Drawing, Books and Games retired (their "this week" premise
    failed live: "I didn't", "No, I didn't", "I didn't play"); My bag retired (old set).
    New: My clothes (uniform text), Minecraft house (her own info gap), Roblox games
-   (our end-of-lesson games), Wimpy Kid (the pages read together). */
+   (our end-of-lesson games), Wimpy Kid (the pages read together).
+   Refreshed 19 Oct (Dasha's OK): After school retired (its "this week" premise failed
+   live: "No, I didn't", 3 Oct; "I was busy this week and I didn't play", 10 Oct).
+   New: My phone yesterday (17 Oct technology phrases + her own screenshots of songs),
+   Tech pets (17 Oct listening 2.2; species from the Go Getter 2 audio script).
+   My clothes now jumper / trousers / socks (what she named 17 Oct), Breakfast has an
+   apple ("I just eat one apple", 17 Oct), Roblox games adds the chip "rare fish".
+   This or that retired to keep nine readable sectors: it is the one sector about
+   nothing that has already happened, and the next target is past questions.
+   No emoji shows a jumper, trousers or a guinea pig, so those three are small drawings. */
+const PIC = {
+  jumper: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M22 15h20l13 9-5 22-8-3v9a2 2 0 0 1-2 2H24a2 2 0 0 1-2-2v-9l-8 3-5-22z' fill='#3f8f5c' stroke='#2a6440' stroke-width='2' stroke-linejoin='round'/><path d='M22 15a10 5 0 0 0 20 0' fill='none' stroke='#2a6440' stroke-width='2'/><rect x='22' y='45' width='20' height='6' rx='1' fill='#2f7049'/><rect x='9' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(12 13 43)'/><rect x='46' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(-12 51 43)'/></svg>",
+  trousers: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M20 10h24v8l-3 36h-9l-1-24-1 24h-9l-3-36z' fill='#8b8f98' stroke='#5c6069' stroke-width='2' stroke-linejoin='round'/><rect x='20' y='10' width='24' height='5' fill='#5c6069'/><line x1='32' y1='18' x2='32' y2='30' stroke='#5c6069' stroke-width='1.6'/></svg>",
+  guineaPig: "<svg width='48' height='38' viewBox='4 16 56 44' xmlns='http://www.w3.org/2000/svg'><ellipse cx='30' cy='37' rx='24' ry='15' fill='#c98a4b' stroke='#7a4e22' stroke-width='2'/><path d='M20 25c6-4 14-4 18 2-2 9-12 12-20 8z' fill='#fff' opacity='.9'/><path d='M40 24c8-3 16 2 17 11 1 6-4 10-10 10' fill='#c98a4b' stroke='#7a4e22' stroke-width='2'/><path d='M43 25c-2-5 3-8 6-5' fill='#e8a3a3' stroke='#7a4e22' stroke-width='1.6'/><circle cx='50' cy='31' r='2.4' fill='#222'/><circle cx='57' cy='37' r='1.6' fill='#7a4e22'/><rect x='17' y='49' width='6' height='5' rx='2' fill='#e8a3a3'/><rect x='38' y='49' width='6' height='5' rx='2' fill='#e8a3a3'/></svg>"
+};
 const TOPICS = [
   { e:'🌦️', name:'Riga weather', color:'#0ea5e9',
     q:'What is the weather like in Riga today?',
@@ -123,7 +137,7 @@ const TOPICS = [
     words:["It's…",'degrees','a jacket','a hoodie','something warm'] },
   { e:'🍳', name:'Breakfast', color:'#f59e0b',
     q:'What did you have for breakfast today?',
-    opts:[['🥣','cereal'],['🍳','eggs'],['🥪','a sandwich'],['🥞','pancakes']],
+    opts:[['🥣','cereal'],['🍳','eggs'],['🥪','a sandwich'],['🍎','an apple']],
     more:['What time did you have it?','What did you drink?','What do you take to school for lunch?'],
     words:['I had…','I drank…','at 8 o\'clock','I take…','sometimes'] },
   { e:'📚', name:'School day', color:'#8b5cf6',
@@ -133,14 +147,14 @@ const TOPICS = [
     words:['I had…','at 8:30','on Friday','in the morning'] },
   { e:'👕', name:'My clothes', color:'#ec4899',
     q:'Which of these are you wearing today?',
-    opts:[['👕','a T-shirt'],['🧶','a jumper'],['👖','jeans'],['👟','trainers']],
+    opts:[['👕','a T-shirt'],[PIC.jumper,'a jumper'],[PIC.trousers,'trousers'],['🧦','socks']],
     more:['What colour is it?','What do you wear on Saturdays?','What does Josh wear to school?'],
     words:["I'm wearing…","I'm also wearing…",'dark blue','a hoodie','shoes'] },
-  { e:'🏠', name:'After school', color:'#6366f1',
-    q:'What did you do after school this week?',
-    opts:[['📝','homework'],['📺','YouTube'],['⛏️','Minecraft'],['🚶','a walk']],
-    more:['What time did you start?','Which day was the busiest?','What did you watch on YouTube?'],
-    words:['I did my homework','I watched…','at 5 o\'clock','on Tuesday','in my room'] },
+  { e:'📱', name:'My phone yesterday', color:'#6366f1',
+    q:'Which of these did you do on your phone yesterday?',
+    opts:[['🌐','go online'],['💬','text a friend'],['🎵','take screenshots of songs'],['🤳','take a selfie']],
+    more:['What do you do on your phone after school? Use two phrases from today.','What does your phone say about your screen time yesterday?','Which song did you save last?'],
+    words:['I went online','I texted…','I took screenshots of…','I took a selfie','for an hour'] },
   { e:'⛏️', name:'Minecraft house', color:'#22c55e',
     q:'Which of these are in your Minecraft house?',
     opts:[['🛏️','a bed'],['🛠️','a crafting table'],['🐕','a dog'],['🪟','windows']],
@@ -150,21 +164,17 @@ const TOPICS = [
     q:'Which of our Roblox games was the most fun?',
     opts:[['🚕','Taxi Boss'],['🏄','Surf and Rescue'],['🚩','Color My Flag'],['💵','the bidding game']],
     more:['Who won?','How many dollars did you have?','Which one do you want to play today?'],
-    words:['The most fun was…','I won','I got…','dollars','I want to play…'] },
+    words:['The most fun was…','I won','I got…','rare fish','dollars','I want to play…'] },
+  { e:'🐾', name:'Tech pets', color:'#a855f7',
+    q:'Which pet was the funniest?',
+    opts:[[PIC.guineaPig,'Manny the guinea pig'],['🦎','Len the lizard'],['🐈','Kitty the cat'],['🐕','Charlie the dog']],
+    more:['What does Kitty like doing?','Where does Len like sleeping?','Which one would you like as a pet?'],
+    words:['The funniest was…','He likes…','She likes…','the keyboard','headphones'] },
   { e:'📖', name:'Wimpy Kid', color:'#f97316',
     q:'Which part of Wimpy Kid was the funniest?',
     opts:[['🧀','the Cheese Touch'],['⏰',"Rodrick's trick"],['📚','the reading groups']],
     more:['What happens if you get the Cheese Touch?','What did Rodrick do to Greg?','Can you say one page in one sentence?'],
-    words:['The funniest part was…','Greg','Rodrick','he thought it was…','funny'] },
-  { e:'🤔', name:'This or that', color:'#ef4444', pairs:true,
-    q:'Which one would you choose?',
-    list:[[['🐉','a pet dragon'],['🐺','a pet wolf']],
-          [['🎬','a film at the cinema'],['🛋️','a film at home']],
-          [['❄️','a snowy day'],['☀️','a sunny day']],
-          [['📺','watching a let\'s play'],['🎮','playing the game yourself']],
-          [['🏖️','a day at the sea'],['🏔️','a day in the mountains']]],
-    more:['Which one would Greg choose?'],
-    words:["I'd choose…",'because…','the dragon','the cinema','a snowy day'] }
+    words:['The funniest part was…','Greg','Rodrick','he thought it was…','funny'] }
 ];
 
 const n = TOPICS.length, seg = 360 / n;

@@ -100,31 +100,42 @@
   <div class="foot">Tip: answer in a full sentence, and say a little more than one word.</div>
 
 <script>
+// Refreshed 19 Oct 2026 (Dasha's OK), content only, machinery unchanged, 9 sectors.
+// Kept: Surfing, Birthdays, Would you rather (unchanged).
+// Retired: Animals (last spun 23 Sept; it rested on an open "Why?").
+// New: Yesterday (15 Oct Next, "What did you do yesterday?" -> I went...; menu = surfing,
+//   a walk with a friend, Roblox, all from her recent lessons; chips from 15 Oct).
+// Changed: Roblox menu = Pet Store Tycoon (8 Oct), the diving game (14 Oct, title not
+//   verified, she read it as "Shelf Dive Monsters"), the Tamagotchi game (15 Oct);
+//   Emma: sleepover question (15 Sept) replaced by "Did Emma and Mia come for dinner?"
+//   (15 Oct "Tomorrow Emma and Mia are coming for dinner");
+//   Hair and eyes: "She's got ... hair" chip removed (15 Oct hinge keeps that frame off screen);
+//   Squishies and Weather: "because it's..." chip added (14 Oct Next).
 const TOPICS = [
   { e:'🏄‍♀️', name:'Surfing', color:'#7c3aed',
     qs:['Do you surf with a group or by yourself?','Were the waves big or small this week?','What do you like about surfing?'],
     words:['I surf by myself','I surf with…','the waves were…','I know how to…','I fell off'] },
   { e:'🎮', name:'Roblox', color:'#a855f7',
-    qs:['Did you play Pet Store Tycoon or a new game?','How many customers did you have?','What do you do in the game?'],
-    words:['I played…','I serve the customers','I found…',"I had … customers",'fish flakes'] },
+    qs:['Did you play Pet Store Tycoon, the diving game or the Tamagotchi game?','How many Tamagotchis have you got?','What do you do in the game?'],
+    words:['I played…',"I've got … Tamagotchis","I'm on level …",'I serve the customers','I found…','fish flakes'] },
   { e:'👭', name:'Emma', color:'#ec4899',
-    qs:['Do you and Emma play Roblox or go shopping?','Did you have a sleepover this week?','What do you and Emma bake?'],
-    words:['we play Roblox','we go shopping','we bake…','a sleepover','we make…'] },
+    qs:['Do you and Emma play Roblox or go shopping?','Did Emma and Mia come for dinner?','What do you and Emma bake?'],
+    words:['we play Roblox','we go shopping',"Yes, they did / No, they didn't",'they came for dinner','we bake…','we make…'] },
   { e:'🎂', name:'Birthdays', color:'#f59e0b',
     qs:['Is your birthday in summer or in autumn?',"When is your birthday? And Emma's?",'What do you do on your birthday: a party or a sleepover?'],
     words:['My birthday is on the … of …','the 1st / the 2nd / the 3rd','on my birthday','a party',"I'd like…"] },
   { e:'🍌', name:'Squishies', color:'#22c55e',
     qs:['Which is your favourite: the dumpling, the eye or the banana?','Is it soft or stretchy?',"How many squishies have you got now?"],
-    words:['my favourite is…',"it's stretchy","it's soft","I've got … squishies"] },
+    words:['my favourite is…',"because it's…","it's stretchy","it's soft","I've got … squishies"] },
   { e:'🌤️', name:'Weather', color:'#0ea5e9',
     qs:['Is it chilly or hot today?','Is it sunny or cloudy?','Is it still hot where you live?'],
-    words:["it's chilly","it's cloudy","it's sunny",'… degrees',"it's still hot"] },
-  { e:'🪼', name:'Animals', color:'#14b8a6',
-    qs:['Which pet is the best: a dog, a cat or a rabbit?','Are you scared of snakes or spiders?','Which animal is the scariest? Why?'],
-    words:['I think … is the best','… is the scariest because…',"I'm scared of…",'stray cats','a mouse / two mice','jellyfish'] },
+    words:["it's chilly","it's cloudy","it's sunny",'… degrees',"it's still hot","because it's…"] },
+  { e:'🗓️', name:'Yesterday', color:'#14b8a6',
+    qs:['What did you do yesterday: surfing 🏄‍♀️, a walk with a friend 🚶‍♀️ or Roblox 🎮?','Was it fun or boring?','What else did you do yesterday?'],
+    words:['I went surfing','I went for a walk with my friend','I played Roblox','it was…'] },
   { e:'💇‍♀️', name:'Hair and eyes', color:'#8b5cf6',
     qs:["Is Emma's hair long or short?",'Is your hair curly, wavy or straight?',"Tell me about your mum's hair and eyes."],
-    words:["Emma's hair is…","She's got … hair",'size, shape, colour','My eyes are…','Her eyes are…'] },
+    words:["Emma's hair is…",'size, shape, colour','My eyes are…','Her eyes are…'] },
   { e:'🤔', name:'Would you rather', color:'#ef4444', wyr:true,
     words:["I'd rather…","because it's…","it's too … to…",'more fun','scary'],
     pairs:[['go outside in the rain','fly in the rain'],

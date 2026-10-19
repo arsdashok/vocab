@@ -112,17 +112,26 @@
     <div class="panel idle" id="panel" aria-live="polite">Spin to start! 👉</div>
   </div>
 
-  <details class="topic-menu"><summary>Choose a topic</summary><div id="topicChoices"></div></details><div class="foot">Try a short sentence. Then ask your teacher!</div>
+  <details class="topic-menu"><summary>Choose a topic</summary><div id="topicChoices"></div></details><div class="foot">Try a short sentence. Then ask me!</div>
 
 <script>
+/* Refreshed 19 Oct (Dasha's OK):
+   Kept: Roblox, Squishies (+ the 16 Oct colours: dark green, lime green, light red, magenta),
+   Meals, My desk, Guess it!, Pick one (now carries the spelling note that was on School).
+   Retired: School (its opener "Did you have your spelling test?" was answered on 16 Oct)
+   and Family (dad's Italy gifts and the cousin's 15th are 9 Oct news).
+   New: My week (16 Oct: "Friday, Saturday I don't go to school", "No, I don't",
+   "Yes, I do, but not every day") and Does he / she? (16 Oct: does-questions about her
+   family with short answers). The cousin + Roblox question stays on card 6 of the
+   16 Oct picture race, so it is not asked here. */
 const TOPICS = [
   {
     "e": "🎮",
     "name": "Roblox",
     "qs": [
-      "Blade Ball or Pet Forest? Which game do you like?",
-      "What do you do in the game?",
-      "Does Erin play it too?"
+      "Blade Ball or Pet Forest? Which game do you like?",
+      "What do you do in the game?",
+      "Does Erin play it too?"
     ],
     "words": [
       "I like...",
@@ -136,16 +145,18 @@ const TOPICS = [
     "e": "🧸",
     "name": "Squishies",
     "qs": [
-      "Show me one squishy. What colour is it?",
-      "Now show me two squishies. Tell me about them.",
-      "How many squishies do you have? More than fifty?"
+      "Show me one squishy. What colour is it?",
+      "Now show me two squishies. Tell me about them.",
+      "How many squishies do you have? More than fifty?"
     ],
     "words": [
       "It's pink.",
       "They are small.",
       "I have ... squishies.",
       "fifteen / fifty",
-      "nineteen / ninety"
+      "nineteen / ninety",
+      "dark green / lime green",
+      "light red / magenta"
     ],
     "color": "#9B4598"
   },
@@ -153,9 +164,9 @@ const TOPICS = [
     "e": "🍝",
     "name": "Meals",
     "qs": [
-      "Breakfast, lunch or dinner: which is your favourite?",
-      "What did you have for breakfast today?",
-      "What did you have for dinner yesterday?"
+      "Breakfast, lunch or dinner: which is your favourite?",
+      "What did you have for breakfast today?",
+      "What did you have for dinner yesterday?"
     ],
     "words": [
       "My favourite is...",
@@ -166,34 +177,33 @@ const TOPICS = [
     "color": "#B94C70"
   },
   {
-    "e": "🏫",
-    "name": "School",
+    "e": "🗓️",
+    "name": "My week",
     "qs": [
-      "Did you have your spelling test? Was it easy or hard?",
-      "I say a word. Spell it.",
-      "Which word is hard for you?"
+      "Friday, Saturday, Sunday or Monday: which day do you like best?",
+      "Do you go to school on Sunday?",
+      "Do you go to school on Friday?"
     ],
     "words": [
-      "It was easy.",
-      "It was hard.",
-      "I think..."
+      "I like...",
+      "It's a day off.",
+      "Yes, I do.",
+      "No, I don't."
     ],
-    "color": "#B26629",
-    "note": "Words to say: journey, danger, village, continue, prefer. If she drops a vowel, build it by syllables: jour-ney, dan-ger."
+    "color": "#B26629"
   },
   {
-    "e": "👪",
-    "name": "Family",
+    "e": "👫",
+    "name": "Does he / she?",
     "qs": [
-      "How old is your cousin now? Fifteen or fifty?",
-      "Did your dad bring presents from Italy?",
-      "What did he bring?"
+      "Pizza 🍕, milk 🥛, books 📚 or ice cream 🍦: what does Mia like?",
+      "Does your dad like pizza?",
+      "Does your dad read books?"
     ],
     "words": [
-      "He is fifteen.",
-      "Yes, he did.",
-      "No, he didn't.",
-      "He brought..."
+      "He likes... / She likes...",
+      "Yes, he does.",
+      "No, she doesn't."
     ],
     "color": "#3C8063"
   },
@@ -201,9 +211,9 @@ const TOPICS = [
     "e": "🧹",
     "name": "My desk",
     "qs": [
-      "Is your desk clean or dirty?",
-      "Did you tidy up your desk this week?",
-      "Is your room big or small?"
+      "Is your desk clean or dirty?",
+      "Did you tidy up your desk this week?",
+      "Is your room big or small?"
     ],
     "words": [
       "It's clean.",
@@ -217,9 +227,9 @@ const TOPICS = [
     "e": "🔎",
     "name": "Guess it!",
     "qs": [
-      "I'm thinking of an animal. Ask me questions!",
-      "Ask me one more question.",
-      "Now you think of an animal. I ask!"
+      "I'm thinking of an animal. Ask me questions!",
+      "Ask me one more question.",
+      "Now you think of an animal. I ask!"
     ],
     "words": [
       "Is it ___? big / small / grey",
@@ -231,16 +241,17 @@ const TOPICS = [
     "e": "🤔",
     "name": "Pick one",
     "qs": [
-      "Tea or hot chocolate? Which do you prefer?",
-      "A mountain or a river?",
-      "A village or a big city?"
+      "Tea or hot chocolate? Which do you prefer?",
+      "A mountain or a river?",
+      "A village or a big city?"
     ],
     "words": [
       "I prefer...",
       "I prefer ... because it's ...",
       "big / small / fun / cold"
     ],
-    "color": "#9455AC"
+    "color": "#9455AC",
+    "note": "Mountain, river, village and prefer are from her 9 Oct school spelling list. To check spelling, say one and ask her to spell it. If she drops the vowel between consonants, build it by syllables: jour-ney, dan-ger, vil-lage, pre-fer."
   }
 ];
 
@@ -259,7 +270,7 @@ let rotation=0,spinning=false,lastIdx=-1;
 function orientLabels(){wheel.querySelectorAll('.lbl').forEach((d,i)=>{const mid=i*seg+seg/2;d.style.transform=`rotate(${mid}deg) translateY(calc(-1 * min(118px, 31vw))) rotate(${-mid-rotation}deg)`;});}
 function showTopic(i){
  const t=TOPICS[i];panel.classList.remove('idle');
- panel.innerHTML=`<div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div><ul>${t.qs.map(q=>`<li>${q}</li>`).join('')}</ul><div class="words"><div class="cap">Try saying</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div><p class="swap">Your turn: ask your teacher one question!</p>${t.note?`<details class="tnote"><summary>Teacher notes</summary><p>${t.note}</p></details>`:''}`;
+ panel.innerHTML=`<div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div><ul>${t.qs.map(q=>`<li>${q}</li>`).join('')}</ul><div class="words"><div class="cap">Try saying</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div><p class="swap">Your turn: ask me one question!</p>${t.note?`<details class="tnote"><summary>Teacher notes</summary><p>${t.note}</p></details>`:''}`;
 }
 function spin(){
  if(spinning)return;spinning=true;spinBtn.disabled=true;

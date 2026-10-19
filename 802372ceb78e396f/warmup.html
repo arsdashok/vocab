@@ -112,6 +112,14 @@
   <details class="topic-menu"><summary>Choose a topic</summary><div id="topicChoices"></div></details><div class="foot">One short sentence is great. You can use the words above!</div>
 
 <script>
+/* Refreshed 19 Oct 2026 (Dasha's OK), data only:
+   Kept: Squishies, School bag, At school, Breakfast, Hobbies, Roblox, The beach.
+   Retired: Pets (7 Aug animals, 11 Sept mice / fish; the oldest premise).
+   New: My body (16 Oct: hand vs arm, fingers, hair, shoulders, knees; Simon says with HER as Simon).
+   Changed: Squishies + «Is your slime hard?» (16 Oct slime); Breakfast egg choice is now the 16 Oct
+   egg types (sunny side up, boiled, scrambled); At school + her school English test (Thu 22 Oct);
+   Roblox + the 9 Oct directions «diagonally» and «lower».
+   Not used: 🖐️ for fingers (renders the same as ✋) and the hair emoji (unreadable at this size). */
 const TOPICS = [
   {
     "e": "🧸",
@@ -119,12 +127,14 @@ const TOPICS = [
     "qs": [
       "Show me your favourite squishy. What colour is it?",
       "Is it big or small?",
+      "Is your slime hard?",
       "How many squishies have you got? More than one hundred?"
     ],
     "words": [
       "This is my favourite ___.",
       "It's pink.",
       "It's small.",
+      "This is my slime. It's hard.",
       "I have more than one hundred."
     ],
     "color": "#7552B5"
@@ -148,11 +158,14 @@ const TOPICS = [
     "e": "📖",
     "name": "At school",
     "qs": [
+      // Her school English test was Thu 22 Oct: swap this first question out after 23 Oct.
+      "Did you have your English test on Thursday? Was it easy?",
       "Are you good at English? Yes or no?",
       "What is your favourite subject? English, maths or art?",
       "Do you have a lot of homework?"
     ],
     "words": [
+      "Yes, I did. It was easy.",
       "Yes, I am.",
       "I'm good at English.",
       "My favourite subject is...",
@@ -164,12 +177,12 @@ const TOPICS = [
     "e": "🍳",
     "name": "Breakfast",
     "qs": [
-      "Breakfast today: eggs, bread or cereal?",
+      "Eggs: sunny side up, boiled or scrambled? Which do you like?",
       "Did you have breakfast with your family?",
       "What did you have for dinner yesterday?"
     ],
     "words": [
-      "I had eggs.",
+      "I like scrambled eggs.",
       "Yes, I did.",
       "I had breakfast with my family.",
       "I had... for dinner."
@@ -197,13 +210,14 @@ const TOPICS = [
     "e": "🎮",
     "name": "Roblox",
     "qs": [
-      "Tell me where to go: left, right, up or down?",
+      "Tell me where to go: left, right, up, down or diagonally?",
       "You versus me. Who wins?",
       "What game do you play now?"
     ],
     "words": [
       "Go left.",
-      "Go down.",
+      "Go diagonally.",
+      "Go lower.",
       "It's me versus you.",
       "I win!",
       "I play..."
@@ -211,18 +225,19 @@ const TOPICS = [
     "color": "#287A9C"
   },
   {
-    "e": "🐶",
-    "name": "Pets",
+    "e": "🧍‍♀️",
+    "name": "My body",
     "qs": [
-      "Your favourite pet: a dog, a cat or a horse?",
-      "Look: 🐭🐭🐭 Tell me.",
-      "Look: 🐟🐟 Tell me."
+      "Point to your arm, then your hand. What's this?",
+      "Look: ✋ 💪 Hand or arm? Tell me.",
+      "Wiggle your fingers. Tell me.",
+      "Now you're Simon! Hair, knees or shoulders: tell me what to touch."
     ],
     "words": [
-      "My favourite pet is a ___.",
-      "These are three ___.",
-      "These are two ___.",
-      "They are small."
+      "This is my hand.",
+      "These are my fingers.",
+      "It's an arm.",
+      "Simon says, touch your ___!"
     ],
     "color": "#536CB2"
   },
@@ -258,7 +273,7 @@ let rotation=0,spinning=false,lastIdx=-1;
 function orientLabels(){wheel.querySelectorAll('.lbl').forEach((d,i)=>{const mid=i*seg+seg/2;d.style.transform=`rotate(${mid}deg) translateY(calc(-1 * min(118px, 31vw))) rotate(${-mid-rotation}deg)`;});}
 function showTopic(i){
  const t=TOPICS[i];panel.classList.remove('idle');
- panel.innerHTML=`<div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div><ul>${t.qs.map(q=>`<li>${q}</li>`).join('')}</ul><div class="words"><div class="cap">Try saying</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div><p class="swap">Choose a question for your teacher. Ask it together!</p>`;
+ panel.innerHTML=`<div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div><ul>${t.qs.map(q=>`<li>${q}</li>`).join('')}</ul><div class="words"><div class="cap">Try saying</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div><p class="swap">Choose a question for me. Ask it together!</p>`;
 }
 function spin(){
  if(spinning)return;spinning=true;spinBtn.disabled=true;

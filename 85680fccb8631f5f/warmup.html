@@ -117,8 +117,15 @@
 
   <div class="foot">Choose an idea or give your own. Say a sentence, then ask me!</div>
 
-<details><summary>Teacher notes</summary><p>Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today’s date. Five topics are the oral questions of the Collège Sylvain Menu test (About me, Why join?, Countries, Culture, Last film): play the examiner, wait for her answer, then ask one follow-up from «What else?». Right now, Interests and English way practise the French-style forms from her lessons and homework (has … years old, in this moment, one language more, interested with / by, they original, to can, other persons). Keep the sentence starters visible. «Help 💡» shows the correct version: open it only after she has tried, and let her say the whole sentence again herself. In English way, «at the moment» repairs her «in this moment»; «right now» is also fine. If mechanic or favourite comes up, ask her to spell it aloud. A personal answer does not have to match a button. Invite her to ask you a question too.</p></details>
+<details><summary>Teacher notes</summary><p>Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today’s date. Five topics are the oral questions of the Collège Sylvain Menu test (About me, Why join?, Countries, Culture, Last film): play the examiner, wait for her answer, then ask one follow-up from «What else?». Last film offers the five films from 14 October; ask where she watched it as a follow-up. Right now and English way practise the forms from her lessons and homework (has … years old, in this moment, one language more, interested with / by, they original, to can, other persons; from 14 October: is looking like my father, there's lots of tables, an hamster). My room carries «There are lots of…» for the test's classroom and bedroom writing. Costume party comes from the Party time unit (pirate, pilot, clown, film star, and her own ghost costume). Keep the sentence starters visible. «Help 💡» shows the correct version: open it only after she has tried, and let her say the whole sentence again herself. In English way, «at the moment» repairs her «in this moment»; «right now» is also fine. If mechanic or favourite comes up, ask her to spell it aloud. A personal answer does not have to match a button. Invite her to ask you a question too.</p></details>
 <script>
+// Refreshed 19 Oct 2026 (Dasha's OK), nine topics.
+// Kept from 12 Oct: About me, Right now, Why join?, Countries, English way, My room.
+// Changed: Culture (films dropped, they failed live 14 Oct; menu from 7 Oct: Halloween, castles, corgis, Roald Dahl's books);
+//   Last film (menu = the five films from 14 Oct; «Where did you watch it?» moved to the follow-ups);
+//   My room (+ «There are lots of...», 14 Oct); English way (+ three 14 Oct slips: looks like, there are lots of, a hamster).
+// Retired: Books, Interests (not test questions; «interested in» right on the 7 Oct sheet, marked 14 Oct).
+// New: Costume party (Party time unit, 14 Oct: pirate, pilot, clown, film star, her ghost costume).
 const TOPICS = [
   {
     "e": "🙋", "name": "About me", "color": "#7957c7",
@@ -157,7 +164,10 @@ const TOPICS = [
       ["“Sam is interested by horses.”", "Sam is interested in horses."],
       ["“I want to read these books in they original language.”", "I want to read these books in their original language."],
       ["“I'm learning English to can read books in English.”", "I'm learning English to be able to read books in English."],
-      ["“At camp we met lots of other persons.”", "At camp we met lots of other people."]
+      ["“At camp we met lots of other persons.”", "At camp we met lots of other people."],
+      ["“He's looking like my father.”", "He looks like my father."],
+      ["“In my classroom there's lots of tables.”", "In my classroom there are lots of tables."],
+      ["“I'd like an hamster in my classroom.”", "I'd like a hamster in my classroom."]
     ]
   },
   {
@@ -168,39 +178,32 @@ const TOPICS = [
     "more": ["What did you see there? / What do you want to see there?", "Who would you like to go with?"]
   },
   {
-    "e": "🔍", "name": "Interests", "color": "#ce5b84",
-    "q": "What are you interested in? Choose one.",
-    "opts": [["🦇", "animals"], ["📚", "books"], ["🧶", "knitting"], ["💃", "flamenco"]],
-    "words": ["I'm interested in...", "My friend is interested in...", "I like it because..."],
-    "more": ["Tell me one more thing about it.", "Is someone in your family interested in it too?"]
-  },
-  {
     "e": "🎃", "name": "Culture", "color": "#168978",
     "q": "The examiner asks: “What do you enjoy about English-speaking culture?”",
-    "opts": [["📚", "the books"], ["🎬", "the films"], ["🎃", "Halloween"], ["🏰", "the castles"]],
+    "opts": [["🎃", "Halloween"], ["🏰", "the castles"], ["🐕", "corgis"], ["📚", "Roald Dahl's books"]],
     "words": ["I really enjoy...", "My favourite ... is...", "because..."],
     "more": ["Which one is your favourite? Why?", "Do you have it in France too?"]
   },
   {
-    "e": "📚", "name": "Books", "color": "#9562bd",
-    "q": "Which book do you want to talk about?",
-    "opts": [["🐉", "Wings of Fire"], ["🐈", "Warrior Cats"], ["📖", "Matilda"], ["🐲", "Cats and Dragon"]],
-    "words": ["It's about...", "My favourite character is...", "He's / She's a bit..."],
-    "more": ["What's your favourite character like?", "What language did you read it in? Would you like to read it in English?"]
-  },
-  {
     "e": "🎬", "name": "Last film", "color": "#c25751",
-    "q": "The examiner asks: “What's the last film you watched?” Where did you watch it?",
-    "opts": [["🍿", "at the cinema"], ["📺", "at home"], ["💻", "on a tablet"], ["👫", "at a friend's house"]],
+    "q": "The examiner asks: “What's the last film you watched?” Choose one.",
+    "opts": [["🫏", "Shrek"], ["🐻", "Paddington"], ["📖", "Matilda"], ["🦊", "Fantastic Mr Fox"], ["🪄", "Harry Potter"]],
     "words": ["The last film I watched was...", "I watched it...", "It's about...", "I liked it because..."],
-    "more": ["Who did you watch it with?", "Who was your favourite character? Why?"]
+    "more": ["Where did you watch it?", "Who did you watch it with?", "Who was your favourite character? Why?"]
   },
   {
     "e": "🏠", "name": "My room", "color": "#5b6fd6",
     "q": "Describe a room. Which one?",
     "opts": [["🛏️", "my bedroom"], ["🏫", "my classroom"]],
-    "words": ["In my ... there's...", "There are...", "on / under / next to"],
+    "words": ["In my ... there's...", "There are...", "There are lots of...", "on / under / next to"],
     "more": ["What's your favourite thing in it? Why?", "What would you like to have in it?"]
+  },
+  {
+    "e": "🎭", "name": "Costume party", "color": "#ce5b84",
+    "q": "It's a costume party! Who are you?",
+    "opts": [["🦜", "pirate"], ["🧑‍✈️", "pilot"], ["🤡", "clown"], ["⭐", "film star"], ["👻", "ghost"]],
+    "words": ["I'm a ... because ..."],
+    "more": ["What are you wearing?", "Now choose a costume for me! Why that one?"]
   }
 ];
 
