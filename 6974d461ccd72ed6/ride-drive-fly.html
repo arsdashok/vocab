@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ride, drive or fly?</title>
+<!-- Built 2026-10-26 for Юля's lesson on Tue 27 Oct (Dasha: «перед пантомимой разложите карточки транспорта
+     на ride / drive / fly. И держи на экране "play tennis" без артикля… Слово "friends" оказалось для неё новым. сделай»).
+     Why: 26 Oct mime game «You are playing a plane» for flying (Dasha: «ride или fly?»), 21 Oct «I'm driving a motorbike»;
+     AB p.73 «He is playing a… tennis», September «play the tennis»; «friends» new on 26 Oct.
+     Screens: 1 sort (tap a picture, tap ride / drive / fly), 2 the board to keep on screen during the mime game,
+     3 one chat card with friends. Only the taught transport set; boat and train left out (no clean single verb for her level).
+     Correct bins: ride = bike, motorbike, horse; drive = car, lorry, bus; fly = plane, helicopter.
+     Bank order is jumbled: horse, car, plane, bike, lorry, helicopter, motorbike, bus.
+     No sound anywhere on this page. No pupil name on the page: it is screen-shared. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Duolingo style (Admin/Design Styles/DESIGN duolingo.md), as on Erin_HasHave_PronounFirst.html. */
+:root {
+  --green:#58cc02; --green-edge:#58a700; --green-light:#d7ffb8; --green-text:#58a700;
+  --sky:#1cb0f6; --sky-edge:#1899d6; --sky-light:#ddf4ff;
+  --red:#ff4b4b; --red-light:#ffdfe0;
+  --grape:#a570ff; --grape-light:#efe6ff; --sun:#ffc700; --sun-light:#fff6d6;
+  --gray:#e5e5e5; --silver:#afafaf; --graphite:#777777; --charcoal:#4b4b4b; --ink:#3c3c3c;
+  --feather:'Fredoka','Baloo 2','Segoe UI',sans-serif;
+  --din:'Nunito','Varela Round','Segoe UI',sans-serif;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:var(--din); letter-spacing:.053em; background:#fff; color:var(--ink); min-height:100vh; }
+.wrap { max-width:1200px; margin:0 auto; padding:14px 20px 28px; }
+header { display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:14px; }
+header h1 { margin:0; font-family:var(--feather); font-weight:700; font-size:30px; letter-spacing:-.02em; color:var(--green); white-space:nowrap; }
+.tabs { display:flex; gap:10px; flex-wrap:wrap; margin-left:auto; }
+.tab { font-family:var(--din); letter-spacing:.053em; font-size:16px; font-weight:800; padding:9px 18px; border-radius:14px;
+       border:2px solid var(--gray); background:#fff; color:var(--charcoal); cursor:pointer; box-shadow:0 4px 0 var(--gray); }
+.tab.on { background:var(--sky-light); border-color:var(--sky); color:var(--sky-edge); box-shadow:0 4px 0 var(--sky); }
+.screen { display:none; } .screen.on { display:block; }
+.lead { font-family:var(--feather); font-weight:600; font-size:28px; letter-spacing:0; color:var(--ink); margin:4px 0 4px; }
+.sub { font-size:16px; color:var(--graphite); margin:0 0 14px; }
+.bar { height:14px; background:var(--gray); border-radius:999px; overflow:hidden; margin:0 0 16px; }
+#fill { height:100%; width:0; background:var(--green); border-radius:999px; transition:width .35s; }
+
+/* sort */
+.bank { display:grid; grid-template-columns:repeat(8,1fr); gap:12px; margin-bottom:18px; min-height:132px; }
+.tile { background:#fff; border:2px solid var(--gray); border-bottom-width:5px; border-radius:16px; padding:8px 4px 10px;
+        display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer;
+        touch-action:manipulation; user-select:none; transition:transform .08s; }
+.tile .e { font-size:58px; line-height:1.1; }
+.tile .w { font-size:18px; font-weight:800; color:var(--charcoal); white-space:nowrap; }
+.tile.sel { border-color:var(--sky); background:var(--sky-light); transform:translateY(-4px); }
+.tile.gone { visibility:hidden; }
+.tile.shake { animation:shake .35s; border-color:var(--red); background:var(--red-light); }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+.bins { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.bin { border:3px dashed var(--gray); border-radius:18px; padding:12px 14px 14px; min-height:250px; cursor:pointer;
+       display:flex; flex-direction:column; gap:8px; touch-action:manipulation; }
+.bin.ready { border-color:var(--sky); background:#f6fbff; }
+.bin h2 { margin:0; font-family:var(--feather); font-weight:700; font-size:40px; letter-spacing:0; text-align:center; }
+.bin.ride h2 { color:var(--green-text); } .bin.drive h2 { color:var(--sky-edge); } .bin.fly h2 { color:#7a4fd6; }
+.bin .ex { text-align:center; font-size:15px; color:var(--graphite); margin-top:-4px; }
+.got { display:flex; flex-direction:column; gap:6px; }
+.got div { font-size:21px; font-weight:800; color:var(--ink); background:#fafafa; border-radius:12px; padding:6px 10px; }
+.got div span { font-size:28px; margin-right:6px; vertical-align:-3px; }
+.msg { min-height:28px; font-size:19px; font-weight:800; color:var(--red); text-align:center; margin:6px 0 0; }
+.msg.ok { color:var(--green-text); }
+.btn { font-family:var(--din); letter-spacing:.053em; font-size:18px; font-weight:800; padding:11px 26px; border-radius:16px; cursor:pointer;
+       border:2px solid var(--green); background:var(--green); color:#fff; box-shadow:0 4px 0 var(--green-edge); text-transform:uppercase; }
+.btn.ghost { background:#fff; color:var(--sky); border-color:var(--gray); box-shadow:0 4px 0 var(--gray); }
+.row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+
+/* board */
+.board { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.col { border:2px solid var(--gray); border-bottom-width:5px; border-radius:18px; padding:12px 14px; }
+.col h3 { margin:0 0 8px; font-family:var(--feather); font-weight:700; font-size:30px; letter-spacing:0; }
+.col.ride h3 { color:var(--green-text); } .col.drive h3 { color:var(--sky-edge); } .col.fly h3 { color:#7a4fd6; } .col.play h3 { color:#c48a00; }
+.col p { margin:8px 0; font-size:25px; font-weight:700; line-height:1.3; }
+.col p span { font-size:32px; margin-right:6px; vertical-align:-3px; }
+.col.play { background:var(--sun-light); border-color:#f3dc8a; }
+.col .small { font-size:15px; color:var(--graphite); font-weight:700; }
+.frames { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+.frame { border-radius:18px; padding:14px 18px; background:var(--sky-light); }
+.frame.b { background:var(--green-light); }
+.frame .t { font-size:15px; font-weight:800; color:var(--graphite); text-transform:uppercase; margin-bottom:6px; }
+.frame .s { font-size:26px; font-weight:800; line-height:1.35; }
+
+/* chat */
+.chat { display:grid; grid-template-columns:1fr 1.2fr; gap:22px; align-items:center; }
+.pic { font-size:96px; text-align:center; line-height:1.15; border:2px solid var(--gray); border-bottom-width:5px; border-radius:22px; padding:18px; }
+.pic .cap { font-family:var(--feather); font-weight:700; font-size:34px; color:var(--green); letter-spacing:0; }
+.qs p { font-family:var(--feather); font-weight:600; font-size:28px; letter-spacing:0; margin:0 0 14px; }
+.chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
+.chip { font-size:20px; font-weight:800; padding:9px 16px; border-radius:999px; background:#f2f2f2; color:var(--charcoal); }
+.notes { margin-top:24px; font-size:14px; color:var(--graphite); }
+.notes summary { cursor:pointer; font-weight:800; }
+
+.lead, .sub, .qs p, .frame .s { text-wrap:balance; }
+@media (max-width:900px) {
+  .bank { grid-template-columns:repeat(4,1fr); }
+  .board { grid-template-columns:1fr 1fr; }
+}
+@media (max-width:620px) {
+  header h1 { font-size:24px; } .tabs { margin-left:0; }
+  .tile .e { font-size:44px; } .tile .w { font-size:15px; }
+  .bins { grid-template-columns:1fr; } .bin { min-height:150px; }
+  .bin h2 { font-size:32px; }
+  .board, .frames, .chat { grid-template-columns:1fr; }
+  .lead { font-size:23px; } .qs p { font-size:23px; }
+}
+</style></head>
+<body><div class="wrap">
+<header>
+  <h1>Ride, drive or fly?</h1>
+  <div class="tabs">
+    <button class="tab on" data-s="s1">1 · Sort</button>
+    <button class="tab" data-s="s2">2 · What am I doing?</button>
+    <button class="tab" data-s="s3">3 · Friends</button>
+  </div>
+</header>
+
+<section class="screen on" id="s1">
+  <p class="lead">Tap a picture, then tap ride, drive or fly.</p>
+  <div class="bar"><div id="fill"></div></div>
+  <div class="bank" id="bank"></div>
+  <div class="bins">
+    <div class="bin ride" data-v="ride"><h2>ride</h2><div class="ex">you sit on it</div><div class="got"></div></div>
+    <div class="bin drive" data-v="drive"><h2>drive</h2><div class="ex">you hold the wheel</div><div class="got"></div></div>
+    <div class="bin fly" data-v="fly"><h2>fly</h2><div class="ex">up in the sky</div><div class="got"></div></div>
+  </div>
+  <div class="msg" id="msg"></div>
+  <div class="row"><button class="btn ghost" id="again">Start again</button><button class="btn" id="next1">Next</button></div>
+</section>
+
+<section class="screen" id="s2">
+  <p class="lead">What am I doing?</p>
+  <p class="sub">Look, guess, ask. Then swap.</p>
+  <div class="board">
+    <div class="col ride"><h3>ride</h3><p><span>🚲</span>riding a bike</p><p><span>🏍️</span>riding a motorbike</p><p><span>🐎</span>riding a horse</p></div>
+    <div class="col drive"><h3>drive</h3><p><span>🚗</span>driving a car</p><p><span>🚚</span>driving a lorry</p><p><span>🚌</span>driving a bus</p></div>
+    <div class="col fly"><h3>fly</h3><p><span>✈️</span>flying a plane</p><p><span>🚁</span>flying a helicopter</p></div>
+    <div class="col play"><h3>play</h3><p><span>🎾</span>playing tennis</p><p><span>⚽</span>playing football</p><p><span>🏀</span>playing basketball</p><p class="small">play + the game: no word in between</p></div>
+  </div>
+  <div class="frames">
+    <div class="frame"><div class="t">Guess</div><div class="s">You're riding a&nbsp;horse.<br>Are you flying a&nbsp;plane?</div></div>
+    <div class="frame b"><div class="t">Answer</div><div class="s">Yes, I&nbsp;am.<br>No, I'm&nbsp;not.</div></div>
+  </div>
+</section>
+
+<section class="screen" id="s3">
+  <div class="chat">
+    <div class="pic">🧒🏼👧🏻🧒🏽<div class="cap">friends</div></div>
+    <div class="qs">
+      <p>Who are your friends?</p>
+      <p>Roblox or football: what do you play with your&nbsp;friends?</p>
+      <p>What are you and your best friend making these&nbsp;days?</p>
+      <div class="chips">
+        <span class="chip">My friends are ...</span>
+        <span class="chip">I play ... with my friends.</span>
+        <span class="chip">We're making ...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<details class="notes"><summary>Teacher notes</summary>
+<p>Why this page: on 26 Oct «You are playing a plane» for flying (you asked «ride или fly?»), on 21 Oct «I'm driving a motorbike»; AB p.73 «He is playing a… tennis», in September «play the tennis»; «friends» was new on 26 Oct («Я не знаю это слово»).</p>
+<p>1 · Sort: a wrong bin shakes the picture back and says «Try again», nothing else. Correct bins: ride = bike, motorbike, horse; drive = car, lorry, bus; fly = plane, helicopter. Boat and train are left out on purpose.</p>
+<p>Hinge, BEFORE tab 2 and with the screen share paused (tab 2 and the sorted bins both print «flying a helicopter»): mime flying a helicopter and ask only «What am I doing?»: «You're flying», not «riding» or «playing»?</p>
+<p>2 · Then keep this tab on screen during the mime game.</p>
+<p>3 · One short chat. Her best friend is Василиса (bead bracelets, animations); she plays Roblox and Gacha with Дарина.</p>
+</details>
+</div>
+
+<script>
+const ITEMS = [
+  {e:'🐎', w:'a horse', v:'ride'}, {e:'🚗', w:'a car', v:'drive'}, {e:'✈️', w:'a plane', v:'fly'},
+  {e:'🚲', w:'a bike', v:'ride'}, {e:'🚚', w:'a lorry', v:'drive'}, {e:'🚁', w:'a helicopter', v:'fly'},
+  {e:'🏍️', w:'a motorbike', v:'ride'}, {e:'🚌', w:'a bus', v:'drive'}
+];
+const bank = document.getElementById('bank'), msg = document.getElementById('msg'), fill = document.getElementById('fill');
+const bins = [...document.querySelectorAll('.bin')];
+let sel = null, done = 0;
+
+function build() {
+  bank.innerHTML = ''; done = 0; sel = null; fill.style.width = '0';
+  msg.textContent = ''; msg.className = 'msg';
+  bins.forEach(b => { b.querySelector('.got').innerHTML = ''; b.classList.remove('ready'); });
+  ITEMS.forEach((it, i) => {
+    const t = document.createElement('div');
+    t.className = 'tile'; t.dataset.i = i;
+    t.innerHTML = `<div class="e">${it.e}</div><div class="w">${it.w}</div>`;
+    t.addEventListener('click', () => pick(t));
+    bank.appendChild(t);
+  });
+}
+function pick(t) {
+  if (t.classList.contains('gone')) return;
+  bank.querySelectorAll('.tile').forEach(x => x.classList.remove('sel'));
+  sel = (sel === t) ? null : t;
+  if (sel) sel.classList.add('sel');
+  bins.forEach(b => b.classList.toggle('ready', !!sel));
+  msg.textContent = ''; msg.className = 'msg';
+}
+bins.forEach(b => b.addEventListener('click', () => {
+  if (!sel) return;
+  const it = ITEMS[sel.dataset.i];
+  if (it.v === b.dataset.v) {
+    const line = document.createElement('div');
+    line.innerHTML = `<span>${it.e}</span>${it.v} ${it.w}`;
+    b.querySelector('.got').appendChild(line);
+    sel.classList.remove('sel'); sel.classList.add('gone'); sel = null;
+    bins.forEach(x => x.classList.remove('ready'));
+    done++; fill.style.width = (done / ITEMS.length * 100) + '%';
+    if (done === ITEMS.length) { msg.textContent = 'Now say them: "I\'m riding a horse."'; msg.className = 'msg ok'; }
+  } else {
+    const t = sel;
+    t.classList.remove('sel'); t.classList.add('shake'); sel = null;
+    bins.forEach(x => x.classList.remove('ready'));
+    msg.textContent = 'Try again'; msg.className = 'msg';
+    setTimeout(() => t.classList.remove('shake'), 380);
+  }
+}));
+document.getElementById('again').addEventListener('click', build);
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id));
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.s === id));
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => show(b.dataset.s)));
+document.getElementById('next1').addEventListener('click', () => show('s2'));
+build();
+</script>
+</body></html>

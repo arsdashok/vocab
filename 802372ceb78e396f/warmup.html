@@ -112,132 +112,118 @@
   <details class="topic-menu"><summary>Choose a topic</summary><div id="topicChoices"></div></details><div class="foot">One short sentence is great. You can use the words above!</div>
 
 <script>
-/* Refreshed 19 Oct 2026 (Dasha's OK), data only:
-   Kept: Squishies, School bag, At school, Breakfast, Hobbies, Roblox, The beach.
-   Retired: Pets (7 Aug animals, 11 Sept mice / fish; the oldest premise).
-   New: My body (16 Oct: hand vs arm, fingers, hair, shoulders, knees; Simon says with HER as Simon).
-   Changed: Squishies + «Is your slime hard?» (16 Oct slime); Breakfast egg choice is now the 16 Oct
-   egg types (sunny side up, boiled, scrambled); At school + her school English test (Thu 22 Oct);
-   Roblox + the 9 Oct directions «diagonally» and «lower».
-   Not used: 🖐️ for fingers (renders the same as ✋) and the hair emoji (unreadable at this size). */
+/* Refreshed 26 Oct 2026 (Dasha: every card a real conversation, not tied to an exercise).
+   Kept and rewritten: Squishies, At school (the test question is gone), Breakfast, Hobbies, Roblox,
+   The beach.
+   New: Halloween (lesson Fri 30 Oct; swap after; «Yes, I have / I've got» for her «I got»),
+   My family (circles back over is + adjective, she likes, have got).
+   Retired: School bag (a this is / these are drill), My body (Simon says), Roblox directions.
+   Previous version: _Archive/Mia_Warmup_Spinner_until_2026-10-26.html */
 const TOPICS = [
   {
     "e": "🧸",
     "name": "Squishies",
     "qs": [
-      "Show me your favourite squishy. What colour is it?",
-      "Is it big or small?",
-      "Is your slime hard?",
-      "How many squishies have you got? More than one hundred?"
+      "Squishies or slime: which do you like?",
+      "What colour is your favourite squishy?",
+      "Have you got a new squishy?"
     ],
     "words": [
-      "This is my favourite ___.",
-      "It's pink.",
-      "It's small.",
-      "This is my slime. It's hard.",
-      "I have more than one hundred."
+      "I like ...",
+      "It's ...",
+      "Yes, I have. / No, I haven't.",
+      "I've got ..."
     ],
     "color": "#7552B5"
-  },
-  {
-    "e": "🎒",
-    "name": "School bag",
-    "qs": [
-      "Show me one pencil. Tell me.",
-      "Now show me three pencils. Tell me.",
-      "Show me your bag. What colour is it?"
-    ],
-    "words": [
-      "This is my ___.",
-      "These are my ___.",
-      "It's green."
-    ],
-    "color": "#9B4598"
   },
   {
     "e": "📖",
     "name": "At school",
     "qs": [
-      // Her school English test was Thu 22 Oct: swap this first question out after 23 Oct.
-      "Did you have your English test on Thursday? Was it easy?",
-      "Are you good at English? Yes or no?",
-      "What is your favourite subject? English, maths or art?",
-      "Do you have a lot of homework?"
+      "English or maths: which is your favourite subject?",
+      "Who do you play with at school?",
+      "What do you play at break?"
     ],
     "words": [
-      "Yes, I did. It was easy.",
-      "Yes, I am.",
-      "I'm good at English.",
-      "My favourite subject is...",
-      "I have a lot of homework."
+      "My favourite subject is ...",
+      "I play with ...",
+      "We play ..."
     ],
-    "color": "#B94C70"
+    "color": "#9B4598"
   },
   {
     "e": "🍳",
     "name": "Breakfast",
     "qs": [
-      "Eggs: sunny side up, boiled or scrambled? Which do you like?",
-      "Did you have breakfast with your family?",
+      "Eggs: boiled or scrambled? Which do you like?",
+      "Did you have breakfast with your family today?",
       "What did you have for dinner yesterday?"
     ],
     "words": [
-      "I like scrambled eggs.",
-      "Yes, I did.",
-      "I had breakfast with my family.",
-      "I had... for dinner."
+      "I like ... eggs.",
+      "Yes, I did. / No, I didn't.",
+      "I had ... for dinner."
     ],
-    "color": "#B26629"
+    "color": "#B94C70"
   },
   {
     "e": "⚽",
     "name": "Hobbies",
     "qs": [
-      "What is your hobby? Roblox, drawing or football?",
-      "Do you play with your friends at school?",
-      "Do you play football at school?"
+      "Roblox, drawing or football: what's your hobby?",
+      "Do you draw at home?",
+      "Do you talk on the phone with your friends?"
     ],
     "words": [
-      "My hobby is...",
-      "I play with my friends.",
-      "I also like...",
-      "Yes, I do.",
-      "No, I don't."
+      "My hobby is ...",
+      "I also like ...",
+      "Yes, I do. / No, I don't."
     ],
-    "color": "#3C8063"
+    "color": "#B26629"
   },
   {
     "e": "🎮",
     "name": "Roblox",
     "qs": [
-      "Tell me where to go: left, right, up, down or diagonally?",
-      "You versus me. Who wins?",
-      "What game do you play now?"
+      "Do you play Roblox with Emma or with your friends?",
+      "You versus Emma: who wins?",
+      "What's your favourite Roblox game?"
     ],
     "words": [
-      "Go left.",
-      "Go diagonally.",
-      "Go lower.",
-      "It's me versus you.",
-      "I win!",
-      "I play..."
+      "I play with ...",
+      "I win! / Emma wins!",
+      "My favourite game is ..."
+    ],
+    "color": "#3C8063"
+  },
+  {
+    "e": "🎃",
+    "name": "Halloween",
+    "qs": [
+      "What do you like at Halloween: the sweets or the costumes?",
+      "Have you got a Halloween costume?",
+      "What sweets do you like?"
+    ],
+    "words": [
+      "I like ...",
+      "Yes, I have. / No, I haven't.",
+      "I've got a ..."
     ],
     "color": "#287A9C"
   },
   {
-    "e": "🧍‍♀️",
-    "name": "My body",
+    "e": "👨‍👩‍👧",
+    "name": "My family",
     "qs": [
-      "Point to your arm, then your hand. What's this?",
-      "Look: ✋ 💪 Hand or arm? Tell me.",
-      "Wiggle your fingers. Tell me.",
-      "Now you're Simon! Hair, knees or shoulders: tell me what to touch."
+      "Is your family big or small?",
+      "What's Emma's favourite game?",
+      "Have you got a pet?"
     ],
     "words": [
-      "This is my hand.",
-      "These are my fingers.",
-      "It's an arm.",
-      "Simon says, touch your ___!"
+      "My family is ...",
+      "Her favourite game is ...",
+      "Yes, I have. / No, I haven't.",
+      "I've got a ..."
     ],
     "color": "#536CB2"
   },
@@ -245,14 +231,15 @@ const TOPICS = [
     "e": "🏖️",
     "name": "The beach",
     "qs": [
-      "The beach or the pool: which do you like more?",
-      "Do you live near the beach or far from the beach?"
+      "The beach or the pool: which do you like?",
+      "Do you live near the beach?",
+      "What do you do at the beach?"
     ],
     "words": [
-      "I like the pool.",
-      "I live near the beach.",
-      "I live far from the beach.",
-      "I like the beach."
+      "I like the ...",
+      "Yes, I do. / No, I don't.",
+      "near / far from",
+      "At the beach I ..."
     ],
     "color": "#9455AC"
   }

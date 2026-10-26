@@ -117,93 +117,79 @@
 
   <div class="foot">Choose an idea or give your own. Say a sentence, then ask me!</div>
 
-<details><summary>Teacher notes</summary><p>Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today’s date. Five topics are the oral questions of the Collège Sylvain Menu test (About me, Why join?, Countries, Culture, Last film): play the examiner, wait for her answer, then ask one follow-up from «What else?». Last film offers the five films from 14 October; ask where she watched it as a follow-up. Right now and English way practise the forms from her lessons and homework (has … years old, in this moment, one language more, interested with / by, they original, to can, other persons; from 14 October: is looking like my father, there's lots of tables, an hamster). My room carries «There are lots of…» for the test's classroom and bedroom writing. Costume party comes from the Party time unit (pirate, pilot, clown, film star, and her own ghost costume). Keep the sentence starters visible. «Help 💡» shows the correct version: open it only after she has tried, and let her say the whole sentence again herself. In English way, «at the moment» repairs her «in this moment»; «right now» is also fine. If mechanic or favourite comes up, ask her to spell it aloud. A personal answer does not have to match a button. Invite her to ask you a question too.</p></details>
+<details><summary>Teacher notes</summary><p>Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today's date. Every card is a real chat: she picks a button or gives her own answer, says a whole sentence, then you ask one question from «What else?». Wait for her to build the sentence before helping. Five cards carry the test's oral questions in everyday form, so you can switch into the examiner on any of them: My family (introduce your family), Languages (why join the section), Countries, Films and TV (the last film you watched) and Halloween (English-speaking culture). My room keeps «There are lots of...» for the test writing. My family mixes looks like, interested in and right now; Free time mixes how often and always / usually / sometimes / never; Holidays mixes the past and present continuous for plans. Recast her French-way forms in the chat when they come up (her list is in her CLAUDE.md), then let her say the sentence again herself. A personal answer does not have to match a button. Invite her to ask you a question too.</p></details>
 <script>
-// Refreshed 19 Oct 2026 (Dasha's OK), nine topics.
-// Kept from 12 Oct: About me, Right now, Why join?, Countries, English way, My room.
-// Changed: Culture (films dropped, they failed live 14 Oct; menu from 7 Oct: Halloween, castles, corgis, Roald Dahl's books);
-//   Last film (menu = the five films from 14 Oct; «Where did you watch it?» moved to the follow-ups);
-//   My room (+ «There are lots of...», 14 Oct); English way (+ three 14 Oct slips: looks like, there are lots of, a hamster).
-// Retired: Books, Interests (not test questions; «interested in» right on the 7 Oct sheet, marked 14 Oct).
-// New: Costume party (Party time unit, 14 Oct: pirate, pilot, clown, film star, her ghost costume).
+// Refreshed 26 Oct 2026 (Dasha: every card is a conversation, none tied to an exercise), nine topics.
+// Each card: a choice question with buttons, two open follow-ups under «What else?», 3-4 starters. No «help» model answers.
+// Kept and refreshed: Countries (no examiner frame), My room.
+// New: Holidays (school holidays from mid-October), My family (looks like + years old + interested in + right now),
+//   Languages (test Q2 as a chat), Films and TV (test Q5; Thundermans 14 Oct), Books (Matilda, Warriors, Cats and Dragon),
+//   Free time (how often; swimming, flamenco, knitting, quizzes), Halloween (her ghost costume, Marseille, 14 Oct).
+// Retired: English way (a correction exercise), About me, Why join?, Culture, Last film (examiner role-play, now
+//   Family / Languages / Halloween / Films and TV), Right now (folded into My family), Costume party (into Halloween).
 const TOPICS = [
   {
-    "e": "🙋", "name": "About me", "color": "#7957c7",
-    "q": "The examiner says: “Introduce yourself and your family.” Who do you want to start with?",
-    "opts": [["🙋", "me"], ["👩", "my mum"], ["👨", "my dad"], ["🐶", "my dog"]],
-    "words": ["My name is...", "I'm ... years old.", "He's / She's ... years old.", "He's / She's interested in..."],
-    "more": ["How old is he or she?", "What's he or she interested in?", "Now tell me about one more person."],
-    "help": ["My name is ..., I'm ... years old and I'm very interested in books and animals."]
+    "e": "🍂", "name": "Holidays", "color": "#c17b12",
+    "q": "Are you at home or on a trip this holiday?",
+    "opts": [["🏠", "at home"], ["🧳", "on a trip"]],
+    "words": ["I'm...", "Last week I went...", "This week I'm..."],
+    "more": ["What did you do last week?", "What are you doing this week?"]
   },
   {
-    "e": "⏰", "name": "Right now", "color": "#188c87",
-    "q": "What's happening right now? Choose one.",
-    "opts": [["🙋", "me"], ["🏠", "my family at home"], ["🐶", "my dog"], ["🪟", "outside my window"]],
-    "words": ["Right now I'm...", "At the moment he's / she's...", "I think they're..."],
-    "more": ["What book are you reading at the moment?", "What are you making at the moment?"]
+    "e": "👨‍👩‍👧", "name": "My family", "color": "#7957c7",
+    "q": "Who do you look like?",
+    "opts": [["👩", "my mum"], ["👨", "my dad"], ["👩‍👨", "both"]],
+    "words": ["I look like...", "She's interested in...", "Right now he's / she's..."],
+    "more": ["What's your mum interested in?", "What's your mum doing right now?"]
   },
   {
-    "e": "🏫", "name": "Why join?", "color": "#bc5090",
-    "q": "The examiner asks: “Why do you want to join the international section?” Choose a reason to start.",
-    "opts": [["🗣️", "learn one more language"], ["📖", "read books in their original language"], ["✈️", "visit other countries"], ["👫", "meet other people"]],
-    "words": ["I want to join the international section because...", "I'd like to...", "and be able to..."],
-    "more": ["How many languages do you speak now?", "Which other language would you like to learn? Why?"],
-    "help": ["I want to join the international section because I'd like to learn one more language, read books in their original language and visit other countries."]
-  },
-  {
-    "e": "🔧", "name": "English way", "color": "#c17b12",
-    "q": "Say it the English way!",
-    "rounds": [
-      ["“This puppy has two years old.”", "This puppy is two years old."],
-      ["“Lucy's brother has ten years old.”", "Lucy's brother is ten years old."],
-      ["“In this moment my mum is cooking dinner.”", "At the moment my mum is cooking dinner."],
-      ["“In this moment I'm reading a book about bats.”", "At the moment I'm reading a book about bats."],
-      ["“I'd like to learn one language more.”", "I'd like to learn one more language."],
-      ["“Can I have one biscuit more, please?”", "Can I have one more biscuit, please?"],
-      ["“He's interested with dinosaurs.”", "He's interested in dinosaurs."],
-      ["“Sam is interested by horses.”", "Sam is interested in horses."],
-      ["“I want to read these books in they original language.”", "I want to read these books in their original language."],
-      ["“I'm learning English to can read books in English.”", "I'm learning English to be able to read books in English."],
-      ["“At camp we met lots of other persons.”", "At camp we met lots of other people."],
-      ["“He's looking like my father.”", "He looks like my father."],
-      ["“In my classroom there's lots of tables.”", "In my classroom there are lots of tables."],
-      ["“I'd like an hamster in my classroom.”", "I'd like a hamster in my classroom."]
-    ]
+    "e": "🗣️", "name": "Languages", "color": "#bc5090",
+    "q": "Which language is the easiest for you?",
+    "opts": [["🥐", "French"], ["🪆", "Russian"], ["🫖", "English"]],
+    "words": ["... is the easiest for me.", "I'd like to learn...", "I want to be able to..."],
+    "more": ["Which other language would you like to learn? Why?", "Why do you want to speak English well?"]
   },
   {
     "e": "🗺️", "name": "Countries", "color": "#4872b5",
-    "q": "The examiner asks: “Have you ever visited an English-speaking country?” Which one have you visited, or would you like to visit?",
+    "q": "Which country would you like to visit?",
     "opts": [["🏰", "Scotland"], ["💂", "England"], ["☘️", "Ireland"], ["🗽", "the USA"]],
-    "words": ["Yes, I've been to...", "No, I haven't, but I'd like to visit...", "because I want to see..."],
-    "more": ["What did you see there? / What do you want to see there?", "Who would you like to go with?"]
+    "words": ["I'd like to visit...", "because I want to see...", "I'd like to go with..."],
+    "more": ["What would you like to see there?", "Who would you like to go with?"]
   },
   {
-    "e": "🎃", "name": "Culture", "color": "#168978",
-    "q": "The examiner asks: “What do you enjoy about English-speaking culture?”",
-    "opts": [["🎃", "Halloween"], ["🏰", "the castles"], ["🐕", "corgis"], ["📚", "Roald Dahl's books"]],
-    "words": ["I really enjoy...", "My favourite ... is...", "because..."],
-    "more": ["Which one is your favourite? Why?", "Do you have it in France too?"]
+    "e": "🎬", "name": "Films and TV", "color": "#c25751",
+    "q": "Films or series: which do you like more?",
+    "opts": [["🎬", "films"], ["📺", "series"]],
+    "words": ["I like ... more.", "The last film I watched was...", "I watched it with..."],
+    "more": ["What's the last film or series you watched?", "Who did you watch it with?"]
   },
   {
-    "e": "🎬", "name": "Last film", "color": "#c25751",
-    "q": "The examiner asks: “What's the last film you watched?” Choose one.",
-    "opts": [["🫏", "Shrek"], ["🐻", "Paddington"], ["📖", "Matilda"], ["🦊", "Fantastic Mr Fox"], ["🪄", "Harry Potter"]],
-    "words": ["The last film I watched was...", "I watched it...", "It's about...", "I liked it because..."],
-    "more": ["Where did you watch it?", "Who did you watch it with?", "Who was your favourite character? Why?"]
+    "e": "📚", "name": "Books", "color": "#188c87",
+    "q": "What are you reading at the moment?",
+    "opts": [["📖", "Matilda"], ["🐈", "Warriors"], ["🐉", "Cats and Dragon"], ["🦇", "a book about animals"]],
+    "words": ["At the moment I'm reading...", "It's about...", "My favourite character is..."],
+    "more": ["What's it about?", "Who's your favourite character? Why?"]
+  },
+  {
+    "e": "⏰", "name": "Free time", "color": "#168978",
+    "q": "What do you do most often in your free time?",
+    "opts": [["🏊", "swimming"], ["💃", "flamenco"], ["🧶", "knitting"], ["❓", "making quizzes"]],
+    "words": ["I usually...", "I ... every...", "I always / sometimes / never..."],
+    "more": ["How often do you do it?", "What are you making or learning at the moment?"]
   },
   {
     "e": "🏠", "name": "My room", "color": "#5b6fd6",
-    "q": "Describe a room. Which one?",
+    "q": "Which room do you like more?",
     "opts": [["🛏️", "my bedroom"], ["🏫", "my classroom"]],
-    "words": ["In my ... there's...", "There are...", "There are lots of...", "on / under / next to"],
-    "more": ["What's your favourite thing in it? Why?", "What would you like to have in it?"]
+    "words": ["In my ... there's...", "There are lots of...", "I'd like..."],
+    "more": ["What's in it?", "What would you like to have in it?"]
   },
   {
-    "e": "🎭", "name": "Costume party", "color": "#ce5b84",
-    "q": "It's a costume party! Who are you?",
-    "opts": [["🦜", "pirate"], ["🧑‍✈️", "pilot"], ["🤡", "clown"], ["⭐", "film star"], ["👻", "ghost"]],
-    "words": ["I'm a ... because ..."],
-    "more": ["What are you wearing?", "Now choose a costume for me! Why that one?"]
+    "e": "🎃", "name": "Halloween", "color": "#ce5b84",
+    "q": "Is Halloween fun or scary for you?",
+    "opts": [["😄", "fun"], ["😱", "scary"], ["🎃", "a bit of both"]],
+    "words": ["It's ... because...", "This year I'm wearing...", "In France people..."],
+    "more": ["What costume are you wearing this year?", "What do people do at Halloween in France?"]
   }
 ];
 

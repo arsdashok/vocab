@@ -115,64 +115,57 @@
   <details class="topic-menu"><summary>Choose a topic</summary><div id="topicChoices"></div></details><div class="foot">Try a short sentence. Then ask me!</div>
 
 <script>
-/* Refreshed 19 Oct (Dasha's OK):
-   Kept: Roblox, Squishies (+ the 16 Oct colours: dark green, lime green, light red, magenta),
-   Meals, My desk, Guess it!, Pick one (now carries the spelling note that was on School).
-   Retired: School (its opener "Did you have your spelling test?" was answered on 16 Oct)
-   and Family (dad's Italy gifts and the cousin's 15th are 9 Oct news).
-   New: My week (16 Oct: "Friday, Saturday I don't go to school", "No, I don't",
-   "Yes, I do, but not every day") and Does he / she? (16 Oct: does-questions about her
-   family with short answers). The cousin + Roblox question stays on card 6 of the
-   16 Oct picture race, so it is not asked here. */
+/* Refreshed 26 Oct 2026 (Dasha: every card a real conversation, not tied to an exercise).
+   Kept and rewritten: Roblox, Meals, My week, Squishies.
+   New: Halloween (lesson Fri 30 Oct; swap after), My family (circles back over he / she, have,
+   short answers), School, Music (she likes singing).
+   Retired: Guess it! (a game), Pick one (her 9 Oct spelling list), My desk (2 Oct premise),
+   Does he / she? (folded into My family).
+   Previous version: _Archive/Emma_Warmup_Spinner_until_2026-10-26.html */
 const TOPICS = [
   {
     "e": "🎮",
     "name": "Roblox",
     "qs": [
-      "Blade Ball or Pet Forest? Which game do you like?",
-      "What do you do in the game?",
-      "Does Erin play it too?"
+      "What game did you play this week?",
+      "Who do you play with?",
+      "What do you do in the game?"
     ],
     "words": [
-      "I like...",
-      "In the game I...",
-      "Yes, she does.",
-      "No, she doesn't."
+      "I played ...",
+      "I play with ...",
+      "In the game I ..."
     ],
     "color": "#7552B5"
   },
   {
-    "e": "🧸",
-    "name": "Squishies",
+    "e": "🎃",
+    "name": "Halloween",
     "qs": [
-      "Show me one squishy. What colour is it?",
-      "Now show me two squishies. Tell me about them.",
-      "How many squishies do you have? More than fifty?"
+      "A pumpkin, a witch or a ghost: what's your Halloween costume?",
+      "Do children say 'trick or treat' in Israel?",
+      "What sweets do you like?"
     ],
     "words": [
-      "It's pink.",
-      "They are small.",
-      "I have ... squishies.",
-      "fifteen / fifty",
-      "nineteen / ninety",
-      "dark green / lime green",
-      "light red / magenta"
+      "My costume is a ...",
+      "Yes, they do. / No, they don't.",
+      "I like ..."
     ],
-    "color": "#9B4598"
+    "color": "#9B4598",
+    "note": "Topical for the Halloween lesson on Fri 30 Oct (costume not decided on 23 Oct, probably a pumpkin). Swap this card out after Halloween."
   },
   {
     "e": "🍝",
     "name": "Meals",
     "qs": [
-      "Breakfast, lunch or dinner: which is your favourite?",
-      "What did you have for breakfast today?",
-      "What did you have for dinner yesterday?"
+      "Breakfast, lunch or dinner: which is your favourite?",
+      "What did you have for breakfast today?",
+      "What do you eat at break?"
     ],
     "words": [
-      "My favourite is...",
+      "My favourite is ...",
       "I had ... for breakfast.",
-      "I had ... for dinner.",
-      "breakfast / lunch / dinner"
+      "At break I eat ..."
     ],
     "color": "#B94C70"
   },
@@ -180,78 +173,79 @@ const TOPICS = [
     "e": "🗓️",
     "name": "My week",
     "qs": [
-      "Friday, Saturday, Sunday or Monday: which day do you like best?",
-      "Do you go to school on Sunday?",
-      "Do you go to school on Friday?"
+      "Friday or Sunday: which day do you like best?",
+      "What do you do on Saturday?",
+      "Do you have a lot of homework this week?"
     ],
     "words": [
-      "I like...",
+      "I like ... best.",
       "It's a day off.",
-      "Yes, I do.",
-      "No, I don't."
+      "On Saturday I ...",
+      "Yes, I do. / No, I don't."
     ],
     "color": "#B26629"
   },
   {
-    "e": "👫",
-    "name": "Does he / she?",
+    "e": "👨‍👩‍👧",
+    "name": "My family",
     "qs": [
-      "Pizza 🍕, milk 🥛, books 📚 or ice cream 🍦: what does Mia like?",
-      "Does your dad like pizza?",
-      "Does your dad read books?"
+      "Your mum or your dad: who cooks dinner?",
+      "Have you got cousins? How many?",
+      "Have you got a pet?"
     ],
     "words": [
-      "He likes... / She likes...",
-      "Yes, he does.",
-      "No, she doesn't."
+      "My mum. / My dad.",
+      "Yes! I've got ... cousins.",
+      "Yes, a ... / No."
     ],
-    "color": "#3C8063"
+    "color": "#3C8063",
+    "note": "Circles back over present simple with he / she, have and short answers. If the -s drops (he like), recast it once and keep talking: the he / she / they steps belong to the lesson, not to the warm-up."
   },
   {
-    "e": "🧹",
-    "name": "My desk",
+    "e": "🧸",
+    "name": "Squishies",
     "qs": [
-      "Is your desk clean or dirty?",
-      "Did you tidy up your desk this week?",
-      "Is your room big or small?"
+      "Squishies or slime: which do you like more?",
+      "Did you make a new squishy this week? Tell me about it.",
+      "How many squishies do you have now?"
     ],
     "words": [
-      "It's clean.",
-      "It isn't clean.",
-      "I tidied up my...",
-      "It's big. / It isn't big."
+      "I like ... more.",
+      "Yes, I did. It's ...",
+      "No, I didn't.",
+      "I have more than ..."
     ],
     "color": "#287A9C"
   },
   {
-    "e": "🔎",
-    "name": "Guess it!",
+    "e": "🏫",
+    "name": "School",
     "qs": [
-      "I'm thinking of an animal. Ask me questions!",
-      "Ask me one more question.",
-      "Now you think of an animal. I ask!"
+      "Is your school big or small?",
+      "What's your favourite subject?",
+      "What do you do with your friends at break?"
     ],
     "words": [
-      "Is it ___? big / small / grey",
-      "Does it ___? swim / eat fish / have a long tail"
+      "My school is ...",
+      "My favourite subject is ...",
+      "At break we ..."
     ],
     "color": "#536CB2"
   },
   {
-    "e": "🤔",
-    "name": "Pick one",
+    "e": "🎤",
+    "name": "Music",
     "qs": [
-      "Tea or hot chocolate? Which do you prefer?",
-      "A mountain or a river?",
-      "A village or a big city?"
+      "Singing or dancing: which do you like more?",
+      "What's your favourite song now?",
+      "Do you sing at home?"
     ],
     "words": [
-      "I prefer...",
-      "I prefer ... because it's ...",
-      "big / small / fun / cold"
+      "I like ... more.",
+      "My favourite song is ...",
+      "Yes, I do. / No, I don't."
     ],
-    "color": "#9455AC",
-    "note": "Mountain, river, village and prefer are from her 9 Oct school spelling list. To check spelling, say one and ask her to spell it. If she drops the vowel between consonants, build it by syllables: jour-ney, dan-ger, vil-lage, pre-fer."
+    "color": "#9455AC"
   }
 ];
 
