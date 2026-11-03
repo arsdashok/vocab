@@ -127,7 +127,13 @@
    Refreshed 26 Oct (Dasha: all sectors are conversation, none tied to an exercise):
    Tech pets, Wimpy Kid, My phone yesterday and School day retired; new Right now
    (present continuous about her mum and her window), My weekend, Pets (parrots),
-   My friend. Every sector: one closed menu, then two follow-ups. */
+   My friend. Every sector: one closed menu, then two follow-ups.
+   Refreshed 3 Nov (weekly refresh): Breakfast retired (on the wheel since 19 Sept,
+   answered in the 17 Oct chat); Minecraft house retired (since 12 Oct, spun 31 Oct,
+   and its "at the moment" premise met «No, I didn't play Minecraft»). New: Last night
+   (bedtime, past simple; 24 Oct sleep chat) and Minecraft garden (her own 31 Oct garden
+   with flowers, «maybe some more lights»; pond and koi fish taught that day).
+   Roblox games: the Hollow event out, Don't Splash in (31 Oct). */
 const PIC = {
   jumper: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M22 15h20l13 9-5 22-8-3v9a2 2 0 0 1-2 2H24a2 2 0 0 1-2-2v-9l-8 3-5-22z' fill='#3f8f5c' stroke='#2a6440' stroke-width='2' stroke-linejoin='round'/><path d='M22 15a10 5 0 0 0 20 0' fill='none' stroke='#2a6440' stroke-width='2'/><rect x='22' y='45' width='20' height='6' rx='1' fill='#2f7049'/><rect x='9' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(12 13 43)'/><rect x='46' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(-12 51 43)'/></svg>",
   trousers: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M20 10h24v8l-3 36h-9l-1-24-1 24h-9l-3-36z' fill='#8b8f98' stroke='#5c6069' stroke-width='2' stroke-linejoin='round'/><rect x='20' y='10' width='24' height='5' fill='#5c6069'/><line x1='32' y1='18' x2='32' y2='30' stroke='#5c6069' stroke-width='1.6'/></svg>",
@@ -139,11 +145,11 @@ const TOPICS = [
     opts:[["☀️","sunny"],["☁️","cloudy"],["🌧️","rainy"],["💨","windy"]],
     more:["What was the weather like yesterday?","What do you wear when it's cold?"],
     words:["It's …","It was …","I wear …"] },
-  { e:"🍳", name:"Breakfast", color:"#f59e0b",
-    q:"What did you have for breakfast today?",
-    opts:[["🥣","cereal"],["🍳","eggs"],["🥪","a sandwich"],["🍎","an apple"]],
-    more:["What did you drink?","What do you have for breakfast on school days?"],
-    words:["I had …","I drank …","At the weekend, I usually …"] },
+  { e:"🌙", name:"Last night", color:"#f59e0b",
+    q:"What time did you go to bed last night?",
+    opts:[["🕘","nine"],["🕙","ten"],["🕚","eleven"],["🕛","midnight"]],
+    more:["What did you do before bed?","What did you have for dinner last night?"],
+    words:["I went to bed at …","Before bed, I watched / read / played …","For dinner I had …"] },
   { e:"🏠", name:"Right now", color:"#8b5cf6",
     q:"What's your mum doing right now?",
     opts:[["🍳","cooking"],["💻","working"],["📖","reading"],["📺","watching TV"]],
@@ -154,11 +160,11 @@ const TOPICS = [
     opts:[["👕","a T-shirt"],[PIC.jumper,"a jumper"],[PIC.trousers,"trousers"],["🧦","socks"]],
     more:["What do you usually wear at the weekend?","What do you wear to school?"],
     words:["I'm wearing …","I usually wear …","At school, I wear …"] },
-  { e:"⛏️", name:"Minecraft house", color:"#22c55e",
-    q:"Which of these are in your Minecraft house?",
-    opts:[["🛏️","a bed"],["🛠️","a crafting table"],["🐕","a dog"],["🪟","windows"]],
-    more:["How many rooms are there?","What are you building at the moment?"],
-    words:["There's a …","There are …","I'm building …"] },
+  { e:"🌷", name:"Minecraft garden", color:"#22c55e",
+    q:"Which of these are in your Minecraft garden?",
+    opts:[["🌷","flowers"],["🏞️","a pond"],["🐟","koi fish"],["💡","lights"]],
+    more:["What else is there next to your house?","What would you like to add next?"],
+    words:["There's a …","There are some …","I added …","I'd like to add …"] },
   { e:"📅", name:"My weekend", color:"#6366f1",
     q:"Which of these do you usually do at the weekend?",
     opts:[["😴","sleep late"],["🎮","play Roblox"],["🧑‍🤝‍🧑","see my friend"],["🚶","go for a walk"]],
@@ -166,9 +172,9 @@ const TOPICS = [
     words:["I usually …","I sometimes …","I get up at …","Last weekend, I slept / saw / went …"] },
   { e:"🎮", name:"Roblox games", color:"#14b8a6",
     q:"Which of these Roblox games do you play most?",
-    opts:[["🚕","Taxi Boss"],["🏄","Surf and Rescue"],["🚩","Color My Flag"],["👻","the Hollow event"]],
-    more:["How many challenges have you done?","Who do you usually play with?"],
-    words:["I play … most","You can get …","I usually play with …"] },
+    opts:[["🚕","Taxi Boss"],["🏄","Surf and Rescue"],["🚩","Color My Flag"],["💦","Don't Splash"]],
+    more:["How do you play it?","Who do you usually play with?"],
+    words:["I play … most","You need to …","You can get …","I usually play with …"] },
   { e:"🦜", name:"Pets", color:"#a855f7",
     q:"Which of these would you like as a pet?",
     opts:[["🦜","a parrot"],["🐈","a cat"],["🐕","a dog"],["🦎","a lizard"]],
