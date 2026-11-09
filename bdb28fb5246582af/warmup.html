@@ -100,27 +100,28 @@
   <div class="foot">Tip: answer in a full sentence, and say a little more than one word.</div>
 
 <script>
-// Refreshed 3 Nov 2026 (Dasha's request, weekly refresh), content only, machinery unchanged,
-// 9 sectors, same colour per position. Each card: an easy choice question first, then two
-// open ones; 3-4 sentence starters. No past-tense questions or chips this week: the 5 Nov
-// hinge («What did you do yesterday?», two past sentences, no frame) stays cold.
-// Kept and refreshed: Surfing (her new surfboard, Friday in a group, 3 Nov), Roblox (new
-//   games, tired of Don't Splash, 3 Nov), Emma and Mia (they / we in the chips, 29 Oct),
-//   My family (personality words from 27 Oct), Squishies, Would you rather.
-// New: Cartoons (29 Oct: SpongeBob, Kevin the Minion, Cody), School (27 / 29 Oct:
-//   a classmate, school finishes at 3:15), Shopping (27 / 29 Oct: the mall).
-// Retired: Bat mitzvah (spun 29 Oct and 3 Nov, gifts answered), Halloween (passed),
-//   Yesterday (its frame is the 5 Nov hinge).
+// Refreshed 9 Nov 2026 (weekly refresh), content only, machinery unchanged, 9 sectors,
+// same colour per position. Each card: an easy choice question first, then two open ones;
+// 3-4 sentence starters. Still no past-tense questions or chips: the 10 Nov hinge
+// («What did you do yesterday? Tell me in two sentences», no frame) stays cold.
+// Rewritten: Surfing (Friday has passed; big or small waves, a storm and she surfs anyway,
+//   5 Nov), Roblox (her new Roblox game, 5 Nov). Spin AFTER the 10 Nov hinge.
+// Gate fixes 9 Nov: no game name nobody used in the room, no claim that Mia played,
+//   storm pair in Would you rather replaced by summer / winter all year, «in the fall».
+// Kept: Cartoons, Emma and Mia, My family, School, Shopping (none spun yet), Would you rather
+//   (palace / houseboat pair dropped, summer / winter all year pair added).
+// New: Seasons (5 Nov: autumn in Israel and London, fall is her favourite, 24 degrees).
+// Retired: Squishies (on the wheel since 14 Sept, spun many times, nothing new on 5 Nov).
 const TOPICS = [
   { e:'🏄‍♀️', name:'Surfing', color:'#7c3aed',
-    qs:['Is your new surfboard long or short?','What does your new surfboard look like?','Who are you surfing with on Friday?'],
-    words:["It's…","It's got…","On Friday I'm surfing with…"] },
+    qs:['Do you like big waves or small waves?','What does your new surfboard look like?','Is it scary to surf when there is a storm? Why?'],
+    words:['I like … waves','My surfboard is…',"It's got…","because it's…"] },
   { e:'🎬', name:'Cartoons', color:'#f59e0b',
     qs:['Who do you like more: SpongeBob or Kevin the Minion?','Which cartoon character is like you? Why?','What cartoon do you want to watch next?'],
     words:['I like … more','… is like me because…','I want to watch…'] },
   { e:'🎮', name:'Roblox', color:'#a855f7',
-    qs:['Is your new Roblox game easy or hard?',"What's it called? What do you do in it?",'Who do you play it with?'],
-    words:["It's called…",'In the game you…','I play with…'] },
+    qs:['Is your new Roblox game easy or hard?','What do you do in it?','Who do you play it with?'],
+    words:["It's…",'In the game you…','I play with…'] },
   { e:'👭', name:'Emma and Mia', color:'#ec4899',
     qs:['Do you see Emma and Mia every day or at the weekend?','What are Emma and Mia like?','What do you do together?'],
     words:['I see them…',"They're … and …",'Together we…'] },
@@ -133,19 +134,19 @@ const TOPICS = [
   { e:'🛍️', name:'Shopping', color:'#f97316',
     qs:['Do you go to the mall with your friends or with your mum?','What do you like buying?',"What's your favourite shop?"],
     words:['I go with…','I like buying…','My favourite shop is…'] },
-  { e:'🍌', name:'Squishies', color:'#22c55e',
-    qs:['Which is your favourite: the dumpling, the eye or the banana?',"How many squishies have you got now?",'Where do you keep them?'],
-    words:['My favourite is…',"I've got … squishies","They're in…"] },
+  { e:'🍂', name:'Seasons', color:'#22c55e',
+    qs:['Is it hot or cold in Israel in the fall?','Why is fall your favourite season?','What do you like doing in the fall?'],
+    words:["In the fall it's…",'Fall is my favourite because…','In the fall I like…',"It's … degrees"] },
   { e:'🤔', name:'Would you rather', color:'#ef4444', wyr:true,
     words:["I'd rather…","because it's…","it's too … to…"],
     pairs:[['live in the coldest country','live in the hottest country'],
-           ['live in a palace','live on a houseboat'],
            ['play Roblox all day','watch films all day'],
            ['be SpongeBob for a day','be a Minion for a day'],
            ['get lost in a maze','get stuck in a bookshop'],
            ['eat sushi every day','eat pizza every day'],
            ['surf with dolphins','swim with sea lions'],
-           ['surf in a big group','surf by yourself']] }
+           ['surf in a big group','surf by yourself'],
+           ['have summer all year','have winter all year']] }
 ];
 
 const n = TOPICS.length;

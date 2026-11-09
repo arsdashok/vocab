@@ -133,7 +133,13 @@
    and its "at the moment" premise met «No, I didn't play Minecraft»). New: Last night
    (bedtime, past simple; 24 Oct sleep chat) and Minecraft garden (her own 31 Oct garden
    with flowers, «maybe some more lights»; pond and koi fish taught that day).
-   Roblox games: the Hollow event out, Don't Splash in (31 Oct). */
+   Roblox games: the Hollow event out, Don't Splash in (31 Oct).
+   Refreshed 9 Nov (weekly refresh): Right now and My weekend retired (both spun and
+   fully answered 7 Nov); Minecraft garden retired (spun 7 Nov and skipped, she has not
+   played Minecraft for two weeks). New: Calls and texts (7 Nov phone lesson, about her
+   own friends), Fireworks (7 Nov bonfire night chat), To school (getting to school,
+   usually and yesterday). Roblox games: Wacky Games (played 7 Nov) in, Taxi Boss out.
+   My clothes chip: "I usually wear …, but today I'm wearing …". */
 const PIC = {
   jumper: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M22 15h20l13 9-5 22-8-3v9a2 2 0 0 1-2 2H24a2 2 0 0 1-2-2v-9l-8 3-5-22z' fill='#3f8f5c' stroke='#2a6440' stroke-width='2' stroke-linejoin='round'/><path d='M22 15a10 5 0 0 0 20 0' fill='none' stroke='#2a6440' stroke-width='2'/><rect x='22' y='45' width='20' height='6' rx='1' fill='#2f7049'/><rect x='9' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(12 13 43)'/><rect x='46' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(-12 51 43)'/></svg>",
   trousers: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M20 10h24v8l-3 36h-9l-1-24-1 24h-9l-3-36z' fill='#8b8f98' stroke='#5c6069' stroke-width='2' stroke-linejoin='round'/><rect x='20' y='10' width='24' height='5' fill='#5c6069'/><line x1='32' y1='18' x2='32' y2='30' stroke='#5c6069' stroke-width='1.6'/></svg>",
@@ -150,29 +156,29 @@ const TOPICS = [
     opts:[["🕘","nine"],["🕙","ten"],["🕚","eleven"],["🕛","midnight"]],
     more:["What did you do before bed?","What did you have for dinner last night?"],
     words:["I went to bed at …","Before bed, I watched / read / played …","For dinner I had …"] },
-  { e:"🏠", name:"Right now", color:"#8b5cf6",
-    q:"What's your mum doing right now?",
-    opts:[["🍳","cooking"],["💻","working"],["📖","reading"],["📺","watching TV"]],
-    more:["What do you think your friend is doing right now?","What can you see out of your window right now?"],
-    words:["She's …ing","She isn't …ing","I think they're …ing","I can see …"] },
+  { e:"📞", name:"Calls and texts", color:"#8b5cf6",
+    q:"How do you usually talk to your friends after school?",
+    opts:[["💬","text"],["📞","call"],["🎥","video call"],["🎮","chat in Roblox"]],
+    more:["Who do you text most?","When did you last call someone?"],
+    words:["I usually text …","I sometimes call …","We chat in …","Yesterday I called …"] },
   { e:"👕", name:"My clothes", color:"#ec4899",
     q:"Which of these are you wearing today?",
     opts:[["👕","a T-shirt"],[PIC.jumper,"a jumper"],[PIC.trousers,"trousers"],["🧦","socks"]],
     more:["What do you usually wear at the weekend?","What do you wear to school?"],
-    words:["I'm wearing …","I usually wear …","At school, I wear …"] },
-  { e:"🌷", name:"Minecraft garden", color:"#22c55e",
-    q:"Which of these are in your Minecraft garden?",
-    opts:[["🌷","flowers"],["🏞️","a pond"],["🐟","koi fish"],["💡","lights"]],
-    more:["What else is there next to your house?","What would you like to add next?"],
-    words:["There's a …","There are some …","I added …","I'd like to add …"] },
-  { e:"📅", name:"My weekend", color:"#6366f1",
-    q:"Which of these do you usually do at the weekend?",
-    opts:[["😴","sleep late"],["🎮","play Roblox"],["🧑‍🤝‍🧑","see my friend"],["🚶","go for a walk"]],
-    more:["What time do you get up on Sundays?","Which of these did you do last weekend?"],
-    words:["I usually …","I sometimes …","I get up at …","Last weekend, I slept / saw / went …"] },
+    words:["I'm wearing …","I usually wear …, but today I'm wearing …","At school, I wear …"] },
+  { e:"🎆", name:"Fireworks", color:"#22c55e",
+    q:"Where did you last see fireworks?",
+    opts:[["🏙️","in the city centre"],["🌉","over the river"],["🏡","near my house"],["📺","on TV"]],
+    more:["When was it?","Who were you with?"],
+    words:["I saw fireworks …","It was …","I was with …"] },
+  { e:"🚌", name:"To school", color:"#6366f1",
+    q:"How do you usually get to school?",
+    opts:[["🚌","by bus"],["🚋","by tram"],["🚗","by car"],["🚶","on foot"]],
+    more:["How long does it take?","Did you go the same way yesterday?"],
+    words:["I usually go …","It takes about … minutes","Yesterday I went …"] },
   { e:"🎮", name:"Roblox games", color:"#14b8a6",
     q:"Which of these Roblox games do you play most?",
-    opts:[["🚕","Taxi Boss"],["🏄","Surf and Rescue"],["🚩","Color My Flag"],["💦","Don't Splash"]],
+    opts:[["🤪","Wacky Games"],["🏄","Surf and Rescue"],["🚩","Color My Flag"],["💦","Don't Splash"]],
     more:["How do you play it?","Who do you usually play with?"],
     words:["I play … most","You need to …","You can get …","I usually play with …"] },
   { e:"🦜", name:"Pets", color:"#a855f7",

@@ -115,45 +115,45 @@
   <details class="topic-menu"><summary>Choose a topic</summary><div id="topicChoices"></div></details><div class="foot">Try a short sentence. Then ask me!</div>
 
 <script>
-/* Refreshed 3 Nov 2026 (Dasha: weekly refresh, every card a real conversation).
-   Kept: Meals, My week, Squishies, School, Music.
-   Rewritten: Roblox (now opens with a choice: building or obby; her 30 Oct mushroom house),
-   My family (pet question moved to the dog card; new «What does Mia like?»).
-   New: The lost dog (her 30 Oct story: the neighbours' dog got lost, Mia found it).
-   Retired: Halloween (31 Oct has passed).
-   Previous version: _Archive/Emma_Warmup_Spinner_until_2026-11-03.html */
+/* Refreshed 9 Nov 2026 (weekly refresh, every card a real conversation).
+   Kept: Meals, My week, My family, Squishies, School, Music.
+   Rewritten: Roblox («What did you build this week?» was answered twice: the mushroom house;
+   now «What do you want to build next?»).
+   New: Rainy days (her 6 Nov news: the school Halloween celebration was cancelled because of rain).
+   Retired: The lost dog (30 Oct story, planned to go after one week).
+   Previous version: _Archive/Emma_Warmup_Spinner_until_2026-11-09.html */
 const TOPICS = [
   {
     "e": "🎮",
     "name": "Roblox",
     "qs": [
       "Building or obby: which do you like more in Roblox?",
-      "What did you build this week?",
+      "What do you want to build next?",
       "Who do you play with?"
     ],
     "words": [
       "I like ... more.",
-      "I built a ...",
+      "I want to build a ...",
       "I play with ..."
     ],
-    "color": "#7552B5"
+    "color": "#7552B5",
+    "note": "She has built a mushroom house (30 Oct and 6 Nov: one room, white spots, a door). If she wants to tell it again, let her; the new question is about her next build."
   },
   {
-    "e": "🐶",
-    "name": "The lost dog",
+    "e": "🌧️",
+    "name": "Rainy days",
     "qs": [
-      "Dogs or cats: which do you like more?",
-      "What happened to the dog? Tell me in English!",
-      "Was the dog big or small?"
+      "Rain or sun: which do you like more?",
+      "Is it rainy today?",
+      "What do you do at home on a rainy day?"
     ],
     "words": [
       "I like ... more.",
-      "The dog got ...",
-      "Mia ... it.",
-      "We gave it ..."
+      "Yes, it is. / No, it isn't.",
+      "On a rainy day I ..."
     ],
     "color": "#9B4598",
-    "note": "Her own story from the 30 Oct chat: the neighbours left the dog with friends, it got lost, Mia found it and they gave it water. Let her tell it again in English. If a past form slips (got, found, gave), recast it once and keep listening; do not drill it here."
+    "note": "From her 6 Nov news: the school Halloween celebration was cancelled because of the rain (she told it in Russian). Ask what happened and let her try it in English; give her a frame at her level, «There was no party. It rained.», not the passive, and keep listening, no drilling."
   },
   {
     "e": "🍝",
