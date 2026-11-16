@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Night House</title>
+<!-- Speaking game for Юля (Wed 18 Nov 2026): What is he / she doing? What are they doing? -> He's / She's / They're ...ing.
+     Style: Admin/Design Styles/DESIGN gsap.md (dark canvas, cream text, neon accents, pill buttons).
+     No sound anywhere on this page. Answers live only in the data below (for the Help letters), never on screen. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+@property --r { syntax: '<length>'; inherits: false; initial-value: 0px; }
+:root{
+  --void:#0e100f; --cream:#fffce1; --olive:#42433d; --ash:#7c7c6f;
+  --green:#0ae448; --lime:#abff84; --pink:#fec5fb; --orange:#ff8709; --violet:#9d95ff; --blue:#00bae2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--void);color:var(--cream);font-family:Manrope,'Inter Tight',system-ui,sans-serif}
+button{font:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+.wrap{max-width:1640px;margin:0 auto;padding:20px 16px 40px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.tag{font-size:16px;color:var(--ash);letter-spacing:.02em}
+.tag b{color:var(--lime);font-weight:600}
+.score{display:flex;gap:10px}
+.score div{border:1px solid var(--olive);border-radius:100px;padding:8px 18px;font-size:20px;white-space:nowrap}
+.score .you{color:var(--pink);border-color:var(--pink)}
+.score .me{color:var(--blue);border-color:var(--blue)}
+h1{font-size:26px;line-height:1.1;margin:0;font-weight:800;letter-spacing:-.01em}
+.instr{font-size:22px;margin:12px 0 16px;color:var(--cream)}
+.instr span{color:var(--ash);font-weight:400}
+
+.game{display:grid;grid-template-columns:1fr;gap:22px}
+.left{display:flex;flex-direction:column;gap:18px}
+.controls{display:flex;flex-direction:column;gap:12px}
+
+/* ---------- the house ---------- */
+.house{position:relative}
+.roof{height:70px;margin:0 6%;background:linear-gradient(114.41deg,#2a1f4a 10%,#1a1830 70%);clip-path:polygon(50% 0,100% 100%,0 100%);position:relative}
+.roof .moon{position:absolute;right:-2%;top:-6px;font-size:40px}
+.rooms{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;border:2px solid var(--olive);border-top:none;padding:8px;border-radius:0 0 8px 8px;background:#16181a}
+.room{container-type:size;position:relative;aspect-ratio:4/3;border-radius:8px;overflow:hidden;border:1px solid var(--olive);background:var(--bg,#2a2c2b);padding:0;color:inherit}
+.room .scene{position:absolute;inset:0}
+.e{position:absolute;line-height:1;font-size:calc(var(--s,64) * .222cqw);transform:translate(-50%,-50%);left:var(--x);top:var(--y);user-select:none;pointer-events:none}
+.dark{position:absolute;inset:0;background:radial-gradient(circle at var(--tx,50%) var(--ty,50%), transparent 0, transparent var(--r), rgba(8,9,9,.97) calc(var(--r) + 30px));transition:opacity .4s ease .9s}
+.room.lit .dark{animation:torch 1s ease-out forwards;opacity:0}
+@keyframes torch{from{--r:0px}to{--r:900px}}
+.room:not(.lit) .scene{filter:brightness(.35)}
+.room .q{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:44px;font-weight:800;color:var(--ash);pointer-events:none}
+.room.lit .q{display:none}
+.room:not(.lit):hover .dark{--tx:50%;--ty:50%;background:radial-gradient(circle at 50% 50%, rgba(255,252,225,.10) 0, rgba(8,9,9,.97) 40%)}
+.room.current{outline:3px solid var(--lime);outline-offset:-3px}
+
+/* little actions */
+@keyframes chomp{0%,100%{transform:translate(-50%,-50%) rotate(0)}50%{transform:translate(-62%,-50%) rotate(-12deg)}}
+@keyframes bob{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-62%)}}
+@keyframes sway{0%,100%{transform:translate(-50%,-50%) rotate(-10deg)}50%{transform:translate(-50%,-56%) rotate(10deg)}}
+@keyframes flick{0%,100%{opacity:1}45%{opacity:.6}55%{opacity:1}}
+@keyframes zz{0%{opacity:0;transform:translate(-50%,-30%)}50%{opacity:1}100%{opacity:0;transform:translate(-20%,-120%)}}
+@keyframes bubble{0%{opacity:0;transform:translate(-50%,0)}40%{opacity:1}100%{opacity:0;transform:translate(-50%,-90%)}}
+@keyframes kick{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(20%,-110%)}}
+@keyframes door{0%,30%{transform:translate(-50%,-50%) perspective(200px) rotateY(0)}70%,100%{transform:translate(-50%,-50%) perspective(200px) rotateY(55deg)}}
+.lit .chomp{animation:chomp 1.1s ease-in-out infinite}
+.lit .bob{animation:bob 1.4s ease-in-out infinite}
+.lit .sway{animation:sway 1.2s ease-in-out infinite}
+.lit .flick{animation:flick 1.6s steps(2) infinite}
+.lit .zz{animation:zz 2.2s ease-in-out infinite}
+.lit .bub{animation:bubble 1.8s ease-in infinite}
+.lit .kick{animation:kick 1s ease-in-out infinite}
+.lit .door{animation:door 2.6s ease-in-out infinite alternate;transform-origin:left center}
+@media (prefers-reduced-motion:reduce){.lit .e{animation:none!important}}
+
+/* ---------- stage: the lit room, big ---------- */
+.stage{container-type:size;position:relative;width:100%;aspect-ratio:4/3;border-radius:8px;overflow:hidden;border:1px solid var(--olive);background:var(--bg,#16181a)}
+.stage .scene{position:absolute;inset:0}
+.stage .dark{transition:none}
+.stage.lit .dark{animation:torch 1s ease-out forwards;opacity:0}
+.stage .finale{flex-direction:column;gap:2cqw;text-align:center}
+.stage .finale h2{font-size:9cqw;margin:0;background:linear-gradient(114.41deg,#0ae448 20%,#abff84 65%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stage .finale p{font-size:6cqw;margin:0;color:var(--cream)}
+.stage .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8cqw;color:var(--ash)}
+.qrow{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
+/* ---------- turn panel ---------- */
+.panel{border:1px solid var(--olive);border-radius:8px;padding:22px;display:flex;flex-direction:column;gap:18px;align-self:start}
+.turn{display:inline-block;align-self:flex-start;border-radius:100px;padding:8px 20px;font-size:20px;font-weight:600;color:var(--void);background:var(--lime)}
+.turn.you{background:var(--pink)}
+.bigq{font-size:34px;line-height:1.15;font-weight:800;margin:0;min-height:1.2em}
+.sub{font-size:20px;color:var(--ash);margin:0}
+.help{font-size:30px;letter-spacing:.12em;color:var(--orange);min-height:1.2em;margin:0;font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+.b{border-radius:100px;padding:12px 22px;font-size:20px;border:1px solid var(--cream);background:transparent;color:var(--cream);min-height:48px}
+.b.star-you{border-color:var(--pink);color:var(--pink)}
+.b.star-me{border-color:var(--blue);color:var(--blue)}
+.b.small{border-color:var(--olive);color:var(--ash)}
+.b:disabled{opacity:.35;cursor:default}
+.end{display:none;text-align:center;padding:10px 0}
+.end.show{display:block}
+.end h2{font-size:40px;margin:0 0 8px;background:linear-gradient(114.41deg,#0ae448 20%,#abff84 65%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.end p{font-size:22px;margin:0}
+
+@media screen and (min-width:900px){
+  .wrap{padding:24px 48px 48px}
+  .tag{font-size:20px}
+  .score div{font-size:26px;padding:10px 24px}
+  h1{font-size:34px}
+  .instr{font-size:36px;font-weight:600;margin-bottom:14px}
+  .game{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:36px;align-items:start}
+  .rooms{grid-template-columns:repeat(4,1fr);gap:10px;padding:10px}
+  .roof{height:80px}
+  .roof .moon{font-size:56px}
+  .room .q{font-size:56px}
+  .panel{padding:24px;gap:16px}
+  .stage{width:min(100%, calc((100vh - 350px) * 4 / 3));margin:0 auto}
+  .game{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
+  .turn{font-size:26px;padding:10px 26px}
+  .bigq{font-size:48px}
+  .sub{font-size:26px}
+  .help{font-size:40px}
+  .b{font-size:26px;padding:14px 28px;min-height:60px}
+  .end h2{font-size:56px}
+  .end p{font-size:30px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>🔦 The Night House</h1>
+    <div class="score"><div class="you">You ⭐ <span id="sy">0</span></div><div class="me">Me ⭐ <span id="sm">0</span></div></div>
+  </div>
+  <p class="instr">Tap a dark room. Who is there? ⭐ = a whole sentence. <span>One room has a monster…</span></p>
+
+  <div class="game">
+    <div class="left">
+      <div class="house">
+        <div class="roof"><span class="moon">🌙</span></div>
+        <div class="rooms" id="rooms"></div>
+      </div>
+      <div class="controls">
+      <p class="sub" id="sub">Shine the torch on it.</p>
+      <p class="help" id="help"></p>
+      <div class="btns">
+        <button class="b star-you" id="byou" disabled>⭐ for you</button>
+        <button class="b star-me" id="bme" disabled>⭐ for me</button>
+      </div>
+      <div class="btns">
+        <button class="b small" id="bhelp" disabled>Help</button>
+        <button class="b small" id="bnew">New night</button>
+      </div>
+      <div class="end" id="end"><h2>Good morning! ☀️</h2><p id="endp"></p></div>
+      </div>
+    </div>
+
+    <aside class="panel" aria-live="polite">
+      <div class="qrow"><span class="turn" id="turn">My turn: I ask</span><p class="bigq" id="bigq">Pick a dark room!</p></div>
+      <div class="stage" id="stage"><div class="empty">🔦</div></div>
+    </aside>
+  </div>
+</div>
+
+<script>
+/* who: he / she / they (drives the question). stem: the verb for the Help letters.
+   Scenes are dealt by TURN, not by room: on the turns where she answers, eat comes first, then three they-scenes;
+   the scenes she asks me about are bath, bed, door and football. Rooms stay random, so she never knows what is behind a door. */
+const SCENES = {
+  grandpa:{m:[12,18], bg:'#3b2f22', who:'he',   name:'grandpa', stem:'eat',   e:[['👴','40%','55%',100],['🥪','57%','60%',50,'chomp'],['🪑','26%','78%',44]]},
+  tv:     {m:[12,18], bg:'#1f2a3d', who:'they', name:'',        stem:'watch', e:[['📺','76%','45%',86,'flick'],['👧','26%','62%',78],['👦','46%','64%',78],['🛋️','36%','84%',60]]},
+  bath:   {m:[12,18], bg:'#1d3a3a', who:'he',   name:'',        stem:'have',  e:[['🛀','50%','58%',150],['🫧','30%','30%',34,'bub'],['🫧','72%','28%',28,'bub']]},
+  bed:    {m:[12,18], bg:'#2c2040', who:'he',   name:'',        stem:'sleep', e:[['🛌','50%','60%',160],['💤','70%','28%',44,'zz']]},
+  pizza:  {m:[14,20], bg:'#40261f', who:'they', name:'',        stem:'eat',   e:[['👧','26%','50%',80],['🍕','40%','56%',44,'chomp'],['👦','66%','50%',80],['🍕','80%','56%',44,'chomp'],['🍽️','52%','84%',44]]},
+  door:   {m:[12,20], bg:'#2f3326', who:'she',  name:'grandma', stem:'open',  e:[['👵','34%','56%',96],['🚪','68%','52%',100,'door']]},
+  ghosts: {m:[80,82], bg:'#1b1d36', who:'they', name:'',        stem:'dance', e:[['👻','34%','52%',86,'sway'],['👻','66%','48%',86,'sway'],['🎵','50%','20%',36,'bob']]},
+  ball:   {m:[12,18], bg:'#1e3324', who:'she',  name:'',        stem:'play',  e:[['👧','34%','54%',90],['⚽','66%','64%',54,'kick'],['🌳','82%','34%',60]]},
+};
+const HER_TURNS = ['grandpa','pizza','ghosts','tv'];          // she answers these, in this order
+const ASK_TURNS = ['bath','bed','door','ball'];               // she asks me about these (shuffled)
+const ROOMS = 8;
+function monsterBits(m){return [['👾',m[0]+'%',m[1]+'%',54,'bob'],['🧦',(m[0]+13)+'%',(m[1]+4)+'%',34,'chomp']]}
+
+let herQ=[], askQ=[], monsterAt=-1, lit=new Set(), you=0, me=0, turnYou=false, current=null, scored=false, helpStep=0;
+const $=id=>document.getElementById(id);
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function build(){
+  herQ=[...HER_TURNS]; askQ=shuffle([...ASK_TURNS]);
+  monsterAt=Math.floor(Math.random()*ROOMS);
+  lit.clear(); you=0; me=0; turnYou=false; current=null; scored=true;
+  $('sy').textContent=0; $('sm').textContent=0; $('end').classList.remove('show');
+  const box=$('rooms'); box.innerHTML='';
+  for(let idx=0;idx<ROOMS;idx++){
+    const r=document.createElement('button');
+    r.className='room'; r.dataset.i=idx;
+    r.setAttribute('aria-label','room '+(idx+1));
+    r.innerHTML='<div class="scene"></div><div class="dark"></div><span class="q">'+(idx+1)+'</span>';
+    r.addEventListener('click',ev=>light(r,idx,ev));
+    box.appendChild(r);
+  }
+  setPanel('My turn: I ask', false, 'Pick a room: 1, 2, 3…', 'Say the number in English!');
+  $('stage').classList.remove('lit'); $('stage').innerHTML='<div class="empty">🔦</div>';
+  $('byou').disabled=$('bme').disabled=$('bhelp').disabled=true; $('help').textContent='';
+}
+
+function sceneHTML(s,withMonster){
+  const items = withMonster ? s.e.concat(monsterBits(s.m)) : s.e;
+  let h='<div class="scene">';
+  items.forEach(([ch,x,y,size,cls])=>{h+=`<span class="e ${cls||''}" style="--x:${x};--y:${y};--s:${size}">${ch}</span>`});
+  return h+'</div>';
+}
+
+function light(r,idx,ev){
+  if(lit.has(idx)) return;
+  if(!scored) return;            // finish the room you are on first
+  const key = turnYou ? askQ.shift() : herQ.shift();
+  const s=SCENES[key]; const withMonster = lit.size===monsterAt;
+  current=s;
+  r.style.setProperty('--bg',s.bg);
+  r.querySelector('.scene').outerHTML=sceneHTML(s,withMonster);
+  const box=r.getBoundingClientRect();
+  r.querySelector('.dark').style.setProperty('--tx',(ev.clientX-box.left)+'px');
+  r.querySelector('.dark').style.setProperty('--ty',(ev.clientY-box.top)+'px');
+  r.classList.add('lit'); lit.add(idx);
+  document.querySelectorAll('.room').forEach(x=>x.classList.remove('current')); r.classList.add('current');
+  const st=$('stage'); st.classList.remove('lit'); st.style.setProperty('--bg',s.bg);
+  st.innerHTML=sceneHTML(s,withMonster)+'<div class="dark"></div>';
+  void st.offsetWidth; st.classList.add('lit');
+  scored=false; helpStep=0; $('help').textContent='';
+  const q = s.who==='they' ? 'What are they doing?' : (s.who==='she' ? 'What is she doing?' : 'What is he doing?');
+  const ask = s.name ? q.replace(s.who==='she'?'she':'he', s.name) : q;
+  if(turnYou){
+    setPanel('Your turn: ask me!', true, 'Ask me a question!', withMonster ? 'Is my answer right? Catch me! And the monster? 👾' : 'Is my answer right? Catch me!');
+  } else {
+    setPanel('My turn: I ask', false, ask, withMonster ? 'And the monster? 👾' : '');
+  }
+  $('byou').disabled=$('bme').disabled=false; $('bhelp').disabled=turnYou;
+}
+
+function setPanel(turn,isYou,q,sub){
+  const t=$('turn'); t.textContent=turn; t.classList.toggle('you',isYou);
+  $('bigq').textContent=q; $('sub').textContent=sub;
+}
+
+function award(who){
+  if(scored) return;
+  if(who==='you'){you++;$('sy').textContent=you}else{me++;$('sm').textContent=me}
+  scored=true; $('byou').disabled=$('bme').disabled=$('bhelp').disabled=true; $('help').textContent='';
+  turnYou=!turnYou;
+  if(lit.size===ROOMS){finish();return}
+  setPanel(turnYou?'Your turn: ask me!':'My turn: I ask', turnYou, 'Pick a room: 1, 2, 3…', turnYou?'You choose the room and ask me.':'Say the number in English!');
+}
+
+function help(){
+  if(!current||scored) return;
+  const stem=current.stem;
+  helpStep=Math.min(helpStep+1,2);
+  $('help').textContent = helpStep===1 ? stem[0]+' '+Array(stem.length-1).fill('_').join(' ')+' …'
+                                       : stem+' …';
+}
+
+function finish(){
+  $('byou').disabled=$('bme').disabled=$('bhelp').disabled=true;
+  setPanel('', false, '', '');
+  $('turn').style.display='none';
+  const res = you>me ? `You win! ${you} : ${me}` : (you===me ? `It's a draw! ${you} : ${me}` : `I win! ${me} : ${you}. Again?`);
+  const st=$('stage'); st.classList.remove('lit'); st.style.setProperty('--bg','#16181a');
+  st.innerHTML='<div class="empty finale"><h2>Good morning! ☀️</h2><p>'+res+'</p></div>';
+}
+
+$('byou').onclick=()=>award('you');
+$('bme').onclick=()=>award('me');
+$('bhelp').onclick=help;
+$('bnew').onclick=()=>{$('turn').style.display='';build()};
+build();
+</script>
+</body>
+</html>
