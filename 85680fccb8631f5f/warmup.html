@@ -117,23 +117,23 @@
 
   <div class="foot">Choose an idea or give your own. Say a sentence, then ask me!</div>
 
-<details><summary>Teacher notes</summary><p>Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today's date. Every card is a real chat: she picks a button or gives her own answer, says a whole sentence, then you ask one question from «What else?». Wait for her to build the sentence before helping. Two cards carry the test's oral questions in everyday form, so you can switch into the examiner on them: My family (introduce your family) and Languages (why join the section; «one more language» sits on a starter). My room keeps «There are lots of...» for the test writing. My family has a hair starter with the size word before the gap (short / long ... hair), for the adjective order from 4 November. Food comes from 6 November (her almond croissant, and éclair means lightning in French): let her explain French words in English. Its «It's...» starter is a chance to hear «it» for a thing. Wild places comes from the magazine (arctic animals on 4 November, Peru and llamas on 6 November). London stays in the present («My favourite place is...», «Next time I'd like to see...») because the past simple has not been taught. My family, Free time and My dog mix the present simple (always, usually, doesn't) with right now. No card asks her to make why-questions about a person: keep that for the picture task in the lesson. Recast her French-way forms in the chat when they come up, then let her say the sentence again herself. A personal answer does not have to match a button. Invite her to ask you a question too.</p></details>
+<details><summary>Teacher notes</summary><p>Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today's date. Every card is a real chat: she picks a button or gives her own answer, says a whole sentence, then you ask one question from «What else?». Wait for her to build the sentence before helping. Two cards carry the test's oral questions in everyday form, so you can switch into the examiner on them: My family (introduce your family) and Languages (why join the section; «one more language» sits on a starter). My room keeps «There are lots of...» for the test writing. My family has a hair starter with the size word before the gap (short / long ... hair), for the adjective order from 4 November. Jobs comes from 11 November («I'd like to be a dentist» is hers). It stays in the first person (I'd like to be..., I'd like to work in...), so keep «What does a ... do?» and the pilot for the lesson. She already said dentist on 11 November, so open with «Would you like to work with animals or with people?». Scary things also comes from 11 November (scared, scary and scaredy cat); fireworks and the family scaredy cat are left off because both lead to her dog: the starters show «I'm scared of...» for how you feel and «... is scary» for the thing. Food now asks what kind of food she likes best: let her explain French words in English, and its «It's...» starter is a chance to hear «it» for a thing. Wild places comes from the magazine (arctic animals on 4 November, Peru and llamas on 6 November). My family and Free time mix the present simple (always, usually) with right now. No card is about her dog: «What is she like?» and «What does she like?» about the dog belong to the lesson. No card asks her to make why-questions about a person: keep that for the lesson too. Recast her French-way forms in the chat when they come up, then let her say the sentence again herself. A personal answer does not have to match a button. Invite her to ask you a question too.</p></details>
 <script>
-// Refreshed 9 Nov 2026 (weekly refresh; every card a conversation, none tied to an exercise), nine topics.
-// Kept: London, My family (adds a hair starter for adjective order, 4 Nov), Free time, My room, My dog.
-// Rewritten: Languages (6 Nov: Russian is easiest, she tried Japanese, Spanish, Italian), Books (6 Nov: a comic in
-//   English, two books at once, reading her favourite series in English).
-// New: Food (6 Nov: almond croissant, eclair = lightning in French, pizza for breakfast), Wild places (magazine 4 and
-//   6 Nov: arctic animals, Peru, llamas).
-// Retired: Dinosaurs (spun 4 Nov, favourite dinosaur answered), Films and TV (spun 4 Nov, The Thundermans answered).
-// No card has her ask why-questions about a person: that is the next lesson's hinge.
+// Refreshed 17 Nov 2026 (weekly refresh; every card a conversation, none tied to an exercise), nine topics.
+// Kept: My family, Languages, Books, Wild places, Free time, My room. Food rewritten (the croissant or eclair
+//   choice was answered on 6 Nov; now what kind of food she likes best).
+// New: Jobs (11 Nov: "I'd like to be a dentist"; first person only), Scary things (11 Nov: her dog is afraid of
+//   fireworks; scared / scary / scaredy cat).
+// Retired: London (the 31 Oct trip is past; a real answer needs the past simple, not taught), My dog (spun 11 Nov,
+//   answered; What is she like? / What does she like? about the dog belongs to the next lesson).
+// No card asks "What does a ... do?" or mentions a pilot: that is the next lesson's hinge.
 const TOPICS = [
   {
-    "e": "💂", "name": "London", "color": "#c17b12",
-    "q": "In London, which do you like more: the parks or the museums?",
-    "opts": [["🐿️", "the parks"], ["🦴", "the museums"]],
-    "words": ["My favourite place in London is...", "In the park there are lots of...", "Next time I'd like to see..."],
-    "more": ["What animals are there in the park?", "What would you like to see in London next time?"]
+    "e": "💼", "name": "Jobs", "color": "#c17b12",
+    "q": "What would you like to be when you grow up?",
+    "opts": [["🦷", "a dentist"], ["🐾", "a vet"], ["🩰", "a dancer"], ["✍️", "a writer"]],
+    "words": ["I'd like to be a ... because...", "I'd like to work in a...", "I'm good with animals. / I'm good with people."],
+    "more": ["Where would you like to work?", "Would you like to work with animals or with people?"]
   },
   {
     "e": "👨‍👩‍👧", "name": "My family", "color": "#7957c7",
@@ -151,8 +151,8 @@ const TOPICS = [
   },
   {
     "e": "🥐", "name": "Food", "color": "#4872b5",
-    "q": "Which do you like more: croissants or éclairs?",
-    "opts": [["🥐", "croissants"], ["🍰", "éclairs"]],
+    "q": "What kind of food do you like best?",
+    "opts": [["🥐", "French food"], ["🥞", "Russian food"], ["🍣", "Japanese food"], ["🍝", "Italian food"]],
     "words": ["My favourite is... It's...", "For breakfast I usually have...", "In French, ... means..."],
     "more": ["What do you usually have for breakfast?", "Do you know any other French words for food? What do they mean?"]
   },
@@ -185,11 +185,11 @@ const TOPICS = [
     "more": ["What's in it?", "What would you like to have in it?"]
   },
   {
-    "e": "🐕", "name": "My dog", "color": "#ce5b84",
-    "q": "What does your dog like most?",
-    "opts": [["🦴", "food"], ["🎾", "playing"], ["🚶", "walks"], ["😴", "sleeping"]],
-    "words": ["My dog loves...", "She doesn't like...", "She always...", "Right now she's..."],
-    "more": ["Is she big or small?", "What's she doing right now?"]
+    "e": "😱", "name": "Scary things", "color": "#ce5b84",
+    "q": "Which of these is scary for you?",
+    "opts": [["🕷️", "spiders"], ["🌑", "the dark"], ["🌩️", "thunder"], ["🦈", "sharks"]],
+    "words": ["I'm scared of...", "... is scary. / ... are scary.", "I'm not scared of...", "When I'm scared, I..."],
+    "more": ["Is there an animal you're scared of?", "Is there a book or a film that is scary for you?"]
   }
 ];
 

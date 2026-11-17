@@ -115,45 +115,46 @@
   <details class="topic-menu"><summary>Choose a topic</summary><div id="topicChoices"></div></details><div class="foot">Try a short sentence. Then ask me!</div>
 
 <script>
-/* Refreshed 9 Nov 2026 (weekly refresh, every card a real conversation).
+/* Refreshed 17 Nov 2026 (weekly refresh, every card a real conversation).
    Kept: Meals, My week, My family, Squishies, School, Music.
-   Rewritten: Roblox («What did you build this week?» was answered twice: the mushroom house;
-   now «What do you want to build next?»).
-   New: Rainy days (her 6 Nov news: the school Halloween celebration was cancelled because of rain).
-   Retired: The lost dog (30 Oct story, planned to go after one week).
-   Previous version: _Archive/Emma_Warmup_Spinner_until_2026-11-09.html */
+   Rewritten: Roblox (on 13 Nov she told the next build: stairs and mushrooms in her house;
+   «What do you want to build next?» is now «What is in your mushroom house now?»).
+   New: School party (her 13 Nov news: the school Halloween party, postponed for rain, was scheduled for that day; not confirmed it happened).
+   Retired: Rainy days (its premise, the cancelled celebration, was overtaken: the party was rescheduled for 13 Nov).
+   Previous version: _Archive/Emma_Warmup_Spinner_until_2026-11-17.html */
 const TOPICS = [
   {
     "e": "🎮",
     "name": "Roblox",
     "qs": [
       "Building or obby: which do you like more in Roblox?",
-      "What do you want to build next?",
+      "What is in your mushroom house now?",
       "Who do you play with?"
     ],
     "words": [
       "I like ... more.",
-      "I want to build a ...",
+      "In my house there are ...",
       "I play with ..."
     ],
     "color": "#7552B5",
-    "note": "She has built a mushroom house (30 Oct and 6 Nov: one room, white spots, a door). If she wants to tell it again, let her; the new question is about her next build."
+    "note": "Her mushroom house: one room, white spots, a door (30 Oct, 6 Nov); on 13 Nov she added stairs and mushrooms. The bridge between the houses was your idea, so do not ask it as her news. On 13 Nov she also played a pushing game; if she brings it up, let her tell it."
   },
   {
-    "e": "🌧️",
-    "name": "Rainy days",
+    "e": "🎃",
+    "name": "School party",
     "qs": [
-      "Rain or sun: which do you like more?",
-      "Is it rainy today?",
-      "What do you do at home on a rainy day?"
+      "Did you have the school party?",
+      "What was your costume?",
+      "What did you do at the party?"
     ],
     "words": [
-      "I like ... more.",
-      "Yes, it is. / No, it isn't.",
-      "On a rainy day I ..."
+      "Yes, I did. / No, I didn't.",
+      "I was a ...",
+      "At the party we ...",
+      "My friend was a ..."
     ],
     "color": "#9B4598",
-    "note": "From her 6 Nov news: the school Halloween celebration was cancelled because of the rain (she told it in Russian). Ask what happened and let her try it in English; give her a frame at her level, «There was no party. It rained.», not the passive, and keep listening, no drilling."
+    "note": "From her 13 Nov news (told in Russian): the school Halloween party, postponed the week before because of the rain, was scheduled for that day, and she said she would go as a pumpkin. Her file does not confirm that the party happened or what she wore, so ask, do not assume. Let her tell it in English; if a past form slips, recast it once and keep listening, no drilling. One week only: retire this card at the next refresh."
   },
   {
     "e": "🍝",

@@ -100,48 +100,48 @@
   <div class="foot">Tip: answer in a full sentence, and say a little more than one word.</div>
 
 <script>
-// Refreshed 9 Nov 2026 (weekly refresh), content only, machinery unchanged, 9 sectors,
+// Refreshed 17 Nov 2026 (weekly refresh), content only, machinery unchanged, 9 sectors,
 // same colour per position. Each card: an easy choice question first, then two open ones;
-// 3-4 sentence starters. Still no past-tense questions or chips: the 10 Nov hinge
-// («What did you do yesterday? Tell me in two sentences», no frame) stays cold.
-// Rewritten: Surfing (Friday has passed; big or small waves, a storm and she surfs anyway,
-//   5 Nov), Roblox (her new Roblox game, 5 Nov). Spin AFTER the 10 Nov hinge.
-// Gate fixes 9 Nov: no game name nobody used in the room, no claim that Mia played,
-//   storm pair in Would you rather replaced by summer / winter all year, «in the fall».
-// Kept: Cartoons, Emma and Mia, My family, School, Shopping (none spun yet), Would you rather
-//   (palace / houseboat pair dropped, summer / winter all year pair added).
-// New: Seasons (5 Nov: autumn in Israel and London, fall is her favourite, 24 degrees).
-// Retired: Squishies (on the wheel since 14 Sept, spun many times, nothing new on 5 Nov).
+// 3-4 sentence starters. Still no past-tense questions or chips: the hinge
+// («What did you do yesterday? Tell me in two sentences», no frame) is asked FIRST, cold.
+// Rewritten: Surfing (her new surfboard, collected 11 Nov), Roblox (the dress-up game, 12 Nov),
+//   School (history, tests, who helps her study; 10 and 17 Nov).
+// Kept: Emma and Mia, Shopping (not spun since 3 Nov), Would you rather (coldest / hottest
+//   country and SpongeBob / Minion pairs dropped; fly / swim and bike / skateboard added, 12 Nov).
+// New: My camera (film camera, 10 Nov), Food (good cook, cook, 12 and 17 Nov),
+//   Sports (action verbs grouped as sports, 12 Nov; can / can't as a chip, 17 Nov).
+// Retired: Cartoons (spun 12 Nov, «like you» answered), My family (spun 3 and 17 Nov,
+//   grandmothers covered on 17 Nov), Seasons (spun 10 Nov, «why fall» answered).
 const TOPICS = [
   { e:'🏄‍♀️', name:'Surfing', color:'#7c3aed',
-    qs:['Do you like big waves or small waves?','What does your new surfboard look like?','Is it scary to surf when there is a storm? Why?'],
-    words:['I like … waves','My surfboard is…',"It's got…","because it's…"] },
-  { e:'🎬', name:'Cartoons', color:'#f59e0b',
-    qs:['Who do you like more: SpongeBob or Kevin the Minion?','Which cartoon character is like you? Why?','What cartoon do you want to watch next?'],
-    words:['I like … more','… is like me because…','I want to watch…'] },
+    qs:['Do you surf in the morning or after school?','What does your new surfboard look like?','Why do you love surfing?'],
+    words:['I surf…','My surfboard is…',"It's got…","because it's…"] },
+  { e:'📷', name:'My camera', color:'#f59e0b',
+    qs:['Do you take photos of people or of the sea?',"What's in your favourite photo?",'Why is a film camera fun?'],
+    words:['I take photos of…',"In my favourite photo there's…","It's fun because…"] },
   { e:'🎮', name:'Roblox', color:'#a855f7',
-    qs:['Is your new Roblox game easy or hard?','What do you do in it?','Who do you play it with?'],
-    words:["It's…",'In the game you…','I play with…'] },
+    qs:['Which party do you like in your dress-up game: New Year, Halloween or a birthday party?','What clothes do you choose in the game?','Who do you play it with?'],
+    words:['I like the … party','I choose a … dress','I play with…'] },
   { e:'👭', name:'Emma and Mia', color:'#ec4899',
     qs:['Do you see Emma and Mia every day or at the weekend?','What are Emma and Mia like?','What do you do together?'],
     words:['I see them…',"They're … and …",'Together we…'] },
-  { e:'👨‍👩‍👧‍👦', name:'My family', color:'#0ea5e9',
-    qs:['Is your brother funny or sporty?','What is your mum like?','What do you do with your family at the weekend?'],
-    words:["He's…","She's … and …",'At the weekend we…'] },
+  { e:'🍳', name:'Food', color:'#0ea5e9',
+    qs:['Do you like cooking or eating more?','Who is a good cook in your family?',"What's your favourite breakfast?"],
+    words:['I like … more','My … is a good cook','I like eating…','My favourite breakfast is…'] },
   { e:'🏫', name:'School', color:'#14b8a6',
-    qs:['Is school fun or boring this week?','Tell me about a friend in your class.','What do you do after school?'],
-    words:['School is…','My friend … is…','After school I…'] },
+    qs:['Is history easy or difficult for you?','What is your favourite lesson? Why?','Who helps you study for a test?'],
+    words:['History is … for me','My favourite lesson is … because…','My … helps me'] },
   { e:'🛍️', name:'Shopping', color:'#f97316',
     qs:['Do you go to the mall with your friends or with your mum?','What do you like buying?',"What's your favourite shop?"],
     words:['I go with…','I like buying…','My favourite shop is…'] },
-  { e:'🍂', name:'Seasons', color:'#22c55e',
-    qs:['Is it hot or cold in Israel in the fall?','Why is fall your favourite season?','What do you like doing in the fall?'],
-    words:["In the fall it's…",'Fall is my favourite because…','In the fall I like…',"It's … degrees"] },
+  { e:'🏃‍♀️', name:'Sports', color:'#22c55e',
+    qs:['Do you like running or swimming more?','Which sport is easy for you?','What sport do you want to try? Why?'],
+    words:['I like … more','… is easy for me.','I want to try…',"because it's…"] },
   { e:'🤔', name:'Would you rather', color:'#ef4444', wyr:true,
     words:["I'd rather…","because it's…","it's too … to…"],
-    pairs:[['live in the coldest country','live in the hottest country'],
-           ['play Roblox all day','watch films all day'],
-           ['be SpongeBob for a day','be a Minion for a day'],
+    pairs:[['fly like a bird','swim like a fish'],
+           ['climb a mountain','dive in the sea'],
+           ['ride a bike to school','skateboard to school'],
            ['get lost in a maze','get stuck in a bookshop'],
            ['eat sushi every day','eat pizza every day'],
            ['surf with dolphins','swim with sea lions'],

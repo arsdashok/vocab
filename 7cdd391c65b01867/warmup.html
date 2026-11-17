@@ -139,7 +139,14 @@
    played Minecraft for two weeks). New: Calls and texts (7 Nov phone lesson, about her
    own friends), Fireworks (7 Nov bonfire night chat), To school (getting to school,
    usually and yesterday). Roblox games: Wacky Games (played 7 Nov) in, Taxi Boss out.
-   My clothes chip: "I usually wear …, but today I'm wearing …". */
+   My clothes chip: "I usually wear …, but today I'm wearing …".
+   Refreshed 17 Nov (weekly refresh): Fireworks retired (bonfire night is over, spun and
+   answered 14 Nov, «On the TV»); My clothes retired (on since 12 Oct, answered in full
+   14 Nov); Roblox games retired (spun four lessons running, 14 Nov «I didn't have time»;
+   the end-of-lesson Roblox block keeps the topic). New, all from the 14 Nov chat: My hair
+   (her new half-blonde hairstyle), Cold days (Riga below zero, staying home; options are
+   her own interests), Friday at school (her maths test week; subjects from her 26 Sept
+   paragraph). Riga weather: snowy in place of windy, snow follow-up. */
 const PIC = {
   jumper: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M22 15h20l13 9-5 22-8-3v9a2 2 0 0 1-2 2H24a2 2 0 0 1-2-2v-9l-8 3-5-22z' fill='#3f8f5c' stroke='#2a6440' stroke-width='2' stroke-linejoin='round'/><path d='M22 15a10 5 0 0 0 20 0' fill='none' stroke='#2a6440' stroke-width='2'/><rect x='22' y='45' width='20' height='6' rx='1' fill='#2f7049'/><rect x='9' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(12 13 43)'/><rect x='46' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(-12 51 43)'/></svg>",
   trousers: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M20 10h24v8l-3 36h-9l-1-24-1 24h-9l-3-36z' fill='#8b8f98' stroke='#5c6069' stroke-width='2' stroke-linejoin='round'/><rect x='20' y='10' width='24' height='5' fill='#5c6069'/><line x1='32' y1='18' x2='32' y2='30' stroke='#5c6069' stroke-width='1.6'/></svg>",
@@ -148,9 +155,9 @@ const PIC = {
 const TOPICS = [
   { e:"🌦️", name:"Riga weather", color:"#0ea5e9",
     q:"What's the weather like in Riga today?",
-    opts:[["☀️","sunny"],["☁️","cloudy"],["🌧️","rainy"],["💨","windy"]],
-    more:["What was the weather like yesterday?","What do you wear when it's cold?"],
-    words:["It's …","It was …","I wear …"] },
+    opts:[["☀️","sunny"],["☁️","cloudy"],["🌧️","rainy"],["❄️","snowy"]],
+    more:["What was the weather like yesterday?","Is there snow on the ground?"],
+    words:["It's …","It was …","It's below zero","No, not yet","Yes, there's a little."] },
   { e:"🌙", name:"Last night", color:"#f59e0b",
     q:"What time did you go to bed last night?",
     opts:[["🕘","nine"],["🕙","ten"],["🕚","eleven"],["🕛","midnight"]],
@@ -161,26 +168,26 @@ const TOPICS = [
     opts:[["💬","text"],["📞","call"],["🎥","video call"],["🎮","chat in Roblox"]],
     more:["Who do you text most?","When did you last call someone?"],
     words:["I usually text …","I sometimes call …","We chat in …","Yesterday I called …"] },
-  { e:"👕", name:"My clothes", color:"#ec4899",
-    q:"Which of these are you wearing today?",
-    opts:[["👕","a T-shirt"],[PIC.jumper,"a jumper"],[PIC.trousers,"trousers"],["🧦","socks"]],
-    more:["What do you usually wear at the weekend?","What do you wear to school?"],
-    words:["I'm wearing …","I usually wear …, but today I'm wearing …","At school, I wear …"] },
-  { e:"🎆", name:"Fireworks", color:"#22c55e",
-    q:"Where did you last see fireworks?",
-    opts:[["🏙️","in the city centre"],["🌉","over the river"],["🏡","near my house"],["📺","on TV"]],
-    more:["When was it?","Who were you with?"],
-    words:["I saw fireworks …","It was …","I was with …"] },
+  { e:"💇‍♀️", name:"My hair", color:"#ec4899",
+    q:"Who did your hair?",
+    opts:[["💇‍♀️","a hairdresser"],["👩","my mum"],["👭","a friend"],["🪞","I did it myself"]],
+    more:["What colour was your hair before?","What colour would you like next time?"],
+    words:["… did it","Before, it was …","Next time I'd like …"] },
+  { e:"🥶", name:"Cold days", color:"#22c55e",
+    q:"What do you do at home on a really cold day?",
+    opts:[["🎨","draw"],["📚","read"],["🎮","play Roblox"],["📺","watch YouTube"]],
+    more:["Do you go outside when it's below zero?","What do you drink to get warm?"],
+    words:["On cold days, I usually …","I sometimes …","I stay at home and …","I drink …"] },
   { e:"🚌", name:"To school", color:"#6366f1",
     q:"How do you usually get to school?",
     opts:[["🚌","by bus"],["🚋","by tram"],["🚗","by car"],["🚶","on foot"]],
     more:["How long does it take?","Did you go the same way yesterday?"],
     words:["I usually go …","It takes about … minutes","Yesterday I went …"] },
-  { e:"🎮", name:"Roblox games", color:"#14b8a6",
-    q:"Which of these Roblox games do you play most?",
-    opts:[["🤪","Wacky Games"],["🏄","Surf and Rescue"],["🚩","Color My Flag"],["💦","Don't Splash"]],
-    more:["How do you play it?","Who do you usually play with?"],
-    words:["I play … most","You need to …","You can get …","I usually play with …"] },
+  { e:"🏫", name:"Friday at school", color:"#14b8a6",
+    q:"Which of these lessons did you have on Friday?",
+    opts:[["🔢","Maths"],["⚽","PE"],["🖌️","Art"],["🇬🇧","English"]],
+    more:["Did you have a test this week?","What did you do in PE?"],
+    words:["On Friday I had …","We had a test in …","No, not this week","In PE we …","We ran.","We played volleyball.","We played basketball."] },
   { e:"🦜", name:"Pets", color:"#a855f7",
     q:"Which of these would you like as a pet?",
     opts:[["🦜","a parrot"],["🐈","a cat"],["🐕","a dog"],["🦎","a lizard"]],
