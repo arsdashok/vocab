@@ -146,7 +146,12 @@
    the end-of-lesson Roblox block keeps the topic). New, all from the 14 Nov chat: My hair
    (her new half-blonde hairstyle), Cold days (Riga below zero, staying home; options are
    her own interests), Friday at school (her maths test week; subjects from her 26 Sept
-   paragraph). Riga weather: snowy in place of windy, snow follow-up. */
+   paragraph). Riga weather: snowy in place of windy, snow follow-up.
+   Refreshed 23 Nov (weekly refresh): Last night and Cold days retired (both spun and
+   answered 21 Nov: «I went to bed at 11», «On cold days I have to go to school»).
+   New, from 21 Nov: This morning (her «long sleep» chat; getting up, the menu bank's
+   clock faces) and Music (her own paragraph: headphones, «I use them to listen to
+   music»). The 21 Nov hinge stays off the wheel: no «What about you?», no «I use … to». */
 const PIC = {
   jumper: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M22 15h20l13 9-5 22-8-3v9a2 2 0 0 1-2 2H24a2 2 0 0 1-2-2v-9l-8 3-5-22z' fill='#3f8f5c' stroke='#2a6440' stroke-width='2' stroke-linejoin='round'/><path d='M22 15a10 5 0 0 0 20 0' fill='none' stroke='#2a6440' stroke-width='2'/><rect x='22' y='45' width='20' height='6' rx='1' fill='#2f7049'/><rect x='9' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(12 13 43)'/><rect x='46' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(-12 51 43)'/></svg>",
   trousers: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M20 10h24v8l-3 36h-9l-1-24-1 24h-9l-3-36z' fill='#8b8f98' stroke='#5c6069' stroke-width='2' stroke-linejoin='round'/><rect x='20' y='10' width='24' height='5' fill='#5c6069'/><line x1='32' y1='18' x2='32' y2='30' stroke='#5c6069' stroke-width='1.6'/></svg>",
@@ -158,11 +163,11 @@ const TOPICS = [
     opts:[["☀️","sunny"],["☁️","cloudy"],["🌧️","rainy"],["❄️","snowy"]],
     more:["What was the weather like yesterday?","Is there snow on the ground?"],
     words:["It's …","It was …","It's below zero","No, not yet","Yes, there's a little."] },
-  { e:"🌙", name:"Last night", color:"#f59e0b",
-    q:"What time did you go to bed last night?",
-    opts:[["🕘","nine"],["🕙","ten"],["🕚","eleven"],["🕛","midnight"]],
-    more:["What did you do before bed?","What did you have for dinner last night?"],
-    words:["I went to bed at …","Before bed, I watched / read / played …","For dinner I had …"] },
+  { e:"☀️", name:"This morning", color:"#f59e0b",
+    q:"What time did you get up this morning?",
+    opts:[["🕘","nine"],["🕙","ten"],["🕚","eleven"],["🕛","midday"]],
+    more:["Did you sleep well?","What did you do before our lesson?"],
+    words:["I got up at …","Yes, I did.","No, not really.","Before the lesson, I …"] },
   { e:"📞", name:"Calls and texts", color:"#8b5cf6",
     q:"How do you usually talk to your friends after school?",
     opts:[["💬","text"],["📞","call"],["🎥","video call"],["🎮","chat in Roblox"]],
@@ -173,11 +178,11 @@ const TOPICS = [
     opts:[["💇‍♀️","a hairdresser"],["👩","my mum"],["👭","a friend"],["🪞","I did it myself"]],
     more:["What colour was your hair before?","What colour would you like next time?"],
     words:["… did it","Before, it was …","Next time I'd like …"] },
-  { e:"🥶", name:"Cold days", color:"#22c55e",
-    q:"What do you do at home on a really cold day?",
-    opts:[["🎨","draw"],["📚","read"],["🎮","play Roblox"],["📺","watch YouTube"]],
-    more:["Do you go outside when it's below zero?","What do you drink to get warm?"],
-    words:["On cold days, I usually …","I sometimes …","I stay at home and …","I drink …"] },
+  { e:"🎵", name:"Music", color:"#22c55e",
+    q:"When do you usually listen to music?",
+    opts:[["🚌","on the way to school"],["🎨","when I draw"],["🎮","when I play games"],["🌙","before bed"]],
+    more:["Do you listen with headphones or without?","What was the last song you listened to?"],
+    words:["I usually listen to music …","I sometimes listen …","With headphones.","The last song was …"] },
   { e:"🚌", name:"To school", color:"#6366f1",
     q:"How do you usually get to school?",
     opts:[["🚌","by bus"],["🚋","by tram"],["🚗","by car"],["🚶","on foot"]],
