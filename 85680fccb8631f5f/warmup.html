@@ -1,279 +1,755 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Maria's Warm-Up Spinner</title>
+<title>Maria's Speaking Wheel</title>
+<!-- BUILT FILE. Do not edit: change Maria_Speaking_Wheel.json and run python3 Tools/build_speaking_wheels.py Maria -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,500;0,700;0,800;1,800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-  @font-face { font-family:'Rubik'; src:local('Rubik'); }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body {
-    font-family:'Rubik','Segoe UI',Arial,sans-serif;
-    min-height:100vh; color:#1f3b4d;
-    background:
-      radial-gradient(circle at 12% 18%, #eee7fb 0, transparent 42%),
-      radial-gradient(circle at 88% 82%, #fde7f3 0, transparent 46%),
-      #faf8fe;
-    display:flex; flex-direction:column; align-items:center;
-    padding:16px 14px 34px;
-  }
-  h1 { font-size:26px; color:#6b46b8; margin-bottom:2px; }
-  .tag { font-size:14px; color:#5b7f8c; margin-bottom:14px; }
+/* Speaking Wheel: shared layout. Theme files only set the variables below and add small extras. */
+:root{
+  --page:#0b1026;
+  --title-ink:#fff; --title-shadow:0 2px 0 rgba(0,0,0,.28);
+  --card:#ffffff; --card-ink:#1f2937; --card-border:0 solid transparent; --card-shadow:0 22px 60px rgba(15,23,42,.30);
+  --radius:28px;
+  --accent:#ff6b57; --accent-ink:#fff; --accent2:#0fb5ae;
+  --muted:#64748b; --line:rgba(15,23,42,.12);
+  --btn:#ff6b57; --btn-ink:#fff; --btn-edge:#c2410c;
+  --idea:#f8fafc; --idea-ink:#1f2937; --idea-line:#e2e8f0; --idea-on:#fff1e6; --idea-on-line:var(--accent);
+  --chip:#fff7ed; --chip-ink:#9a3412; --chip-line:#fed7aa; --chip-on:var(--accent); --chip-on-ink:#fff;
+  --tool:#f1f5f9; --tool-ink:#334155;
+  --font-d:'Fredoka',system-ui,sans-serif; --font-b:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font-b);color:var(--card-ink);background:var(--page);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit}
 
-  .stage { display:flex; gap:26px; flex-wrap:wrap; justify-content:center; align-items:flex-start; width:100%; max-width:920px; }
+#stage{position:fixed;inset:0;z-index:0}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;outline:0}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:40;pointer-events:none}
 
-  .wheel-wrap { position:relative; width:340px; height:340px; flex:none; }
-  .pointer {
-    position:absolute; top:-6px; left:50%; transform:translateX(-50%);
-    width:0; height:0; border-left:16px solid transparent; border-right:16px solid transparent;
-    border-top:26px solid #f97316; z-index:5;
-  }
-  .wheel {
-    width:340px; height:340px; border-radius:50%;
-    border:8px solid #fff; box-shadow:0 8px 26px rgba(15,118,110,.25);
-    transition:transform 3.6s cubic-bezier(.17,.67,.16,1);
-    position:relative;
-  }
-  .wheel .lbl {
-    position:absolute; top:50%; left:50%; width:96px; margin-left:-48px; margin-top:-16px;
-    text-align:center; font-size:13px; font-weight:700; color:#fff; line-height:1.15;
-    text-shadow:0 1px 2px rgba(0,0,0,.35); pointer-events:none;
-  }
-  .wheel .lbl .e { display:block; font-size:22px; }
-  .hub {
-    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    width:58px; height:58px; border-radius:50%; background:#fff; z-index:4;
-    box-shadow:0 2px 8px rgba(0,0,0,.2); display:flex; align-items:center; justify-content:center;
-    font-size:26px;
-  }
-  .spinBtn {
-    display:block; margin:16px auto 0; font-family:inherit; font-weight:800; font-size:19px;
-    color:#fff; border:none; border-radius:16px; padding:13px 30px; cursor:pointer;
-    background:linear-gradient(135deg,#7957c7,#9b7bd4); box-shadow:0 4px 0 #6b46b8;
-  }
-  .spinBtn:active { transform:translateY(2px); box-shadow:0 2px 0 #6b46b8; }
-  .spinBtn:disabled { opacity:.6; cursor:default; }
+/* flat fallback when 3D is not available */
+#flat{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#flat[hidden]{display:none}
+#flat .f-wrap{position:relative;width:min(70vh,46vw);aspect-ratio:1}
+#flat canvas{width:100%;height:100%;border-radius:50%;border:10px solid #fff;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+#flat .f-ptr{position:absolute;left:50%;top:-14px;transform:translateX(-50%);width:0;height:0;border-left:20px solid transparent;border-right:20px solid transparent;border-top:36px solid var(--btn);z-index:2;filter:drop-shadow(0 3px 2px rgba(0,0,0,.3))}
 
-  .panel {
-    flex:1 1 340px; min-width:300px; max-width:460px; min-height:340px;
-    background:#fff; border:3px solid #ddd2f0; border-radius:20px; padding:18px 20px;
-    box-shadow:0 6px 20px rgba(15,118,110,.10);
-  }
-  .panel.idle { display:flex; align-items:center; justify-content:center; text-align:center; color:#8fb3b0; font-size:17px; }
-  .head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-  .head .e { font-size:32px; }
-  .head .name { font-size:22px; font-weight:800; color:#6b46b8; }
-  .q { font-size:20px; font-weight:700; color:#1f3b4d; line-height:1.35; margin-bottom:12px; }
+#top{position:fixed;left:0;right:0;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 26px;pointer-events:none}
+#top > *{pointer-events:auto}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--font-d);font-weight:700;font-size:28px;line-height:1;color:var(--title-ink);text-shadow:var(--title-shadow);background:var(--brand-bg,rgba(10,30,60,.28));padding:8px 18px 8px 12px;border-radius:999px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.brand .logo{font-size:36px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.top-tools{display:flex;gap:10px;position:relative}
+.pill{font-family:var(--font-d);font-weight:600;font-size:17px;padding:9px 16px;border-radius:999px;border:0;cursor:pointer;background:rgba(255,255,255,.9);color:#1f2937;box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.pill:hover{background:#fff}
+#topicMenu{position:absolute;right:0;top:48px;width:min(420px,86vw);background:#fff;color:#1f2937;border-radius:20px;padding:14px;box-shadow:0 18px 50px rgba(0,0,0,.3);display:flex;flex-wrap:wrap;gap:8px}
+#topicMenu[hidden]{display:none}
+#topicMenu button{font-family:var(--font-d);font-weight:600;font-size:18px;border:2px solid #e2e8f0;background:#f8fafc;border-radius:14px;padding:8px 12px;cursor:pointer;color:#1f2937}
+#topicMenu button:hover{border-color:var(--accent)}
+#topicMenu button.done{opacity:.55}
 
-  .menu { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .opt {
-    font-family:inherit; background:#f5f0fc; border:2px solid #ddd2f0; border-radius:14px;
-    padding:10px 8px; cursor:pointer; text-align:center; color:#1f3b4d; font-size:15px; font-weight:600;
-  }
-  .opt .big { display:block; font-size:34px; line-height:1.1; margin-bottom:4px; }
-  .opt.on { background:#e9ddfa; border-color:#7957c7; }
+#wheelzone{position:fixed;z-index:10;left:0;top:0;bottom:0;width:100%;pointer-events:none;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px;padding-bottom:3.6vh;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+body.has-card #wheelzone{width:50%}
+#spin{pointer-events:auto;font-family:var(--font-d);font-weight:700;font-size:34px;letter-spacing:.5px;color:var(--btn-ink);background:var(--btn);border:0;border-radius:24px;padding:14px 48px;cursor:pointer;box-shadow:0 7px 0 var(--btn-edge),0 16px 26px rgba(0,0,0,.28);transition:transform .08s,box-shadow .08s,filter .2s}
+#spin:hover{filter:brightness(1.06)}
+#spin:active{transform:translateY(5px);box-shadow:0 2px 0 var(--btn-edge),0 6px 12px rgba(0,0,0,.25)}
+#spin:disabled{filter:saturate(.45) brightness(.95);cursor:default}
+body:not(.has-card):not(.spinning) #spin{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+#hint{font-family:var(--font-d);font-weight:600;font-size:19px;max-width:min(92vw,560px);text-align:center;background:var(--brand-bg,rgba(10,30,60,.28));padding:5px 14px;border-radius:999px;color:var(--title-ink);text-shadow:var(--title-shadow);opacity:.95}
+body.has-card #hint,body.spinning #hint{visibility:hidden}
 
-  .more { margin-top:14px; display:none; }
-  .more.show { display:block; }
-  .more .cap, .words .cap { font-size:12px; text-transform:uppercase; letter-spacing:1px; color:#7aa3a0; margin-bottom:6px; }
-  .more li { list-style:none; font-size:17px; line-height:1.45; padding:5px 0 5px 24px; position:relative; }
-  .more li::before { content:"💬"; position:absolute; left:0; top:6px; font-size:14px; }
-  .words { margin-top:12px; }
-  .chip {
-    display:inline-block; background:#fff7ed; border:1.5px solid #fed7aa; color:#9a3412;
-    border-radius:20px; padding:4px 12px; margin:3px 4px 3px 0; font-size:14px; font-weight:600;
-  }
-  .moreBtn {
-    margin-top:12px; font-family:inherit; font-weight:700; font-size:15px; color:#6b46b8;
-    background:#fff; border:2px dashed #baa0df; border-radius:12px; padding:7px 14px; cursor:pointer;
-  }
-  .ownBtn { border-style:solid; font-weight:500; }
-  .q.say { font-style:italic; color:#9a3412; }
-  .more.help li::before { content:"✅"; }
-  details { max-width:790px; width:100%; margin-top:22px; color:#576675; font-size:14px; line-height:1.6; }
-  details p { padding-top:8px; }
-  summary { cursor:pointer; }
-  @media(max-width:390px) { .wheel-wrap,.wheel { width:300px; height:300px; } .wheel .lbl { font-size:12px; width:88px; margin-left:-44px; } .panel { min-width:0; width:100%; } }
-  @media(prefers-reduced-motion:reduce) { .wheel { transition:none; } }
-  .foot { margin-top:16px; font-size:12.5px; color:#8fb3b0; text-align:center; }
+#card{position:fixed;z-index:12;right:24px;top:68px;width:calc(52% - 36px);max-width:880px;max-height:calc(100vh - 80px);overflow:auto;background:var(--card);color:var(--card-ink);border-radius:var(--radius);border:var(--card-border);box-shadow:var(--card-shadow);padding:16px 24px 16px;transform-origin:left center;transform:perspective(1400px) rotateY(-75deg) translateX(80px);opacity:0;pointer-events:none;transition:transform .75s cubic-bezier(.2,.9,.25,1.08),opacity .35s}
+body.has-card #card{transform:none;opacity:1;pointer-events:auto}
+#card.flip .c-body{animation:flipin .55s cubic-bezier(.2,.9,.25,1.06)}
+@keyframes flipin{0%{transform:perspective(1200px) rotateX(-70deg);opacity:0}100%{transform:none;opacity:1}}
+.c-body{transform-origin:top center}
+
+.c-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.topic{display:flex;align-items:center;gap:12px;min-width:0}
+.t-ico{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:30px;background:var(--idea);border:3px solid var(--accent)}
+.t-name{font-family:var(--font-d);font-weight:700;font-size:28px;line-height:1.1;color:var(--accent)}
+.c-tools{display:flex;gap:8px;flex:none;align-items:center}
+.tool{width:46px;height:46px;border-radius:14px;border:0;background:var(--tool);color:var(--tool-ink);font-size:22px;cursor:pointer;display:grid;place-items:center;transition:transform .12s}
+.tool:hover{transform:translateY(-2px)}
+.tool[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+
+.swapbar{display:none;font-family:var(--font-d);font-weight:700;font-size:22px;color:var(--accent-ink);background:var(--accent);border-radius:14px;padding:6px 14px;margin-bottom:10px}
+#card.swap .swapbar{display:block;animation:pop .3s}
+.q-step{font-family:var(--font-d);font-weight:600;font-size:14px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-right:4px;white-space:nowrap}
+.q{font-family:var(--font-d);font-weight:700;font-size:clamp(36px,3.05vw,50px);line-height:1.14;color:var(--card-ink);text-wrap:balance;margin-bottom:10px}
+.q.swapin{animation:qin .4s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes qin{0%{transform:translateY(14px);opacity:0}100%{transform:none;opacity:1}}
+.q.veiled{cursor:pointer;color:var(--muted)}
+#card.hideq .say{visibility:hidden}
+.q.veiled .q-txt{display:none}
+.q .q-veil{display:none}
+.q.veiled .q-veil{display:inline}
+
+.cap{font-family:var(--font-d);font-weight:600;font-size:15px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:2px 0 8px;display:flex;align-items:center;gap:10px}
+.cap button{font-family:var(--font-d);font-weight:600;font-size:15px;letter-spacing:0;text-transform:none;border:2px dashed var(--idea-line);background:transparent;color:var(--card-ink);border-radius:10px;padding:2px 10px;cursor:pointer}
+
+.cap .own{margin-left:auto;font-size:19px;border:2px dashed var(--accent);padding:3px 12px;border-radius:12px}
+.cap .own.on{background:var(--accent);color:var(--accent-ink);border-style:solid;animation:pop .32s cubic-bezier(.2,1.3,.4,1)}
+.ideas{display:grid;gap:8px;margin-bottom:12px;perspective:900px}
+.ideas.n1{grid-template-columns:1fr}.ideas.n2{grid-template-columns:repeat(2,1fr)}.ideas.n3{grid-template-columns:repeat(3,1fr)}
+.ideas.n4{grid-template-columns:repeat(2,1fr)}.ideas.n5,.ideas.n6{grid-template-columns:repeat(3,1fr)}
+.idea{min-height:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 10px;border-radius:20px;border:3px solid var(--idea-line);background:var(--idea);color:var(--idea-ink);cursor:pointer;transition:transform .14s,border-color .14s,background .14s,box-shadow .14s;transform-style:preserve-3d;will-change:transform;min-width:0}
+.idea:hover{transform:translateY(-4px) rotateX(8deg);box-shadow:0 10px 18px rgba(15,23,42,.14)}
+.idea:active{transform:translateY(1px) scale(.97)}
+.idea.on{background:var(--idea-on);border-color:var(--idea-on-line);animation:pop .32s cubic-bezier(.2,1.3,.4,1)}
+@keyframes pop{0%{transform:scale(.86)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+.i-art{height:54px;display:grid;place-items:center;flex:none}
+.i-art .emo{font-size:46px;line-height:1}
+.i-art img{height:54px;max-width:110px;object-fit:contain;border-radius:10px}
+.i-lab{font-family:var(--font-d);font-weight:600;font-size:clamp(26px,1.85vw,30px);line-height:1.08;text-align:center;min-width:0}
+.ideas.wide .idea{flex-direction:row;justify-content:flex-start;gap:12px;min-height:62px;padding:6px 14px}
+.ideas.wide .i-art{height:46px}.ideas.wide .i-art .emo{font-size:38px}.ideas.wide .i-art img{height:46px;max-width:64px}
+.ideas.wide .i-lab{text-align:left}
+.idea.veil .i-lab{display:none}
+.idea.veil{justify-content:center!important}
+.idea.veil .i-art{height:70px}.idea.veil .i-art .emo{font-size:58px}.idea.veil .i-art img{height:70px;max-width:120px}
+.ideas.wide .idea.veil .i-art{height:50px}.ideas.wide .idea.veil .i-art .emo{font-size:42px}.ideas.wide .idea.veil .i-art img{height:50px}
+.ideas.pair{grid-template-columns:1fr auto 1fr;align-items:center}
+.ideas.pair .idea{min-height:92px}
+.ideas.pair .or{font-family:var(--font-d);font-weight:700;font-size:26px;color:var(--muted)}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.chip{font-family:var(--font-b);font-weight:800;font-size:clamp(26px,1.9vw,30px);line-height:1.12;text-align:left;color:var(--chip-ink);background:var(--chip);border:2.5px solid var(--chip-line);border-radius:18px 18px 18px 6px;padding:6px 15px;cursor:pointer;transition:transform .12s,background .15s,color .15s;animation:chipin .45s cubic-bezier(.2,1.2,.4,1) both}
+.chip:nth-child(2){animation-delay:.07s}.chip:nth-child(3){animation-delay:.14s}.chip:nth-child(4){animation-delay:.21s}.chip:nth-child(5){animation-delay:.28s}.chip:nth-child(n+6){animation-delay:.35s}
+@keyframes chipin{0%{transform:translateY(12px) scale(.9);opacity:0}100%{transform:none;opacity:1}}
+.chip:hover{transform:translateY(-2px)}
+.chip.on{background:var(--chip-on);color:var(--chip-on-ink);border-color:var(--chip-on)}
+
+.nav{display:flex;align-items:center;gap:12px;margin:2px -24px -16px;padding:8px 24px 14px;position:sticky;bottom:-16px;background:var(--nav-bg,var(--card));border-radius:0 0 var(--radius) var(--radius)}
+.nav .nbtn{font-family:var(--font-d);font-weight:700;font-size:26px;border-radius:18px;border:0;padding:10px 20px;cursor:pointer;transition:transform .08s,box-shadow .08s}
+.nav .back{background:var(--tool);color:var(--tool-ink);box-shadow:0 4px 0 rgba(15,23,42,.18)}
+.nav .next{margin-left:auto;background:var(--btn);color:var(--btn-ink);box-shadow:0 5px 0 var(--btn-edge)}
+.nav .nbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--btn-edge)}
+.nav .nbtn:disabled{opacity:.35;cursor:default}
+.dots{display:flex;gap:8px}
+.dot{width:16px;height:16px;border-radius:50%;border:0;background:var(--idea-line);cursor:pointer;padding:0}
+.dot.on{background:var(--accent);transform:scale(1.25)}
+
+#notes{position:fixed;z-index:30;right:16px;bottom:16px;width:min(560px,94vw);max-height:70vh;overflow:auto;background:#fffdf5;color:#3f3a2e;border:2px solid #e7dfc6;border-radius:18px;padding:16px 18px;box-shadow:0 18px 50px rgba(0,0,0,.35);font-size:16px;line-height:1.5}
+#notes[hidden]{display:none}
+#notes h3{font-family:var(--font-d);font-size:18px;margin:10px 0 4px;color:#7a5c12}
+#notes h3:first-child{margin-top:0}
+#notes .x{position:sticky;float:right;top:0;border:0;background:#f1ead2;border-radius:10px;width:34px;height:34px;font-size:18px;cursor:pointer}
+
+@media (max-width:899px){
+  body{overflow-y:auto}
+  #stage{position:relative;height:46vh;min-height:300px;transition:height .5s}
+  body:not(.has-card) #stage{height:72vh}
+  #top{position:absolute;padding:10px 12px}
+  .brand{font-size:17px;padding:6px 12px 6px 8px;gap:8px;max-width:52vw}.brand .logo{font-size:24px}
+  .pill{font-size:13px;padding:7px 10px;white-space:nowrap}
+  .top-tools{gap:6px}
+  .ideas.wide .idea{flex-direction:column;gap:2px;min-height:86px}
+  .ideas.wide .i-lab{text-align:center}
+  #top{align-items:flex-start}
+  #wheelzone,body.has-card #wheelzone{position:static;width:100%;padding:10px 0 12px;background:transparent}
+  #spin{font-size:26px;padding:11px 36px}
+  #hint{display:none}
+  #card{position:static;width:auto;max-width:none;max-height:none;margin:0 10px 16px;padding:16px 16px;display:none;transform:none}
+  body.has-card #card{display:block}
+  .t-ico{width:44px;height:44px;font-size:24px}.t-name{font-size:23px}
+  .q{font-size:27px}
+  .i-lab{font-size:20px}.chip{font-size:20px}.nav .nbtn{font-size:20px;padding:9px 14px}
+  .ideas.n3,.ideas.n5,.ideas.n6{grid-template-columns:repeat(2,1fr)}
+  .idea{min-height:92px}
+  .i-art{height:46px}.i-art .emo{font-size:38px}.i-art img{height:46px}
+  .cap .own{font-size:16px}
+  .q-step{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  #card,.chip,.idea,.q.swapin,#card.flip .c-body{animation:none!important;transition:none!important}
+  body:not(.has-card):not(.spinning) #spin{animation:none}
+}
+
+body.notrans *,body.notrans{transition:none!important;animation:none!important}
+
+/* dragon: Maria. Her explorer-magazine look (blue, yellow ring, slanted orange plaque, bubble words) with a dragon over the mountains. */
+:root{
+  --page:#1e88e5; --title-shadow:0 2px 0 rgba(10,40,90,.45); --brand-bg:rgba(10,50,110,.35);
+  --card:#ffffff; --card-ink:#0d2b4a; --radius:28px; --card-shadow:0 22px 60px rgba(10,40,90,.38);
+  --accent:#f57c00; --accent2:#1976d2; --muted:#5b7c99;
+  --btn:#f57c00; --btn-edge:#b85a00;
+  --idea:#e3f4fd; --idea-ink:#0d2b4a; --idea-line:#b8def5; --idea-on:#fff6d6; --idea-on-line:#ffcc00;
+  --chip:#29b6f6; --chip-ink:#ffffff; --chip-line:transparent; --chip-on:#0d2b4a; --chip-on-ink:#ffcc00;
+  --tool:#e3f4fd; --tool-ink:#1976d2;
+  --font-d:'Rubik',system-ui,sans-serif; --font-b:'Rubik',system-ui,sans-serif;
+}
+#card{border-top:14px solid #1976d2}
+.t-ico{border:5px solid #ffcc00;background:#e3f4fd}
+.t-name{background:#f57c00;color:#fff;padding:5px 18px 6px;border-radius:6px;transform:skewX(-9deg) rotate(-1.5deg);font-style:italic;font-weight:800}
+.chip{border-radius:999px;font-weight:700;padding:8px 20px}
+.chip:nth-child(6n+2){background:#fb8c00}.chip:nth-child(6n+3){background:#43a047}.chip:nth-child(6n+4){background:#8e24aa}.chip:nth-child(6n+5){background:#ec407a}.chip:nth-child(6n+6){background:#1e88e5}
+.chip.on{background:#0d2b4a}
+
 </style>
 </head>
-<body>
-  <h1>🐉 Maria's Warm-Up</h1>
-  <div class="tag">Spin, choose and chat!</div>
-
-  <div class="stage">
-    <div>
-      <div class="wheel-wrap">
-        <div class="pointer"></div>
-        <div class="wheel" id="wheel"></div>
-        <div class="hub">🌀</div>
-      </div>
-      <button class="spinBtn" id="spinBtn">Spin! 🎡</button>
-    </div>
-    <div class="panel idle" id="panel" aria-live="polite">Spin to start! 👉</div>
-  </div>
-
-  <div class="foot">Choose an idea or give your own. Say a sentence, then ask me!</div>
-
-<details><summary>Teacher notes</summary><p>Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today's date. Every card is a real chat: she picks a button or gives her own answer, says a whole sentence, then you ask one question from «What else?». Wait for her to build the sentence before helping. Two cards carry the test's oral questions in everyday form, so you can switch into the examiner on them: My family (introduce your family) and Languages (why join the section; «one more language» sits on a starter). My family has a new question, because she answered «Who do you look like?» on 18 November (her father); the hair starter keeps the size word before the gap (short / long ... hair), for the adjective order from 4 November. Languages has a new question too (she chose Italian on 18 November); her reason, «like French», came after my prompt, so the starters leave the reason open. Treehouse comes from the treehouse series she is reading (18 November) and now carries «There are lots of...» for the test writing. Best day replaces Free time: «On Wednesdays I...» is there for her «all Wednesdays», and if she says her favourite thing is existing, that is her joke, so enjoy it and ask what else. Helping comes from 18 November («I help my cat, my dog and my mom», «I don't know how to...») and stays in the first person. Jobs and Scary things have not been spun yet. Jobs stays in the first person too (I'd like to be..., I'd like to work in...): she already said dentist on 11 November, so open with «Would you like to work with animals or with people?». Scary things: the starters show «I'm scared of...» for how you feel and «... is scary» for the thing. Food asks what kind of food she likes best: let her explain French words in English, and its «It's...» starter is a chance to hear «it» for a thing. Wild places comes from the magazine (arctic animals on 4 November, Peru and llamas on 6 November). No card asks what somebody does (a pilot, her dog, her cat, her mum or dad): keep «What does ... do?» for the lesson. No card is about her dog, about Katie or about the detective costume: those words come back from pictures in the lesson. Recast her French-way forms in the chat when they come up, then let her say the sentence again herself. A personal answer does not have to match a button. Invite her to ask you a question too.</p></details>
+<body class="theme-dragon">
+<div id="stage"><canvas id="gl" aria-label="Topic wheel. Press Spin to choose a topic."></canvas><div id="flat" hidden><div class="f-wrap"><div class="f-ptr"></div></div></div></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<header id="top">
+  <div class="brand"><span class="logo" id="brandIcon"></span><span id="brandText"></span></div>
+  <div class="top-tools"><button type="button" class="pill" id="btnTopics">Topics</button><button type="button" class="pill" id="btnNotes">Teacher notes</button><div id="topicMenu" hidden></div></div>
+</header>
+<div id="wheelzone"><button type="button" id="spin">Spin!<span aria-hidden="true"> 🎡</span></button><div id="hint">Spin the wheel. Then we talk!</div></div>
+<section id="card" aria-live="polite"></section>
+<aside id="notes" hidden><button type="button" class="x" id="notesClose" aria-label="Close">✕</button><div id="notesBody"></div></aside>
+<script type="application/json" id="wheel-data">{"title": "Maria's Speaking Wheel", "icon": "🐉", "notes": "Use 2 or 3 spins for a 5-minute warm-up. Start by asking Maria for today's date. Every card is a real chat: she picks a button or gives her own answer, says a whole sentence, then you ask one or two of the next questions (Next question; Spin again under the wheel moves on at any time). Wait for her to build the sentence before helping. Two cards carry the test's oral questions in everyday form, so you can switch into the examiner on them: My family (introduce your family) and Languages (why join the section; «one more language» sits on a starter). My family has a new question, because she answered «Who do you look like?» on 18 November (her father); the hair starter keeps the size word before the gap (short / long ... hair), for the adjective order from 4 November. Languages has a new question too (she chose Italian on 18 November); her reason, «like French», came after my prompt, so the starters leave the reason open. Treehouse comes from the treehouse series she is reading (18 November) and now carries «There are lots of...» for the test writing. Best day replaces Free time: «On Wednesdays I...» is there for her «all Wednesdays», and if she says her favourite thing is existing, that is her joke, so enjoy it and ask what else. Helping comes from 18 November («I help my cat, my dog and my mom», «I don't know how to...») and stays in the first person. Jobs and Scary things have not been spun yet. Jobs stays in the first person too (I'd like to be..., I'd like to work in...): she already said dentist on 11 November, so open with «Would you like to work with animals or with people?». Scary things: the starters show «I'm scared of...» for how you feel and «... is scary» for the thing. Food asks what kind of food she likes best: let her explain French words in English, and its «It's...» starter is a chance to hear «it» for a thing. Wild places comes from the magazine (arctic animals on 4 November, Peru and llamas on 6 November). No card asks what somebody does (a pilot, her dog, her cat, her mum or dad): keep «What does ... do?» for the lesson. No card is about her dog, about Katie or about the detective costume: those words come back from pictures in the lesson. Recast her French-way forms in the chat when they come up, then let her say the sentence again herself. A personal answer does not have to match a button. Invite her to ask you a question too.", "tip": "Choose an idea or give your own. Say a sentence, then ask me!", "topics": [{"icon": "💼", "name": "Jobs", "q": "What would you like to be when you grow up?", "ideas": [{"icon": "🦷", "label": "a dentist"}, {"icon": "🐾", "label": "a vet"}, {"icon": "🩰", "label": "a dancer"}, {"icon": "✍️", "label": "a writer"}], "starters": ["I'd like to be a ... because...", "I'd like to work in a...", "I'm good with animals. / I'm good with people."], "more": ["Where would you like to work?", "Would you like to work with animals or with people?"]}, {"icon": "👨‍👩‍👧", "name": "My family", "q": "Who is the funniest person in your family?", "ideas": [{"icon": "👩", "label": "my mum"}, {"icon": "👨", "label": "my dad"}, {"icon": "🙋", "label": "me"}], "starters": ["The funniest person is ... because...", "He's / She's got short / long ... hair.", "She's interested in...", "Right now he's / she's..."], "more": ["What does your mum look like?", "What's your dad doing right now?"]}, {"icon": "🗣️", "name": "Languages", "q": "Which language sounds the most beautiful to you?", "ideas": [{"icon": "🇮🇹", "label": "Italian"}, {"icon": "🇫🇷", "label": "French"}, {"icon": "🇷🇺", "label": "Russian"}, {"icon": "🇬🇧", "label": "English"}], "starters": ["I think ... sounds...", "I like how ... sounds.", "I'd like to learn one more language..."], "more": ["Which language do you speak at home, and which at school?", "Why do you want to speak English well?"]}, {"icon": "🥐", "name": "Food", "q": "What kind of food do you like best?", "ideas": [{"icon": "🥐", "label": "French food"}, {"icon": "🥞", "label": "Russian food"}, {"icon": "🍣", "label": "Japanese food"}, {"icon": "🍝", "label": "Italian food"}], "starters": ["My favourite is... It's...", "For breakfast I usually have...", "In French, ... means..."], "more": ["What do you usually have for breakfast?", "Do you know any other French words for food? What do they mean?"]}, {"icon": "🌳", "name": "Treehouse", "q": "What would you like to have in your own treehouse?", "ideas": [{"icon": "🏊", "label": "a swimming pool"}, {"icon": "📚", "label": "a library"}, {"icon": "🛝", "label": "a slide"}, {"icon": "🐾", "label": "a room for animals"}], "starters": ["In my treehouse there's...", "There are lots of...", "I'd like to have ... because...", "At the moment I'm reading..."], "more": ["How many floors has your treehouse got?", "What's the funniest thing in the treehouse book you're reading?"]}, {"icon": "🦙", "name": "Wild places", "q": "Where would you like to go: Peru or the Arctic?", "ideas": [{"icon": "🦙", "label": "Peru"}, {"icon": "🐻‍❄️", "label": "the Arctic"}], "starters": ["I'd like to go to ... because...", "There are lots of ... there.", "I'd like to see..."], "more": ["Which animals live there?", "Would you like to have a llama? Why?"]}, {"icon": "📅", "name": "Best day", "q": "What's your favourite day of the week?", "ideas": [{"icon": "💃", "label": "Wednesday"}, {"icon": "🎉", "label": "Friday"}, {"icon": "🏫", "label": "Saturday"}, {"icon": "🛋️", "label": "Sunday"}], "starters": ["My favourite day is ... because...", "On that day I...", "The best day of the year is...", "I don't like ... because..."], "more": ["What's the best day of the year for you?", "Which day don't you like? Why?"]}, {"icon": "🤝", "name": "Helping", "q": "What do you help with at home?", "ideas": [{"icon": "🍳", "label": "cooking"}, {"icon": "🧹", "label": "tidying up"}, {"icon": "🛒", "label": "shopping"}, {"icon": "🍽️", "label": "washing the dishes"}], "starters": ["I help with the...", "I usually...", "I'm good at...", "I don't know how to..."], "more": ["What can you cook?", "What don't you like doing at home?"]}, {"icon": "😱", "name": "Scary things", "q": "Which of these is scary for you?", "ideas": [{"icon": "🕷️", "label": "spiders"}, {"icon": "🌑", "label": "the dark"}, {"icon": "🌩️", "label": "thunder"}, {"icon": "🦈", "label": "sharks"}], "starters": ["I'm scared of...", "... is scary. / ... are scary.", "I'm not scared of...", "When I'm scared, I..."], "more": ["Is there an animal you're scared of?", "Is there a book or a film that is scary for you?"]}]}</script>
+<script type="application/json" id="wheel-images">{}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js" crossorigin="anonymous"></script>
 <script>
-// Refreshed 23 Nov 2026 (weekly refresh; every card a conversation, none tied to an exercise), nine topics.
-// Kept: Jobs and Scary things (not spun yet), Food, Wild places.
-// Rewritten (spun and answered on 18 Nov): My family (now the funniest person), Languages (now which language
-//   sounds the most beautiful), Free time (now Best day: favourite day of the week, "On Wednesdays I...").
-// New: Treehouse (18 Nov: the treehouse series she is reading; carries "There are lots of..."),
-//   Helping at home (18 Nov: "I help my cat, my dog and my mom", "I don't know how to...").
-// Retired: Books (spun 18 Nov, answered), My room (on the wheel since 12 Oct).
-// No card asks "What does ... do?" about a pilot, her dog, her cat or a person: that is the next lesson's work.
-const TOPICS = [
-  {
-    "e": "💼", "name": "Jobs", "color": "#c17b12",
-    "q": "What would you like to be when you grow up?",
-    "opts": [["🦷", "a dentist"], ["🐾", "a vet"], ["🩰", "a dancer"], ["✍️", "a writer"]],
-    "words": ["I'd like to be a ... because...", "I'd like to work in a...", "I'm good with animals. / I'm good with people."],
-    "more": ["Where would you like to work?", "Would you like to work with animals or with people?"]
+/* dragon: snowy mountains, pines and clouds, and a dragon that flies round the wheel and flaps its wings. */
+window.WHEEL_THEME = {
+  id: 'dragon',
+  sky: ['#1976d2', '#64b5f6', '#e3f4fd'],
+  fog: ['#d5ecfb', 40, 95],
+  light: { sky: '#ffffff', ground: '#8fb98a', hemi: 1.0, sun: '#fff6e0', sunI: 1.25, pos: [7, 11, 9] },
+  particles: ['✨', '🔥', '⭐', '🐉'],
+  wheel: { colors: ['#1976d2', '#f57c00', '#43a047', '#8e24aa', '#e53935', '#00acc1'], rim: '#ffcc00', rimMetal: 0.25, side: '#e0a800', hub: '#f57c00', hubEmoji: '🐉', peg: '#ffffff', stand: false,
+    bulbs: { n: 18, colors: ['#ff5252', '#40c4ff', '#69f0ae'], r: 0.075 } },
+  pointer: function (ptr, H) { // a blue crystal
+    H.add(ptr, new H.THREE.OctahedronGeometry(0.3, 0), H.mat('#40c4ff', { flat: true, rough: 0.15, metal: 0.2, emissive: '#1976d2', ei: 0.35 }), [0, -0.05, 0], null, [0.8, 1.7, 0.8]);
+    H.add(ptr, H.sph(0.2, 16, 12), H.mat('#ffcc00', { metal: 0.3, rough: 0.3 }), [0, 0.5, 0]);
   },
-  {
-    "e": "👨‍👩‍👧", "name": "My family", "color": "#7957c7",
-    "q": "Who is the funniest person in your family?",
-    "opts": [["👩", "my mum"], ["👨", "my dad"], ["🙋", "me"]],
-    "words": ["The funniest person is ... because...", "He's / She's got short / long ... hair.", "She's interested in...", "Right now he's / she's..."],
-    "more": ["What does your mum look like?", "What's your dad doing right now?"]
-  },
-  {
-    "e": "🗣️", "name": "Languages", "color": "#bc5090",
-    "q": "Which language sounds the most beautiful to you?",
-    "opts": [["🇮🇹", "Italian"], ["🇫🇷", "French"], ["🇷🇺", "Russian"], ["🇬🇧", "English"]],
-    "words": ["I think ... sounds...", "I like how ... sounds.", "I'd like to learn one more language..."],
-    "more": ["Which language do you speak at home, and which at school?", "Why do you want to speak English well?"]
-  },
-  {
-    "e": "🥐", "name": "Food", "color": "#4872b5",
-    "q": "What kind of food do you like best?",
-    "opts": [["🥐", "French food"], ["🥞", "Russian food"], ["🍣", "Japanese food"], ["🍝", "Italian food"]],
-    "words": ["My favourite is... It's...", "For breakfast I usually have...", "In French, ... means..."],
-    "more": ["What do you usually have for breakfast?", "Do you know any other French words for food? What do they mean?"]
-  },
-  {
-    "e": "🌳", "name": "Treehouse", "color": "#188c87",
-    "q": "What would you like to have in your own treehouse?",
-    "opts": [["🏊", "a swimming pool"], ["📚", "a library"], ["🛝", "a slide"], ["🐾", "a room for animals"]],
-    "words": ["In my treehouse there's...", "There are lots of...", "I'd like to have ... because...", "At the moment I'm reading..."],
-    "more": ["How many floors has your treehouse got?", "What's the funniest thing in the treehouse book you're reading?"]
-  },
-  {
-    "e": "🦙", "name": "Wild places", "color": "#c25751",
-    "q": "Where would you like to go: Peru or the Arctic?",
-    "opts": [["🦙", "Peru"], ["🐻‍❄️", "the Arctic"]],
-    "words": ["I'd like to go to ... because...", "There are lots of ... there.", "I'd like to see..."],
-    "more": ["Which animals live there?", "Would you like to have a llama? Why?"]
-  },
-  {
-    "e": "📅", "name": "Best day", "color": "#168978",
-    "q": "What's your favourite day of the week?",
-    "opts": [["💃", "Wednesday"], ["🎉", "Friday"], ["🏫", "Saturday"], ["🛋️", "Sunday"]],
-    "words": ["My favourite day is ... because...", "On that day I...", "The best day of the year is...", "I don't like ... because..."],
-    "more": ["What's the best day of the year for you?", "Which day don't you like? Why?"]
-  },
-  {
-    "e": "🤝", "name": "Helping", "color": "#5b6fd6",
-    "q": "What do you help with at home?",
-    "opts": [["🍳", "cooking"], ["🧹", "tidying up"], ["🛒", "shopping"], ["🍽️", "washing the dishes"]],
-    "words": ["I help with the...", "I usually...", "I'm good at...", "I don't know how to..."],
-    "more": ["What can you cook?", "What don't you like doing at home?"]
-  },
-  {
-    "e": "😱", "name": "Scary things", "color": "#ce5b84",
-    "q": "Which of these is scary for you?",
-    "opts": [["🕷️", "spiders"], ["🌑", "the dark"], ["🌩️", "thunder"], ["🦈", "sharks"]],
-    "words": ["I'm scared of...", "... is scary. / ... are scary.", "I'm not scared of...", "When I'm scared, I..."],
-    "more": ["Is there an animal you're scared of?", "Is there a book or a film that is scary for you?"]
+  build: function (c) {
+    var H = c.H, THREE = c.THREE, scene = c.scene, g0 = c.ground, i;
+    var geo = new THREE.PlaneGeometry(120, 90, 44, 32); geo.rotateX(-Math.PI / 2);
+    var p = geo.attributes.position;
+    for (i = 0; i < p.count; i++) { var x = p.getX(i), z = p.getZ(i), k = Math.min(1, Math.abs(z + 4) / 7); p.setY(i, (Math.sin(x * 0.3) * 0.5 + Math.cos(z * 0.25 + x * 0.12) * 0.45) * k); }
+    var land = H.add(scene, geo, H.mat('#5fae4d', { flat: true, rough: 1 }), [0, g0, -18]); land.castShadow = false;
+    // mountains with snow
+    [[-17, -30, 9, 11], [-7, -36, 12, 15], [5, -34, 10, 13], [16, -29, 9, 10], [26, -36, 12, 14], [-28, -38, 11, 13]].forEach(function (m, k) {
+      var mt = H.add(scene, H.cone(m[2], m[3], 6, 1), H.mat(k % 2 ? '#6f86a3' : '#7b93b0', { flat: true, rough: 1 }), [m[0], g0 + m[3] / 2 - 0.5, m[1]], [0, k * 0.7, 0]); mt.castShadow = false;
+      var sn = H.add(scene, H.cone(m[2] * 0.36, m[3] * 0.36, 6, 1), H.mat('#ffffff', { flat: true, rough: 1 }), [m[0], g0 + m[3] * 0.82 - 0.45, m[1]], [0, k * 0.7, 0]); sn.castShadow = false;
+    });
+    // pines
+    [[-9, -6, 1.3], [-6.4, -9, 1.7], [8.4, -7, 1.5], [11, -10, 1.9], [-12.5, -11, 2.1], [5.5, -12, 1.4], [-4.2, -4.4, 1], [14.5, -5, 1.2]].forEach(function (t) {
+      var g = H.group(scene, [t[0], g0 + 0.1, t[1]]); g.scale.setScalar(t[2]);
+      H.add(g, H.cyl(0.14, 0.18, 0.7, 7), H.mat('#7a5230', { flat: true }), [0, 0.35, 0]);
+      for (var j = 0; j < 3; j++) H.add(g, H.cone(0.95 - j * 0.24, 1.1, 7), H.mat(j % 2 ? '#2f8f46' : '#27803d', { flat: true }), [0, 1.0 + j * 0.62, 0]);
+    });
+    // a stone tower holds the wheel
+    var st = H.mat('#9aa7b4', { flat: true, rough: 1 }), st2 = H.mat('#87949f', { flat: true, rough: 1 });
+    for (i = 0; i < 5; i++) H.add(c.rig, H.cyl(0.62 + i * 0.07, 0.68 + i * 0.07, 0.74, 8), i % 2 ? st : st2, [0, 0.2 - i * 0.72, -c.TH / 2 - 0.75], [0, i * 0.4, 0]);
+    H.add(c.rig, H.box(0.5, 0.44, 1.0), st, [0, c.R + 0.5, -0.3]);
+    H.add(c.rig, H.cyl(0.2, 0.2, 0.9, 8), st2, [0, 0, -c.TH / 2 - 0.4], [Math.PI / 2, 0, 0]);
+    [[-1.7, 0.45, 0.3, 0.7], [1.6, 0.35, 0.1, 0.55], [2.5, 0.25, 1.2, 0.4]].forEach(function (r) { H.add(scene, H.ico(r[3], 0), st2, [r[0], g0 + r[1], r[2]], [r[0], r[3] * 5, 0]); });
+    var clouds = [H.cloud(scene, [-11, 6.6, -20], 1.7), H.cloud(scene, [7, 8, -26], 2.2), H.cloud(scene, [19, 5.8, -18], 1.4), H.cloud(scene, [-22, 8.4, -30], 2)];
+    // the dragon (nose towards +x)
+    var dr = H.group(scene), body = H.mat('#14a89a', { flat: true, rough: 0.6 }), belly = H.mat('#ffd166', { flat: true, rough: 0.7 }), wingM = H.mat('#ff9800', { flat: true, rough: 0.6, side: true, emissive: '#ff6d00', ei: 0.35 }), dark = H.mat('#0d7f75', { flat: true });
+    H.add(dr, H.ico(1, 1), body, null, null, [1.5, 0.64, 0.64]);
+    H.add(dr, H.ico(1, 1), belly, [0.05, -0.16, 0], null, [1.3, 0.5, 0.5]);
+    H.add(dr, H.cyl(0.26, 0.38, 1.15, 7), body, [1.42, 0.5, 0], [0, 0, -0.95]);
+    var head = H.group(dr, [1.95, 0.98, 0]);
+    H.add(head, H.ico(0.44, 1), body, null, null, [1.25, 0.95, 0.95]);
+    H.add(head, H.box(0.56, 0.3, 0.44), body, [0.5, -0.1, 0]);
+    H.add(head, H.box(0.5, 0.1, 0.4), belly, [0.5, -0.28, 0]);
+    [0.2, -0.2].forEach(function (z) {
+      H.add(head, H.cone(0.09, 0.5, 6), belly, [-0.3, 0.42, z], [0, 0, 0.75]);
+      H.add(head, H.sph(0.085, 12, 8), H.mat('#ffe27a', { emissive: '#ffb300', ei: 0.5 }), [0.2, 0.14, z * 1.8], null, [1.2, 0.7, 1]); H.add(head, H.sph(0.045, 10, 8), H.mat('#12202b'), [0.25, 0.14, z * 2.12], null, [0.6, 1.2, 1]);
+      H.add(head, H.box(0.3, 0.06, 0.1), body, [0.2, 0.25, z * 1.75], [0, 0, -0.35]);
+      H.add(head, H.sph(0.035, 8, 6), H.mat('#0b4f49'), [0.76, 0.02, z * 0.6]);
+    });
+    for (i = 0; i < 6; i++) H.add(dr, H.cone(0.12, 0.34, 5), belly, [0.9 - i * 0.42, 0.62 - Math.abs(i - 1.5) * 0.03, 0], [0, 0, -0.2]);
+    var tail = [], tp = dr;
+    for (i = 0; i < 5; i++) { var tg = H.group(tp, [i === 0 ? -1.3 : -0.55, 0, 0]); H.add(tg, H.cone(0.34 - i * 0.06, 0.75, 6), i % 2 ? dark : body, [-0.3, 0, 0], [0, 0, Math.PI / 2]); tail.push(tg); tp = tg; }
+    H.add(tp, H.cone(0.26, 0.5, 4), wingM, [-0.75, 0, 0], [0, 0, Math.PI / 2], [1, 1, 0.25]);
+    [0.36, -0.36].forEach(function (z) { H.add(dr, H.cyl(0.11, 0.09, 0.5, 6), body, [0.7, -0.62, z]); H.add(dr, H.cyl(0.11, 0.09, 0.5, 6), body, [-0.7, -0.62, z]); });
+    var ws = new THREE.Shape(); ws.moveTo(0.35, 0); ws.lineTo(0.75, 2.5); ws.lineTo(-0.2, 1.95); ws.lineTo(-0.9, 2.2); ws.lineTo(-1.1, 1.3); ws.lineTo(-1.7, 1.15); ws.lineTo(-1.0, 0); ws.lineTo(0.35, 0);
+    var wgeo = new THREE.ShapeGeometry(ws);
+    var wL = H.group(dr, [0.25, 0.42, 0.34]), wR = H.group(dr, [0.25, 0.42, -0.34]);
+    H.add(wL, wgeo, wingM); H.add(wR, wgeo, wingM);
+    dr.scale.setScalar(0.74);
+    var ang = 1.2, roll = 0; H.onClick(dr, function () { roll = 1; c.burst(dr, 12); });
+    return {
+      update: function (t, dt, S) {
+        ang += dt * (0.5 + Math.min(1.4, S.speed * 0.09) + (roll > 0 ? 1.2 : 0));
+        var rx = 6.6, rz = 4.3;
+        dr.position.set(Math.cos(ang) * rx, 1.5 + Math.sin(t * 0.9) * 0.7, -1.2 + Math.sin(ang) * rz);
+        dr.rotation.set(0, -ang - Math.PI / 2, 0);
+        if (roll > 0) { roll = Math.max(0, roll - dt * 1.3); dr.rotation.x = (1 - roll) * H.TAU; }
+        var f = Math.sin(t * 7) * 0.62;
+        wL.rotation.x = Math.PI / 2 - 0.25 - f; wR.rotation.x = -Math.PI / 2 + 0.25 + f;
+        tail.forEach(function (tg, k) { tg.rotation.y = Math.sin(t * 3 - k * 0.7) * 0.16; tg.rotation.z = Math.sin(t * 2 - k * 0.6) * 0.07; });
+        head.rotation.z = Math.sin(t * 1.4) * 0.08;
+        clouds.forEach(function (cl, k) { cl.position.x += dt * (0.2 + k * 0.05); if (cl.position.x > 30) cl.position.x = -28; });
+      },
+      land: function () { roll = 1; c.burst(dr, 14); }
+    };
   }
-];
+};
 
-const n = TOPICS.length, seg = 360 / n;
-const wheel = document.getElementById('wheel');
-const panel = document.getElementById('panel');
-const spinBtn = document.getElementById('spinBtn');
+</script>
+<script>
+/* Speaking Wheel engine. One construction for every pupil:
+   spin the 3D wheel -> a topic card: question, idea tiles, sentence starters, follow-up questions.
+   Content comes from #wheel-data (JSON), pictures from #wheel-images, the look from window.WHEEL_THEME.
+   No sound anywhere. */
+(function () {
+'use strict';
+var TAU = Math.PI * 2;
+var D = JSON.parse(document.getElementById('wheel-data').textContent);
+var IMG = JSON.parse(document.getElementById('wheel-images').textContent || '{}');
+var T = window.WHEEL_THEME || {};
+var WC = Object.assign({
+  colors: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#14b8a6'],
+  rim: '#ffffff', side: null, rimTube: 0.13, rimMetal: 0, hub: '#fde047', hubEmoji: '',
+  label: '#ffffff', stroke: 'rgba(0,0,0,.42)', sep: 'rgba(255,255,255,.95)', peg: '#ffffff',
+  bulbs: null, stand: '#8b5a2b', pointer: '#ef4444', emissive: 0.24
+}, T.wheel || {});
+var topics = D.topics, N = topics.length, SEG = TAU / N;
+var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+function $(s) { return document.querySelector(s); }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function mod(a, n) { return ((a % n) + n) % n; }
+function lerp(a, b, k) { return a + (b - a) * k; }
+function rand(a, b) { return a + Math.random() * (b - a); }
+function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
 
-wheel.style.background = `conic-gradient(${TOPICS.map((t,i)=>`${t.color} ${i*seg}deg ${(i+1)*seg}deg`).join(',')})`;
-TOPICS.forEach((t,i)=>{
-  const mid = i*seg + seg/2, d = document.createElement('div');
-  d.className = 'lbl';
-  d.innerHTML = `<span class="e">${t.e}</span>${t.name}`;
-  d.style.transform = `rotate(${mid}deg) translateY(${window.innerWidth < 391 ? -101 : -118}px) rotate(${-mid}deg)`;
-  wheel.appendChild(d);
-});
+var S = { rot: 0, from: 0, to: 0, t0: 0, dur: 0, spinning: false, target: -1, cur: -1, step: 0, visited: {}, speed: 0,
+  ptr: 0, pv: 0, listen: false, swap: false, time: 0, hero: 1, heroTo: 1, pair: -1 };
 
-let rotation = 0, spinning = false, lastIdx = -1;
-const randInt = (a,b) => a + Math.floor(Math.random()*(b-a+1));
-function pickIdx(){ let i; do { i = randInt(0, n-1); } while(i === lastIdx); lastIdx = i; return i; }
-function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=randInt(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-// "English way" rounds: go through every sentence in a shuffled order before any repeats.
-function nextRound(t){ if(!t._deck || !t._deck.length) t._deck = shuffle(t.rounds); return t._deck.pop(); }
+/* ---------- wheel face (2D canvas, used as the 3D texture and as the flat fallback) ---------- */
+var faceCv = document.createElement('canvas'); faceCv.width = faceCv.height = 1024;
+var fontD = getComputedStyle(document.documentElement).getPropertyValue('--font-d').trim() || 'sans-serif';
+function segColor(i) {
+  var L = WC.colors.length;
+  if (i === N - 1 && N % L === 1 && L > 2) return WC.colors[1 + ((N - 2) % L === 1 ? 1 : 0)];
+  return WC.colors[i % L];
+}
+function splitOptions(name) {
+  var w = name.split(' '), out = [[name]], a, b;
+  for (a = 1; a < w.length; a++) out.push([w.slice(0, a).join(' '), w.slice(a).join(' ')]);
+  for (a = 1; a < w.length - 1; a++) for (b = a + 1; b < w.length; b++) out.push([w.slice(0, a).join(' '), w.slice(a, b).join(' '), w.slice(b).join(' ')]);
+  return out;
+}
+function fitLabel(g, name, maxW) {
+  var opts = splitOptions(name), size, best, i, j, mw;
+  for (size = 50; size >= 24; size -= 2) {
+    g.font = '700 ' + size + 'px ' + fontD;
+    best = null;
+    for (i = 0; i < opts.length; i++) {
+      if (opts[i].length > (size > 34 ? 2 : 3)) continue;
+      mw = 0; for (j = 0; j < opts[i].length; j++) mw = Math.max(mw, g.measureText(opts[i][j]).width);
+      if (mw <= maxW && (!best || opts[i].length < best.lines.length || (opts[i].length === best.lines.length && mw < best.w))) best = { lines: opts[i], w: mw };
+    }
+    if (best) return { size: size, lines: best.lines };
+  }
+  return { size: 24, lines: opts[opts.length - 1] };
+}
+function drawFace() {
+  var g = faceCv.getContext('2d'), Sz = 1024, c = Sz / 2, R = c - 2, i, a0;
+  g.clearRect(0, 0, Sz, Sz);
+  for (i = 0; i < N; i++) {
+    a0 = -Math.PI / 2 + i * SEG;
+    g.beginPath(); g.moveTo(c, c); g.arc(c, c, R, a0, a0 + SEG); g.closePath();
+    g.fillStyle = segColor(i); g.fill();
+    if (S.visited[i] && i !== S.cur) { g.fillStyle = 'rgba(20,20,40,.34)'; g.fill(); }
+  }
+  var rg = g.createRadialGradient(c, c, R * 0.2, c, c, R);
+  rg.addColorStop(0, 'rgba(255,255,255,.16)'); rg.addColorStop(0.7, 'rgba(255,255,255,0)'); rg.addColorStop(1, 'rgba(0,0,0,.16)');
+  g.fillStyle = rg; g.beginPath(); g.arc(c, c, R, 0, TAU); g.fill();
+  g.strokeStyle = WC.sep; g.lineWidth = 7; g.lineCap = 'round';
+  for (i = 0; i < N; i++) {
+    a0 = -Math.PI / 2 + i * SEG;
+    g.beginPath(); g.moveTo(c + Math.cos(a0) * R * 0.2, c + Math.sin(a0) * R * 0.2); g.lineTo(c + Math.cos(a0) * R, c + Math.sin(a0) * R); g.stroke();
+  }
+  var maxW = 2 * 0.67 * R * Math.tan(SEG / 2) * 0.9;
+  for (i = 0; i < N; i++) {
+    var t = topics[i], name = t.short || t.name, fit = fitLabel(g, name, Math.min(maxW, R * 0.86));
+    g.save(); g.translate(c, c); g.rotate((i + 0.5) * SEG);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = '700 ' + fit.size + 'px ' + fontD;
+    var lh = fit.size * 1.12, n = fit.lines.length, top = -R * (n === 1 ? 0.79 : n === 2 ? 0.845 : 0.87);
+    g.lineJoin = 'round'; g.lineWidth = Math.max(6, fit.size * 0.2); g.strokeStyle = WC.stroke; g.fillStyle = WC.label;
+    for (var k = 0; k < n; k++) { g.strokeText(fit.lines[k], 0, top + k * lh); g.fillText(fit.lines[k], 0, top + k * lh); }
+    g.font = Math.round(R * 0.2) + 'px ' + EMOJI_FONT; g.fillStyle = '#000';
+    g.fillText(t.icon || '💬', 0, -R * 0.44);
+    g.restore();
+  }
+  if (faceTex) faceTex.needsUpdate = true;
+}
+var faceTex = null;
 
-function showTopic(i){
-  const t = TOPICS[i];
-  const round = t.rounds ? nextRound(t) : null;
-  const opts = round ? [] : (t.pairs ? t.list[randInt(0, t.list.length-1)] : shuffle(t.opts));
-  const help = round ? [round[1]] : (t.help || []);
-  const words = t.words || [], more = t.more || [];
-  panel.classList.remove('idle');
-  panel.innerHTML = `
-    <div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div>
-    <div class="q">${t.q}</div>
-    ${round ? `<div class="q say">${round[0]}</div>` : ''}
-    ${opts.length ? `<div class="menu">${opts.map(o=>`<button class="opt"><span class="big">${o[0]}</span>${o[1]}</button>`).join('')}</div>
-    <button class="moreBtn ownBtn" id="ownBtn">My own answer</button>` : ''}
-    ${words.length ? `<div class="words"><div class="cap">Sentence starters</div>${words.map(w=>`<span class="chip">${w}</span>`).join('')}</div>` : ''}
-    ${help.length ? `<button class="moreBtn" id="helpBtn">Help 💡</button>
-    <div class="more help" id="help"><div class="cap">Say it like this</div><ul>${help.map(h=>`<li>${h}</li>`).join('')}</ul></div>` : ''}
-    ${more.length ? `<button class="moreBtn" id="moreBtn">What else? ➕</button>
-    <div class="more" id="more"><div class="cap">Next questions</div><ul>${more.map(q=>`<li>${q}</li>`).join('')}</ul></div>` : ''}
-    ${round ? `<button class="moreBtn ownBtn" id="nextBtn">Another one ➡️</button>` : ''}`;
-  panel.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
-    panel.querySelectorAll('.opt').forEach(x => x.classList.remove('on'));
-    b.classList.add('on');
-    document.getElementById('ownBtn').textContent = 'My own answer';
-  }));
-  const own = document.getElementById('ownBtn');
-  if (own) own.addEventListener('click', () => {
-    panel.querySelectorAll('.opt').forEach(x => x.classList.remove('on'));
-    own.textContent = 'Tell me your idea!';
+/* ---------- 3D ---------- */
+var G = null; // {renderer, scene, camera, wheel, ptr, bulbs, api, clickables}
+var R3 = 2, TH = 0.36, FOV = 36;
+var H = {}; // helpers handed to themes
+function init3D() {
+  if (!window.THREE) return false;
+  var THREE = window.THREE, canvas = $('#gl'), renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' }); } catch (e) { return false; }
+  if (THREE.ColorManagement && 'legacyMode' in THREE.ColorManagement) THREE.ColorManagement.legacyMode = false;
+  var small = Math.min(innerWidth, innerHeight) < 560;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  var scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 300);
+
+  H.THREE = THREE;
+  H.mat = function (c, o) {
+    o = o || {};
+    var m = new THREE.MeshStandardMaterial({ color: new THREE.Color(c), roughness: o.rough == null ? 0.72 : o.rough, metalness: o.metal || 0, flatShading: !!o.flat });
+    if (o.emissive != null) { m.emissive = new THREE.Color(o.emissive); m.emissiveIntensity = o.ei == null ? 1 : o.ei; }
+    if (o.opacity != null) { m.transparent = true; m.opacity = o.opacity; m.depthWrite = o.depthWrite !== false && o.opacity > 0.6; }
+    if (o.side) m.side = THREE.DoubleSide;
+    if (o.map) m.map = o.map;
+    return m;
+  };
+  H.basic = function (c, o) { o = o || {}; var m = new THREE.MeshBasicMaterial({ color: new THREE.Color(c) }); if (o.opacity != null) { m.transparent = true; m.opacity = o.opacity; m.depthWrite = false; } if (o.add) m.blending = THREE.AdditiveBlending; if (o.side) m.side = THREE.DoubleSide; if (o.map) m.map = o.map; return m; };
+  H.box = function (w, h, d) { return new THREE.BoxGeometry(w, h, d); };
+  H.sph = function (r, a, b) { return new THREE.SphereGeometry(r, a || 20, b || 14); };
+  H.ico = function (r, d) { return new THREE.IcosahedronGeometry(r, d || 0); };
+  H.cyl = function (rt, rb, h, s) { return new THREE.CylinderGeometry(rt, rb, h, s || 18); };
+  H.cone = function (r, h, s) { return new THREE.ConeGeometry(r, h, s || 14); };
+  H.tor = function (r, t, a, b, arc) { return new THREE.TorusGeometry(r, t, a || 10, b || 40, arc || TAU); };
+  H.add = function (parent, geo, material, pos, rot, scl) {
+    var m = new THREE.Mesh(geo, material);
+    if (pos) m.position.set(pos[0], pos[1], pos[2]);
+    if (rot) m.rotation.set(rot[0], rot[1], rot[2]);
+    if (scl != null) { if (scl.length) m.scale.set(scl[0], scl[1], scl[2]); else m.scale.setScalar(scl); }
+    m.castShadow = true; m.receiveShadow = true;
+    parent.add(m); return m;
+  };
+  H.group = function (parent, pos) { var g = new THREE.Group(); if (pos) g.position.set(pos[0], pos[1], pos[2]); (parent || scene).add(g); return g; };
+  H.tex = function (size, draw) { var c = document.createElement('canvas'); c.width = c.height = size; draw(c.getContext('2d'), size); var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; };
+  H.emoji = function (ch, s) {
+    var t = H.tex(128, function (g) { g.font = '104px ' + EMOJI_FONT; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(ch, 64, 70); });
+    var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false })); sp.scale.setScalar(s || 1); return sp;
+  };
+  H.glow = function (color, s) {
+    var t = H.tex(128, function (g) { var r = g.createRadialGradient(64, 64, 0, 64, 64, 64); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.35, 'rgba(255,255,255,.45)'); r.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = r; g.fillRect(0, 0, 128, 128); });
+    var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, color: new THREE.Color(color), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); sp.scale.setScalar(s || 1); return sp;
+  };
+  H.cloud = function (parent, pos, s, color) {
+    var g = H.group(parent, pos), m = H.mat(color || '#ffffff', { flat: true, rough: 1 });
+    [[0, 0, 0, 1], [0.9, -0.1, 0.1, 0.75], [-0.9, -0.15, 0, 0.7], [0.35, 0.45, -0.1, 0.7], [-0.4, 0.35, 0.1, 0.6]].forEach(function (p) {
+      var b = H.add(g, H.ico(1, 1), m, [p[0], p[1], p[2]], null, [p[3], p[3] * 0.8, p[3] * 0.8]); b.castShadow = false; b.receiveShadow = false;
+    });
+    g.scale.setScalar(s || 1); return g;
+  };
+  H.rand = rand; H.pick = pick; H.lerp = lerp; H.TAU = TAU;
+  var clickables = [];
+  H.onClick = function (obj, fn) { clickables.push({ obj: obj, fn: fn }); };
+
+  // sky
+  var sky = T.sky || ['#7dd3fc', '#e0f2fe'];
+  scene.background = H.tex(256, function (g, s) { var gr = g.createLinearGradient(0, 0, 0, s); sky.forEach(function (c, i) { gr.addColorStop(i / (sky.length - 1), c); }); g.fillStyle = gr; g.fillRect(0, 0, s, s); });
+  if (T.fog) scene.fog = new THREE.Fog(new THREE.Color(T.fog[0]), T.fog[1], T.fog[2]);
+  var L = T.light || {};
+  var hemi = new THREE.HemisphereLight(new THREE.Color(L.sky || '#ffffff'), new THREE.Color(L.ground || '#8a9bb0'), L.hemi == null ? 0.95 : L.hemi); scene.add(hemi);
+  var sun = new THREE.DirectionalLight(new THREE.Color(L.sun || '#ffffff'), L.sunI == null ? 1.15 : L.sunI);
+  var sp = L.pos || [5, 9, 9]; sun.position.set(sp[0], sp[1], sp[2]); sun.castShadow = true;
+  sun.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048);
+  var sc = sun.shadow.camera; sc.left = -10; sc.right = 10; sc.top = 10; sc.bottom = -10; sc.near = 0.5; sc.far = 50;
+  sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.03; scene.add(sun);
+
+  // wheel
+  var rig = new THREE.Group(); scene.add(rig);
+  var wheel = new THREE.Group(); rig.add(wheel);
+  faceTex = new THREE.CanvasTexture(faceCv); faceTex.encoding = THREE.sRGBEncoding; faceTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  var faceMat = new THREE.MeshStandardMaterial({ map: faceTex, roughness: 0.42, metalness: 0, emissive: new THREE.Color('#ffffff'), emissiveMap: faceTex, emissiveIntensity: WC.emissive });
+  var face = new THREE.Mesh(new THREE.CircleGeometry(R3, 80), faceMat); face.position.z = TH / 2 + 0.002; face.receiveShadow = true; wheel.add(face);
+  var body = H.add(wheel, H.cyl(R3, R3, TH, 80), H.mat(WC.side || WC.rim, { rough: 0.5 }), null, [Math.PI / 2, 0, 0]);
+  H.add(wheel, new THREE.TorusGeometry(R3 + 0.03, WC.rimTube, 16, 80), H.mat(WC.rim, { rough: 0.32, metal: WC.rimMetal }), [0, 0, TH / 2 - 0.03]);
+  var back = H.add(wheel, new THREE.CircleGeometry(R3, 48), H.mat(WC.side || WC.rim), [0, 0, -TH / 2 - 0.002], [0, Math.PI, 0]);
+  var i, a;
+  for (i = 0; i < N; i++) { // pegs on the sector borders
+    a = Math.PI / 2 - i * SEG;
+    H.add(wheel, H.sph(0.085, 14, 10), H.mat(WC.peg, { rough: 0.3 }), [Math.cos(a) * (R3 + 0.03), Math.sin(a) * (R3 + 0.03), TH / 2 + 0.1]);
+  }
+  var bulbs = [];
+  if (WC.bulbs && WC.bulbs.n) {
+    for (i = 0; i < WC.bulbs.n; i++) {
+      a = Math.PI / 2 - (i + 0.5) * TAU / WC.bulbs.n;
+      var col = WC.bulbs.colors[i % WC.bulbs.colors.length];
+      var b = H.add(wheel, H.sph(WC.bulbs.r || 0.075, 12, 8), H.mat(col, { emissive: col, ei: 0.5, rough: 0.3 }), [Math.cos(a) * (R3 + 0.03), Math.sin(a) * (R3 + 0.03), TH / 2 + 0.09]);
+      b.castShadow = false; bulbs.push(b);
+    }
+  }
+  // hub does not turn
+  var hub = H.group(rig, [0, 0, TH / 2]);
+  H.add(hub, H.cyl(0.4, 0.46, 0.2, 32), H.mat(WC.hub, { rough: 0.3, metal: 0.15 }), [0, 0, 0.1], [Math.PI / 2, 0, 0]);
+  H.add(hub, H.sph(0.4, 28, 14), H.mat(WC.hub, { rough: 0.25, metal: 0.15 }), [0, 0, 0.2], null, [1, 1, 0.42]);
+  if (WC.hubEmoji) { var he = H.emoji(WC.hubEmoji, 0.56); he.position.set(0, 0, 0.42); hub.add(he); }
+  // pointer (pivot at the top, tip pointing down)
+  var ptr = H.group(rig, [0, R3 + 0.5, TH / 2 + 0.2]);
+  if (T.pointer) T.pointer(ptr, H);
+  else {
+    H.add(ptr, H.cone(0.2, 0.62, 20), H.mat(WC.pointer, { rough: 0.35 }), [0, -0.2, 0], [Math.PI, 0, 0]);
+    H.add(ptr, H.sph(0.24, 20, 14), H.mat(WC.pointer, { rough: 0.3 }), [0, 0.12, 0]);
+  }
+  var ground = T.ground == null ? -3.05 : T.ground;
+  if (WC.stand) {
+    H.add(rig, H.box(0.34, R3 + Math.abs(ground), 0.3), H.mat(WC.stand, { rough: 0.6 }), [0, (ground) / 2 - 0.2, -TH / 2 - 0.2]);
+    H.add(rig, H.cyl(1.05, 1.3, 0.26, 28), H.mat(WC.stand, { rough: 0.6 }), [0, ground + 0.13, -TH / 2 - 0.1]);
+    H.add(rig, H.box(0.5, 0.5, 0.3), H.mat(WC.stand, { rough: 0.6 }), [0, R3 + 0.5, -TH / 2 - 0.2]);
+    H.add(rig, H.box(0.3, 0.3, 0.5), H.mat(WC.stand, { rough: 0.6 }), [0, R3 + 0.5, -0.02]);
+  }
+  H.onClick(face, function () { spin(); });
+
+  G = { renderer: renderer, scene: scene, camera: camera, wheel: wheel, rig: rig, ptr: ptr, bulbs: bulbs, sun: sun, hemi: hemi, clickables: clickables, api: {}, ground: ground };
+  var ctx = { THREE: THREE, H: H, scene: scene, camera: camera, rig: rig, wheel: wheel, hub: hub, ptr: ptr, R: R3, TH: TH, ground: ground, sun: sun, hemi: hemi, N: N, reduce: reduce,
+    burst: function (obj, n) { var p = project(obj); burst(p.x, p.y, n || 10); } };
+  if (T.build) { try { G.api = T.build(ctx) || {}; } catch (e) { console.error('theme build failed', e); G.api = {}; } }
+
+  // pointer events
+  var ray = new THREE.Raycaster(), v2 = new THREE.Vector2();
+  function hit(ev) {
+    var r = canvas.getBoundingClientRect();
+    v2.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(v2, camera);
+    var objs = clickables.map(function (c) { return c.obj; });
+    var hits = ray.intersectObjects(objs, true), k, o;
+    if (!hits.length) return null;
+    o = hits[0].object;
+    while (o) { for (k = 0; k < clickables.length; k++) if (clickables[k].obj === o) return { c: clickables[k], point: hits[0].point }; o = o.parent; }
+    return null;
+  }
+  canvas.addEventListener('click', function (ev) { var h = hit(ev); if (h) h.c.fn(h.point, ev); });
+  var lastMove = 0;
+  canvas.addEventListener('pointermove', function (ev) {
+    par.tx = (ev.clientX / innerWidth) * 2 - 1; par.ty = (ev.clientY / innerHeight) * 2 - 1;
+    var now = performance.now(); if (now - lastMove < 70) return; lastMove = now;
+    canvas.style.cursor = hit(ev) ? 'pointer' : 'default';
   });
-  const reveal = (btnId, boxId) => {
-    const b = document.getElementById(btnId);
-    if (b) b.addEventListener('click', () => { document.getElementById(boxId).classList.add('show'); b.style.display = 'none'; });
-  };
-  reveal('helpBtn', 'help');
-  reveal('moreBtn', 'more');
-  const next = document.getElementById('nextBtn');
-  if (next) next.addEventListener('click', () => showTopic(i));
+  window.addEventListener('pointermove', function (ev) { par.tx = (ev.clientX / innerWidth) * 2 - 1; par.ty = (ev.clientY / innerHeight) * 2 - 1; });
+  return true;
+}
+var par = { x: 0, y: 0, tx: 0, ty: 0 };
+var lay = { w: 0, h: 0, wide: true, ppu: 100 };
+function layout() {
+  var st = $('#stage'), r = st.getBoundingClientRect();
+  lay.w = Math.max(1, r.width); lay.h = Math.max(1, r.height); lay.wide = innerWidth >= 900;
+  var fx = $('#fx'), dpr = Math.min(window.devicePixelRatio || 1, 2);
+  fx.width = innerWidth * dpr; fx.height = innerHeight * dpr;
+  if (G) { G.renderer.setSize(lay.w, lay.h, false); G.camera.aspect = lay.w / lay.h; G.camera.updateProjectionMatrix(); }
+}
+function applyCamera() {
+  var w = lay.w, h = lay.h, k = lay.wide ? 1 - S.hero : 0;
+  var diam = lay.wide ? lerp(Math.min(0.5 * w, 0.62 * h), Math.min(0.41 * w, 0.62 * h), k) : Math.min(0.8 * w, 0.6 * h);
+  var ppu = diam / 4.7, dist = h / (2 * Math.tan(FOV * Math.PI / 360) * ppu);
+  var cx = lay.wide ? k * (0.25 * w) / ppu : 0;
+  lay.ppu = ppu;
+  var px = reduce ? 0 : par.x * 0.55, py = reduce ? 0 : par.y * 0.3;
+  G.camera.position.set(cx + px, 0.5 - py, dist);
+  G.camera.lookAt(cx + px * 0.25, lay.wide ? 0.12 : 0.3, 0);
+}
+var _v;
+function project(obj) {
+  if (!G) return { x: innerWidth / 2, y: innerHeight / 2 };
+  _v = _v || new G.THREE_V3();
+  obj.getWorldPosition ? obj.getWorldPosition(_v) : _v.set(obj[0], obj[1], obj[2]);
+  _v.project(G.camera);
+  var r = $('#gl').getBoundingClientRect();
+  return { x: r.left + (_v.x * 0.5 + 0.5) * r.width, y: r.top + (-_v.y * 0.5 + 0.5) * r.height };
 }
 
-function spin(){
-  if(spinning) return;
-  spinning = true; spinBtn.disabled = true;
-  const i = pickIdx();
-  const targetMod = (360 - (i*seg + seg/2) + 360) % 360;
-  const currentMod = ((rotation % 360) + 360) % 360;
-  rotation += 360*5 + (targetMod - currentMod + 360) % 360;
-  wheel.style.transform = `rotate(${rotation}deg)`;
-  let completed = false;
-  const done = () => {
-    if (completed) return;
-    completed = true;
-    wheel.removeEventListener('transitionend', done);
-    showTopic(i);
-    spinning = false; spinBtn.disabled = false;
-    spinBtn.textContent = 'Spin again 🎡';
-  };
-  wheel.addEventListener('transitionend', done, { once:true });
-  setTimeout(done, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3900);
+/* ---------- confetti (2D overlay) ---------- */
+var parts = [];
+function burst(x, y, n, set) {
+  if (reduce) return;
+  set = set || T.particles || ['⭐', '✨'];
+  for (var i = 0; i < n; i++) parts.push({ x: x, y: y, vx: rand(-1, 1) * 520, vy: rand(-980, -260), r: rand(0, TAU), vr: rand(-5, 5), s: rand(22, 46), ch: pick(set), life: 0, max: rand(1.1, 2) });
 }
-spinBtn.addEventListener('click', spin);
+function drawParts(dt) {
+  var fx = $('#fx'), g = fx.getContext('2d'), dpr = fx.width / innerWidth;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, fx.width, fx.height);
+  if (!parts.length) return;
+  g.setTransform(dpr, 0, 0, dpr, 0, 0); g.textAlign = 'center'; g.textBaseline = 'middle';
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var p = parts[i]; p.life += dt; if (p.life > p.max) { parts.splice(i, 1); continue; }
+    p.vy += 1500 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt;
+    g.save(); g.translate(p.x, p.y); g.rotate(p.r); g.globalAlpha = Math.max(0, 1 - p.life / p.max);
+    g.font = p.s + 'px ' + EMOJI_FONT; g.fillText(p.ch, 0, 0); g.restore();
+  }
+}
+
+/* ---------- spin ---------- */
+function spin(toIdx) {
+  if (S.spinning) return;
+  var i = toIdx, k, pool = [];
+  if (i == null) {
+    for (k = 0; k < N; k++) if (!S.visited[k] && k !== S.cur) pool.push(k);
+    if (!pool.length) { S.visited = {}; for (k = 0; k < N; k++) if (k !== S.cur) pool.push(k); }
+    i = pick(pool);
+  }
+  var want = mod(-(i + 0.5) * SEG + (Math.random() - 0.5) * SEG * 0.5, TAU), cur = mod(S.rot, TAU);
+  var turns = toIdx == null ? (reduce ? 1 : 5) : 1;
+  S.from = S.rot; S.to = S.rot + turns * TAU + mod(want - cur, TAU);
+  S.dur = reduce ? 0.5 : (toIdx == null ? 4.4 : 1.5); S.t0 = S.time; S.spinning = true; S.target = i;
+  document.body.classList.add('spinning'); $('#spin').disabled = true; $('#topicMenu').hidden = true;
+  if (G && G.api.spin) G.api.spin();
+}
+function landed(i) {
+  S.spinning = false; S.speed = 0; S.cur = i; S.visited[i] = true; S.step = 0; S.pair = -1; S.swap = false; S.listen = false; // every new card starts plain: the pupil answers first
+  document.body.classList.remove('spinning'); document.body.classList.add('has-card');
+  $('#spin').disabled = false; $('#spin').firstChild.textContent = 'Spin again';
+  S.heroTo = 0; drawFace(); renderCard(true); buildMenu();
+  var p = G ? project(G.ptr) : { x: innerWidth * 0.25, y: innerHeight * 0.2 };
+  burst(p.x, p.y + 30, 34);
+  if (G && G.api.land) G.api.land(i);
+}
+function tick(dt) {
+  S.time += dt;
+  if (S.spinning) {
+    var u = Math.min(1, (S.time - S.t0) / S.dur), e = 1 - Math.pow(1 - u, 3.4), prev = S.rot;
+    S.rot = S.from + (S.to - S.from) * e; S.speed = (S.rot - prev) / dt;
+    if (Math.floor(prev / SEG) !== Math.floor(S.rot / SEG)) S.pv += Math.min(10, 2.5 + S.speed * 0.55);
+    if (u >= 1) landed(S.target);
+  }
+  S.pv += (-110 * S.ptr - 11 * S.pv) * dt; S.ptr += S.pv * dt; if (S.ptr < -0.12) { S.ptr = -0.12; S.pv = 0; } if (S.ptr > 0.8) { S.ptr = 0.8; S.pv *= -0.2; }
+  S.hero += (S.heroTo - S.hero) * Math.min(1, dt * 3.2);
+  par.x += (par.tx - par.x) * Math.min(1, dt * 3); par.y += (par.ty - par.y) * Math.min(1, dt * 3);
+  if (G) {
+    G.wheel.rotation.z = -S.rot; G.ptr.rotation.z = S.ptr;
+    for (var i = 0; i < G.bulbs.length; i++) {
+      var on = S.spinning ? ((i + Math.floor(S.time * 14)) % 3 === 0) : ((i + Math.floor(S.time * 1.6)) % 2 === 0);
+      G.bulbs[i].material.emissiveIntensity = on ? 1.5 : 0.25;
+    }
+    if (G.api.update) G.api.update(S.time, dt, S);
+  } else {
+    var f = $('#flat canvas'); if (f) f.style.transform = 'rotate(' + S.rot + 'rad)';
+  }
+}
+function render(dt) { if (G) { applyCamera(); G.renderer.render(G.scene, G.camera); } drawParts(dt || 0); }
+var last = 0;
+function frame(now) {
+  var dt = Math.min(0.05, (now - last) / 1000 || 0.016); last = now;
+  tick(dt); render(dt); requestAnimationFrame(frame);
+}
+
+/* ---------- card ---------- */
+function questions(t) {
+  var list = [{ q: t.q, starters: t.starters || [], note: t.qnote || '' }];
+  (t.more || []).forEach(function (m) { list.push(typeof m === 'string' ? { q: m, starters: null, note: '' } : { q: m.q, starters: m.starters || null, note: m.note || '' }); });
+  return list;
+}
+function ideaHTML(o, veil) {
+  var art = o.img && IMG[o.img] ? '<img src="' + IMG[o.img] + '" alt="">' : (o.icon ? '<span class="emo">' + o.icon + '</span>' : '');
+  return '<button type="button" class="idea' + (veil ? ' veil' : '') + (art ? '' : ' noart') + '">' + (art ? '<span class="i-art">' + art + '</span>' : '') + '<span class="i-lab">' + esc(o.label) + '</span></button>';
+}
+function renderCard(fresh) {
+  var card = $('#card'), t = topics[S.cur]; if (!t) return;
+  var qs = questions(t), n = qs.length, cur = qs[S.step];
+  var veil = D.ideaLabels === 'tap';
+  var ideas = t.ideas || [], pair = null, html = '';
+  if (t.pairs) {
+    if (S.pair < 0) { var p; do { p = Math.floor(Math.random() * t.pairs.length); } while (t.pairs.length > 1 && p === t._last); S.pair = p; t._last = p; }
+    pair = t.pairs[S.pair];
+  }
+  var starters = cur.starters || t.starters || [];
+  html += '<div class="c-body"><div class="c-head"><div class="topic"><span class="t-ico">' + (t.icon || '💬') + '</span><span class="t-name">' + esc(t.name) + '</span></div>' +
+    '<div class="c-tools">' + (n > 1 ? '<span class="q-step">Question ' + (S.step + 1) + ' of ' + n + '</span>' : '') + '<button type="button" class="tool" id="tListen" aria-pressed="' + S.listen + '" title="Hide the question and the starters (I say the question myself)">🙈</button>' +
+    '<button type="button" class="tool" id="tSwap" aria-pressed="' + S.swap + '" title="Swap: the pupil asks the question">🔁</button></div></div>';
+  html += '<div class="swapbar">' + esc(D.swapText || 'Your turn: ask me!') + '</div>';
+  html += '<h2 class="q swapin' + (S.listen ? ' veiled' : '') + '"><span class="q-txt">' + esc(cur.q) + '</span><span class="q-veil">🙈 Tap to show the question</span></h2>';
+  if (S.step === 0 && pair) {
+    html += '<div class="ideas pair">' + ideaHTML({ label: pair[0] }) + '<span class="or">or</span>' + ideaHTML({ label: pair[1] }) + '</div>';
+  } else if ((S.step === 0 || D.ideasStay) && ideas.length) {
+    html += '<div class="cap"><span>Ideas</span>' + (veil ? '<button type="button" id="showWords">Show words</button>' : '') + '<button type="button" class="own" id="ownIdea">✨ My own idea</button></div>' +
+      '<div class="ideas n' + Math.min(ideas.length, 6) + (ideas.length >= 4 ? ' wide' : '') + '">' + ideas.map(function (o) { return ideaHTML(o, veil); }).join('') + '</div>';
+  }
+  if (starters.length) html += '<div class="say"><div class="cap">Sentence starters</div><div class="chips">' + starters.map(function (s) { return '<button type="button" class="chip">' + esc(s) + '</button>'; }).join('') + '</div></div>';
+  var dots = ''; for (var i = 0; i < n; i++) dots += '<button type="button" class="dot' + (i === S.step ? ' on' : '') + '" data-i="' + i + '" aria-label="Question ' + (i + 1) + '"></button>';
+  var lastQ = S.step >= n - 1;
+  html += '<div class="nav"><button type="button" class="nbtn back" id="prevQ"' + (S.step === 0 ? ' disabled' : '') + ' aria-label="Back">←</button>' + (n > 1 ? '<div class="dots">' + dots + '</div>' : '') +
+    (t.pairs && lastQ ? '<button type="button" class="nbtn back" id="again">Another one 🎲</button>' : '') +
+    '<button type="button" class="nbtn next" id="nextQ">' + (lastQ ? 'Spin again 🎡' : 'Next question →') + '</button></div></div>';
+  card.innerHTML = html;
+  card.classList.toggle('swap', S.swap); card.classList.toggle('hideq', S.listen);
+  if (fresh) { card.classList.remove('flip'); void card.offsetWidth; card.classList.add('flip'); card.scrollTop = 0; }
+  // wiring
+  card.querySelectorAll('.idea').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var was = b.classList.contains('on');
+      card.querySelectorAll('.idea').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.remove('veil');
+      var ow = $('#ownIdea'); if (ow) ow.classList.remove('on');
+      if (!was) { b.classList.add('on'); var r = b.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 7); }
+    });
+  });
+  var own = $('#ownIdea'); if (own) own.addEventListener('click', function () {
+    card.querySelectorAll('.idea').forEach(function (x) { x.classList.remove('on'); });
+    own.classList.toggle('on'); if (own.classList.contains('on')) { var r = own.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 7); }
+  });
+  card.querySelectorAll('.chip').forEach(function (b) {
+    b.addEventListener('click', function () { var was = b.classList.contains('on'); card.querySelectorAll('.chip').forEach(function (x) { x.classList.remove('on'); }); if (!was) b.classList.add('on'); });
+  });
+  var sw = $('#showWords'); if (sw) sw.addEventListener('click', function () { card.querySelectorAll('.idea.veil').forEach(function (x) { x.classList.remove('veil'); }); sw.remove(); });
+  var q = card.querySelector('.q'); q.addEventListener('click', function () { q.classList.remove('veiled'); card.classList.remove('hideq'); });
+  $('#tListen').addEventListener('click', function () { S.listen = !S.listen; this.setAttribute('aria-pressed', S.listen); q.classList.toggle('veiled', S.listen); card.classList.toggle('hideq', S.listen); });
+  $('#tSwap').addEventListener('click', function () { S.swap = !S.swap; this.setAttribute('aria-pressed', S.swap); card.classList.toggle('swap', S.swap); });
+  $('#prevQ').addEventListener('click', function () { if (S.step > 0) { S.step--; renderCard(); } });
+  $('#nextQ').addEventListener('click', function () { if (S.step < n - 1) { S.step++; renderCard(); } else spin(); });
+  var ag = $('#again'); if (ag) ag.addEventListener('click', function () { S.pair = -1; renderCard(true); });
+  card.querySelectorAll('.dot').forEach(function (d) { d.addEventListener('click', function () { S.step = +d.dataset.i; renderCard(); }); });
+  renderNotes();
+}
+function renderNotes() {
+  var box = $('#notesBody'), t = topics[S.cur], html = '';
+  if (D.notes) html += '<h3>About this wheel</h3><p>' + esc(D.notes) + '</p>';
+  if (t) {
+    var cur = questions(t)[S.step];
+    if (t.note) html += '<h3>' + esc(t.name) + '</h3><p>' + esc(t.note) + '</p>';
+    if (cur && cur.note) html += '<h3>This question</h3><p>' + esc(cur.note) + '</p>';
+  }
+  box.innerHTML = html || '<p>No notes for this card.</p>';
+}
+function buildMenu() {
+  var m = $('#topicMenu'); m.innerHTML = '';
+  topics.forEach(function (t, i) {
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = (t.icon || '') + ' ' + t.name; if (S.visited[i]) b.className = 'done';
+    b.addEventListener('click', function () { m.hidden = true; spin(i); }); m.appendChild(b);
+  });
+}
+
+/* ---------- start ---------- */
+function start() {
+  $('#brandIcon').textContent = D.icon || '🎡';
+  if (D.tip) $('#hint').textContent = D.tip;
+  $('#brandText').textContent = D.title || 'Speaking Wheel';
+  document.title = D.title || 'Speaking Wheel';
+  drawFace();
+  var ok = false; try { ok = init3D(); } catch (e) { console.error(e); ok = false; }
+  if (ok) { G.THREE_V3 = window.THREE.Vector3; }
+  else {
+    G = null; document.body.classList.add('no3d');
+    var fl = $('#flat'); fl.hidden = false; fl.querySelector('.f-wrap').appendChild(faceCv);
+    faceCv.addEventListener('click', function () { spin(); });
+    var sky = T.sky || ['#7dd3fc', '#e0f2fe']; $('#stage').style.background = 'linear-gradient(' + sky.join(',') + ')';
+  }
+  layout(); buildMenu(); renderNotes();
+  window.addEventListener('resize', layout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fontD = getComputedStyle(document.documentElement).getPropertyValue('--font-d').trim() || fontD; drawFace(); });
+  $('#spin').addEventListener('click', function () { spin(); });
+  $('#btnTopics').addEventListener('click', function () { var m = $('#topicMenu'); m.hidden = !m.hidden; });
+  $('#btnNotes').addEventListener('click', function () { var n = $('#notes'); n.hidden = !n.hidden; });
+  $('#notesClose').addEventListener('click', function () { $('#notes').hidden = true; });
+  document.addEventListener('keydown', function (e) {
+    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    if (e.key === 'ArrowRight' && S.cur >= 0) { var b = $('#nextQ'); if (b && questions(topics[S.cur]).length - 1 > S.step) b.click(); }
+    if (e.key === 'ArrowLeft' && S.cur >= 0) { var p = $('#prevQ'); if (p && !p.disabled) p.click(); }
+  });
+  requestAnimationFrame(function (t) { last = t; frame(t); });
+  // test hooks: the pane may throttle animation frames, so tests step time by hand
+  window.__wheel = { S: S, spin: spin, topics: topics, G: function () { return G; },
+    still: function () { document.body.classList.add('notrans'); },
+    step: function (sec) { var t = 0; while (t < sec) { tick(1 / 60); t += 1 / 60; } layout(); render(1 / 60); return { cur: S.cur, spinning: S.spinning, rot: S.rot }; } };
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
 </script>
 </body>
 </html>

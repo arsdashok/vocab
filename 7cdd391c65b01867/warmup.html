@@ -1,265 +1,747 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Masha's Warm-Up Spinner</title>
+<title>Masha's Speaking Wheel</title>
+<!-- BUILT FILE. Do not edit: change Masha_Speaking_Wheel.json and run python3 Tools/build_speaking_wheels.py Masha -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-  @font-face { font-family:'Rubik'; src:local('Rubik'); }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body {
-    font-family:'Rubik','Segoe UI',Arial,sans-serif;
-    min-height:100vh; color:#1f3b4d;
-    background:
-      radial-gradient(circle at 12% 18%, #dff6f0 0, transparent 42%),
-      radial-gradient(circle at 88% 82%, #fde7f3 0, transparent 46%),
-      #f6fbfb;
-    display:flex; flex-direction:column; align-items:center;
-    padding:16px 14px 34px;
-  }
-  h1 { font-size:26px; color:#0f766e; margin-bottom:2px; }
-  .tag { font-size:14px; color:#5b7f8c; margin-bottom:14px; }
+/* Speaking Wheel: shared layout. Theme files only set the variables below and add small extras. */
+:root{
+  --page:#0b1026;
+  --title-ink:#fff; --title-shadow:0 2px 0 rgba(0,0,0,.28);
+  --card:#ffffff; --card-ink:#1f2937; --card-border:0 solid transparent; --card-shadow:0 22px 60px rgba(15,23,42,.30);
+  --radius:28px;
+  --accent:#ff6b57; --accent-ink:#fff; --accent2:#0fb5ae;
+  --muted:#64748b; --line:rgba(15,23,42,.12);
+  --btn:#ff6b57; --btn-ink:#fff; --btn-edge:#c2410c;
+  --idea:#f8fafc; --idea-ink:#1f2937; --idea-line:#e2e8f0; --idea-on:#fff1e6; --idea-on-line:var(--accent);
+  --chip:#fff7ed; --chip-ink:#9a3412; --chip-line:#fed7aa; --chip-on:var(--accent); --chip-on-ink:#fff;
+  --tool:#f1f5f9; --tool-ink:#334155;
+  --font-d:'Fredoka',system-ui,sans-serif; --font-b:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font-b);color:var(--card-ink);background:var(--page);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit}
 
-  .stage { display:flex; gap:26px; flex-wrap:wrap; justify-content:center; align-items:flex-start; width:100%; max-width:920px; }
+#stage{position:fixed;inset:0;z-index:0}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;outline:0}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:40;pointer-events:none}
 
-  .wheel-wrap { position:relative; width:340px; height:340px; flex:none; }
-  .pointer {
-    position:absolute; top:-6px; left:50%; transform:translateX(-50%);
-    width:0; height:0; border-left:16px solid transparent; border-right:16px solid transparent;
-    border-top:26px solid #f97316; z-index:5;
-  }
-  .wheel {
-    width:340px; height:340px; border-radius:50%;
-    border:8px solid #fff; box-shadow:0 8px 26px rgba(15,118,110,.25);
-    transition:transform 3.6s cubic-bezier(.17,.67,.16,1);
-    position:relative;
-  }
-  .wheel .lbl {
-    position:absolute; top:50%; left:50%; width:96px; margin-left:-48px; margin-top:-16px;
-    text-align:center; font-size:13px; font-weight:700; color:#fff; line-height:1.15;
-    text-shadow:0 1px 2px rgba(0,0,0,.35); pointer-events:none;
-  }
-  .wheel .lbl .e { display:block; font-size:22px; }
-  .hub {
-    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    width:58px; height:58px; border-radius:50%; background:#fff; z-index:4;
-    box-shadow:0 2px 8px rgba(0,0,0,.2); display:flex; align-items:center; justify-content:center;
-    font-size:26px;
-  }
-  .spinBtn {
-    display:block; margin:16px auto 0; font-family:inherit; font-weight:800; font-size:19px;
-    color:#fff; border:none; border-radius:16px; padding:13px 30px; cursor:pointer;
-    background:linear-gradient(135deg,#0d9488,#14b8a6); box-shadow:0 4px 0 #0f766e;
-  }
-  .spinBtn:active { transform:translateY(2px); box-shadow:0 2px 0 #0f766e; }
-  .spinBtn:disabled { opacity:.6; cursor:default; }
+/* flat fallback when 3D is not available */
+#flat{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#flat[hidden]{display:none}
+#flat .f-wrap{position:relative;width:min(70vh,46vw);aspect-ratio:1}
+#flat canvas{width:100%;height:100%;border-radius:50%;border:10px solid #fff;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+#flat .f-ptr{position:absolute;left:50%;top:-14px;transform:translateX(-50%);width:0;height:0;border-left:20px solid transparent;border-right:20px solid transparent;border-top:36px solid var(--btn);z-index:2;filter:drop-shadow(0 3px 2px rgba(0,0,0,.3))}
 
-  .panel {
-    flex:1 1 340px; min-width:300px; max-width:460px; min-height:340px;
-    background:#fff; border:3px solid #ccece6; border-radius:20px; padding:18px 20px;
-    box-shadow:0 6px 20px rgba(15,118,110,.10);
-  }
-  .panel.idle { display:flex; align-items:center; justify-content:center; text-align:center; color:#8fb3b0; font-size:17px; }
-  .head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-  .head .e { font-size:32px; }
-  .head .name { font-size:22px; font-weight:800; color:#0f766e; }
-  .q { font-size:20px; font-weight:700; color:#1f3b4d; line-height:1.35; margin-bottom:12px; }
+#top{position:fixed;left:0;right:0;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 26px;pointer-events:none}
+#top > *{pointer-events:auto}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--font-d);font-weight:700;font-size:28px;line-height:1;color:var(--title-ink);text-shadow:var(--title-shadow);background:var(--brand-bg,rgba(10,30,60,.28));padding:8px 18px 8px 12px;border-radius:999px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.brand .logo{font-size:36px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.top-tools{display:flex;gap:10px;position:relative}
+.pill{font-family:var(--font-d);font-weight:600;font-size:17px;padding:9px 16px;border-radius:999px;border:0;cursor:pointer;background:rgba(255,255,255,.9);color:#1f2937;box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.pill:hover{background:#fff}
+#topicMenu{position:absolute;right:0;top:48px;width:min(420px,86vw);background:#fff;color:#1f2937;border-radius:20px;padding:14px;box-shadow:0 18px 50px rgba(0,0,0,.3);display:flex;flex-wrap:wrap;gap:8px}
+#topicMenu[hidden]{display:none}
+#topicMenu button{font-family:var(--font-d);font-weight:600;font-size:18px;border:2px solid #e2e8f0;background:#f8fafc;border-radius:14px;padding:8px 12px;cursor:pointer;color:#1f2937}
+#topicMenu button:hover{border-color:var(--accent)}
+#topicMenu button.done{opacity:.55}
 
-  .menu { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .opt {
-    font-family:inherit; background:#f0faf8; border:2px solid #ccece6; border-radius:14px;
-    padding:10px 8px; cursor:pointer; text-align:center; color:#1f3b4d; font-size:15px; font-weight:600;
-  }
-  .opt .big { display:block; font-size:34px; line-height:1.1; margin-bottom:4px; }
-  .opt.on { background:#ccfbf1; border-color:#0d9488; }
+#wheelzone{position:fixed;z-index:10;left:0;top:0;bottom:0;width:100%;pointer-events:none;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px;padding-bottom:3.6vh;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+body.has-card #wheelzone{width:50%}
+#spin{pointer-events:auto;font-family:var(--font-d);font-weight:700;font-size:34px;letter-spacing:.5px;color:var(--btn-ink);background:var(--btn);border:0;border-radius:24px;padding:14px 48px;cursor:pointer;box-shadow:0 7px 0 var(--btn-edge),0 16px 26px rgba(0,0,0,.28);transition:transform .08s,box-shadow .08s,filter .2s}
+#spin:hover{filter:brightness(1.06)}
+#spin:active{transform:translateY(5px);box-shadow:0 2px 0 var(--btn-edge),0 6px 12px rgba(0,0,0,.25)}
+#spin:disabled{filter:saturate(.45) brightness(.95);cursor:default}
+body:not(.has-card):not(.spinning) #spin{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+#hint{font-family:var(--font-d);font-weight:600;font-size:19px;max-width:min(92vw,560px);text-align:center;background:var(--brand-bg,rgba(10,30,60,.28));padding:5px 14px;border-radius:999px;color:var(--title-ink);text-shadow:var(--title-shadow);opacity:.95}
+body.has-card #hint,body.spinning #hint{visibility:hidden}
 
-  .more { margin-top:14px; display:none; }
-  .more.show { display:block; }
-  .more .cap, .words .cap { font-size:12px; text-transform:uppercase; letter-spacing:1px; color:#7aa3a0; margin-bottom:6px; }
-  .more li { list-style:none; font-size:17px; line-height:1.45; padding:5px 0 5px 24px; position:relative; }
-  .more li::before { content:"💬"; position:absolute; left:0; top:6px; font-size:14px; }
-  .words { margin-top:12px; }
-  .chip {
-    display:inline-block; background:#fff7ed; border:1.5px solid #fed7aa; color:#9a3412;
-    border-radius:20px; padding:4px 12px; margin:3px 4px 3px 0; font-size:14px; font-weight:600;
-  }
-  .moreBtn {
-    margin-top:12px; font-family:inherit; font-weight:700; font-size:15px; color:#0f766e;
-    background:#fff; border:2px dashed #99d6cc; border-radius:12px; padding:7px 14px; cursor:pointer;
-  }
-  .foot { margin-top:16px; font-size:12.5px; color:#8fb3b0; text-align:center; }
+#card{position:fixed;z-index:12;right:24px;top:68px;width:calc(52% - 36px);max-width:880px;max-height:calc(100vh - 80px);overflow:auto;background:var(--card);color:var(--card-ink);border-radius:var(--radius);border:var(--card-border);box-shadow:var(--card-shadow);padding:16px 24px 16px;transform-origin:left center;transform:perspective(1400px) rotateY(-75deg) translateX(80px);opacity:0;pointer-events:none;transition:transform .75s cubic-bezier(.2,.9,.25,1.08),opacity .35s}
+body.has-card #card{transform:none;opacity:1;pointer-events:auto}
+#card.flip .c-body{animation:flipin .55s cubic-bezier(.2,.9,.25,1.06)}
+@keyframes flipin{0%{transform:perspective(1200px) rotateX(-70deg);opacity:0}100%{transform:none;opacity:1}}
+.c-body{transform-origin:top center}
+
+.c-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.topic{display:flex;align-items:center;gap:12px;min-width:0}
+.t-ico{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:30px;background:var(--idea);border:3px solid var(--accent)}
+.t-name{font-family:var(--font-d);font-weight:700;font-size:28px;line-height:1.1;color:var(--accent)}
+.c-tools{display:flex;gap:8px;flex:none;align-items:center}
+.tool{width:46px;height:46px;border-radius:14px;border:0;background:var(--tool);color:var(--tool-ink);font-size:22px;cursor:pointer;display:grid;place-items:center;transition:transform .12s}
+.tool:hover{transform:translateY(-2px)}
+.tool[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+
+.swapbar{display:none;font-family:var(--font-d);font-weight:700;font-size:22px;color:var(--accent-ink);background:var(--accent);border-radius:14px;padding:6px 14px;margin-bottom:10px}
+#card.swap .swapbar{display:block;animation:pop .3s}
+.q-step{font-family:var(--font-d);font-weight:600;font-size:14px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-right:4px;white-space:nowrap}
+.q{font-family:var(--font-d);font-weight:700;font-size:clamp(36px,3.05vw,50px);line-height:1.14;color:var(--card-ink);text-wrap:balance;margin-bottom:10px}
+.q.swapin{animation:qin .4s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes qin{0%{transform:translateY(14px);opacity:0}100%{transform:none;opacity:1}}
+.q.veiled{cursor:pointer;color:var(--muted)}
+#card.hideq .say{visibility:hidden}
+.q.veiled .q-txt{display:none}
+.q .q-veil{display:none}
+.q.veiled .q-veil{display:inline}
+
+.cap{font-family:var(--font-d);font-weight:600;font-size:15px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:2px 0 8px;display:flex;align-items:center;gap:10px}
+.cap button{font-family:var(--font-d);font-weight:600;font-size:15px;letter-spacing:0;text-transform:none;border:2px dashed var(--idea-line);background:transparent;color:var(--card-ink);border-radius:10px;padding:2px 10px;cursor:pointer}
+
+.cap .own{margin-left:auto;font-size:19px;border:2px dashed var(--accent);padding:3px 12px;border-radius:12px}
+.cap .own.on{background:var(--accent);color:var(--accent-ink);border-style:solid;animation:pop .32s cubic-bezier(.2,1.3,.4,1)}
+.ideas{display:grid;gap:8px;margin-bottom:12px;perspective:900px}
+.ideas.n1{grid-template-columns:1fr}.ideas.n2{grid-template-columns:repeat(2,1fr)}.ideas.n3{grid-template-columns:repeat(3,1fr)}
+.ideas.n4{grid-template-columns:repeat(2,1fr)}.ideas.n5,.ideas.n6{grid-template-columns:repeat(3,1fr)}
+.idea{min-height:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 10px;border-radius:20px;border:3px solid var(--idea-line);background:var(--idea);color:var(--idea-ink);cursor:pointer;transition:transform .14s,border-color .14s,background .14s,box-shadow .14s;transform-style:preserve-3d;will-change:transform;min-width:0}
+.idea:hover{transform:translateY(-4px) rotateX(8deg);box-shadow:0 10px 18px rgba(15,23,42,.14)}
+.idea:active{transform:translateY(1px) scale(.97)}
+.idea.on{background:var(--idea-on);border-color:var(--idea-on-line);animation:pop .32s cubic-bezier(.2,1.3,.4,1)}
+@keyframes pop{0%{transform:scale(.86)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+.i-art{height:54px;display:grid;place-items:center;flex:none}
+.i-art .emo{font-size:46px;line-height:1}
+.i-art img{height:54px;max-width:110px;object-fit:contain;border-radius:10px}
+.i-lab{font-family:var(--font-d);font-weight:600;font-size:clamp(26px,1.85vw,30px);line-height:1.08;text-align:center;min-width:0}
+.ideas.wide .idea{flex-direction:row;justify-content:flex-start;gap:12px;min-height:62px;padding:6px 14px}
+.ideas.wide .i-art{height:46px}.ideas.wide .i-art .emo{font-size:38px}.ideas.wide .i-art img{height:46px;max-width:64px}
+.ideas.wide .i-lab{text-align:left}
+.idea.veil .i-lab{display:none}
+.idea.veil{justify-content:center!important}
+.idea.veil .i-art{height:70px}.idea.veil .i-art .emo{font-size:58px}.idea.veil .i-art img{height:70px;max-width:120px}
+.ideas.wide .idea.veil .i-art{height:50px}.ideas.wide .idea.veil .i-art .emo{font-size:42px}.ideas.wide .idea.veil .i-art img{height:50px}
+.ideas.pair{grid-template-columns:1fr auto 1fr;align-items:center}
+.ideas.pair .idea{min-height:92px}
+.ideas.pair .or{font-family:var(--font-d);font-weight:700;font-size:26px;color:var(--muted)}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.chip{font-family:var(--font-b);font-weight:800;font-size:clamp(26px,1.9vw,30px);line-height:1.12;text-align:left;color:var(--chip-ink);background:var(--chip);border:2.5px solid var(--chip-line);border-radius:18px 18px 18px 6px;padding:6px 15px;cursor:pointer;transition:transform .12s,background .15s,color .15s;animation:chipin .45s cubic-bezier(.2,1.2,.4,1) both}
+.chip:nth-child(2){animation-delay:.07s}.chip:nth-child(3){animation-delay:.14s}.chip:nth-child(4){animation-delay:.21s}.chip:nth-child(5){animation-delay:.28s}.chip:nth-child(n+6){animation-delay:.35s}
+@keyframes chipin{0%{transform:translateY(12px) scale(.9);opacity:0}100%{transform:none;opacity:1}}
+.chip:hover{transform:translateY(-2px)}
+.chip.on{background:var(--chip-on);color:var(--chip-on-ink);border-color:var(--chip-on)}
+
+.nav{display:flex;align-items:center;gap:12px;margin:2px -24px -16px;padding:8px 24px 14px;position:sticky;bottom:-16px;background:var(--nav-bg,var(--card));border-radius:0 0 var(--radius) var(--radius)}
+.nav .nbtn{font-family:var(--font-d);font-weight:700;font-size:26px;border-radius:18px;border:0;padding:10px 20px;cursor:pointer;transition:transform .08s,box-shadow .08s}
+.nav .back{background:var(--tool);color:var(--tool-ink);box-shadow:0 4px 0 rgba(15,23,42,.18)}
+.nav .next{margin-left:auto;background:var(--btn);color:var(--btn-ink);box-shadow:0 5px 0 var(--btn-edge)}
+.nav .nbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--btn-edge)}
+.nav .nbtn:disabled{opacity:.35;cursor:default}
+.dots{display:flex;gap:8px}
+.dot{width:16px;height:16px;border-radius:50%;border:0;background:var(--idea-line);cursor:pointer;padding:0}
+.dot.on{background:var(--accent);transform:scale(1.25)}
+
+#notes{position:fixed;z-index:30;right:16px;bottom:16px;width:min(560px,94vw);max-height:70vh;overflow:auto;background:#fffdf5;color:#3f3a2e;border:2px solid #e7dfc6;border-radius:18px;padding:16px 18px;box-shadow:0 18px 50px rgba(0,0,0,.35);font-size:16px;line-height:1.5}
+#notes[hidden]{display:none}
+#notes h3{font-family:var(--font-d);font-size:18px;margin:10px 0 4px;color:#7a5c12}
+#notes h3:first-child{margin-top:0}
+#notes .x{position:sticky;float:right;top:0;border:0;background:#f1ead2;border-radius:10px;width:34px;height:34px;font-size:18px;cursor:pointer}
+
+@media (max-width:899px){
+  body{overflow-y:auto}
+  #stage{position:relative;height:46vh;min-height:300px;transition:height .5s}
+  body:not(.has-card) #stage{height:72vh}
+  #top{position:absolute;padding:10px 12px}
+  .brand{font-size:17px;padding:6px 12px 6px 8px;gap:8px;max-width:52vw}.brand .logo{font-size:24px}
+  .pill{font-size:13px;padding:7px 10px;white-space:nowrap}
+  .top-tools{gap:6px}
+  .ideas.wide .idea{flex-direction:column;gap:2px;min-height:86px}
+  .ideas.wide .i-lab{text-align:center}
+  #top{align-items:flex-start}
+  #wheelzone,body.has-card #wheelzone{position:static;width:100%;padding:10px 0 12px;background:transparent}
+  #spin{font-size:26px;padding:11px 36px}
+  #hint{display:none}
+  #card{position:static;width:auto;max-width:none;max-height:none;margin:0 10px 16px;padding:16px 16px;display:none;transform:none}
+  body.has-card #card{display:block}
+  .t-ico{width:44px;height:44px;font-size:24px}.t-name{font-size:23px}
+  .q{font-size:27px}
+  .i-lab{font-size:20px}.chip{font-size:20px}.nav .nbtn{font-size:20px;padding:9px 14px}
+  .ideas.n3,.ideas.n5,.ideas.n6{grid-template-columns:repeat(2,1fr)}
+  .idea{min-height:92px}
+  .i-art{height:46px}.i-art .emo{font-size:38px}.i-art img{height:46px}
+  .cap .own{font-size:16px}
+  .q-step{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  #card,.chip,.idea,.q.swapin,#card.flip .c-body{animation:none!important;transition:none!important}
+  body:not(.has-card):not(.spinning) #spin{animation:none}
+}
+
+body.notrans *,body.notrans{transition:none!important;animation:none!important}
+
+/* vinyl: Masha. Pastel studio, a record that spins, sound bars, headphones, a parrot. */
+:root{
+  --page:#e0d4ff; --title-ink:#3a1d52; --title-shadow:none; --brand-bg:rgba(255,255,255,.6);
+  --card:#ffffff; --card-ink:#34204a; --radius:32px; --card-shadow:0 22px 60px rgba(120,70,160,.28);
+  --accent:#ff4f9a; --accent2:#22c1c3; --muted:#a05c88;
+  --btn:#ff4f9a; --btn-edge:#c2256d;
+  --idea:#fff0f7; --idea-ink:#34204a; --idea-line:#ffc4de; --idea-on:#e3fbfb; --idea-on-line:#22c1c3;
+  --chip:#e8fbff; --chip-ink:#0b6470; --chip-line:#a8e9f0; --chip-on:#22c1c3;
+  --tool:#fff0f7; --tool-ink:#c2256d; --nav-bg:#fff5fa;
+  --font-d:'Quicksand',system-ui,sans-serif; --font-b:'Nunito',system-ui,sans-serif;
+}
+#card{background:linear-gradient(160deg,#ffffff 55%,#fff0f7)}
+.pill{background:#fff}
+
 </style>
 </head>
-<body>
-  <h1>🎨 Masha's Warm-Up</h1>
-  <div class="tag">Spin the wheel. Pick one, then say it in English!</div>
-
-  <div class="stage">
-    <div>
-      <div class="wheel-wrap">
-        <div class="pointer"></div>
-        <div class="wheel" id="wheel"></div>
-        <div class="hub">🌀</div>
-      </div>
-      <button class="spinBtn" id="spinBtn">Spin! 🎡</button>
-    </div>
-    <div class="panel idle" id="panel">Spin to start! 👉</div>
-  </div>
-
-  <div class="foot">Tap your answer, then say it in a full sentence.</div>
-
+<body class="theme-vinyl">
+<div id="stage"><canvas id="gl" aria-label="Topic wheel. Press Spin to choose a topic."></canvas><div id="flat" hidden><div class="f-wrap"><div class="f-ptr"></div></div></div></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<header id="top">
+  <div class="brand"><span class="logo" id="brandIcon"></span><span id="brandText"></span></div>
+  <div class="top-tools"><button type="button" class="pill" id="btnTopics">Topics</button><button type="button" class="pill" id="btnNotes">Teacher notes</button><div id="topicMenu" hidden></div></div>
+</header>
+<div id="wheelzone"><button type="button" id="spin">Spin!<span aria-hidden="true"> 🎡</span></button><div id="hint">Spin the wheel. Then we talk!</div></div>
+<section id="card" aria-live="polite"></section>
+<aside id="notes" hidden><button type="button" class="x" id="notesClose" aria-label="Close">✕</button><div id="notesBody"></div></aside>
+<script type="application/json" id="wheel-data">{"title": "Masha's Speaking Wheel", "icon": "🎧", "notes": "She answers first: start from the tiles, not from «My own idea». Swap roles (🔁) only after she has had the chance to ask back herself; the bar «Your turn: ask me!» would otherwise prompt the question the hinge is waiting for. Every new card starts with the swap off.", "tip": "Tap your answer, then say it in a full sentence.", "topics": [{"icon": "🌦️", "name": "Riga weather", "q": "What's the weather like in Riga today?", "ideas": [{"icon": "☀️", "label": "sunny"}, {"icon": "☁️", "label": "cloudy"}, {"icon": "🌧️", "label": "rainy"}, {"icon": "❄️", "label": "snowy"}], "starters": ["It's …", "It was …", "It's below zero", "No, not yet", "Yes, there's a little."], "more": ["What was the weather like yesterday?", "Is there snow on the ground?"]}, {"icon": "☀️", "name": "This morning", "q": "What time did you get up this morning?", "ideas": [{"icon": "🕘", "label": "nine"}, {"icon": "🕙", "label": "ten"}, {"icon": "🕚", "label": "eleven"}, {"icon": "🕛", "label": "midday"}], "starters": ["I got up at …", "Yes, I did.", "No, not really.", "Before the lesson, I …"], "more": ["Did you sleep well?", "What did you do before our lesson?"]}, {"icon": "📞", "name": "Calls and texts", "q": "How do you usually talk to your friends after school?", "ideas": [{"icon": "💬", "label": "text"}, {"icon": "📞", "label": "call"}, {"icon": "🎥", "label": "video call"}, {"icon": "🎮", "label": "chat in Roblox"}], "starters": ["I usually text …", "I sometimes call …", "We chat in …", "Yesterday I called …"], "more": ["Who do you text most?", "When did you last call someone?"]}, {"icon": "💇‍♀️", "name": "My hair", "q": "Who did your hair?", "ideas": [{"icon": "💇‍♀️", "label": "a hairdresser"}, {"icon": "👩", "label": "my mum"}, {"icon": "👭", "label": "a friend"}, {"icon": "🪞", "label": "I did it myself"}], "starters": ["… did it", "Before, it was …", "Next time I'd like …"], "more": ["What colour was your hair before?", "What colour would you like next time?"]}, {"icon": "🎵", "name": "Music", "q": "When do you usually listen to music?", "ideas": [{"icon": "🚌", "label": "on the way to school"}, {"icon": "🎨", "label": "when I draw"}, {"icon": "🎮", "label": "when I play games"}, {"icon": "🌙", "label": "before bed"}], "starters": ["I usually listen to music …", "I sometimes listen …", "With headphones.", "The last song was …"], "more": ["Do you listen with headphones or without?", "What was the last song you listened to?"]}, {"icon": "🚌", "name": "To school", "q": "How do you usually get to school?", "ideas": [{"icon": "🚌", "label": "by bus"}, {"icon": "🚋", "label": "by tram"}, {"icon": "🚗", "label": "by car"}, {"icon": "🚶", "label": "on foot"}], "starters": ["I usually go …", "It takes about … minutes", "Yesterday I went …"], "more": ["How long does it take?", "Did you go the same way yesterday?"]}, {"icon": "🏫", "name": "Friday at school", "q": "Which of these lessons did you have on Friday?", "ideas": [{"icon": "🔢", "label": "Maths"}, {"icon": "⚽", "label": "PE"}, {"icon": "🖌️", "label": "Art"}, {"icon": "🇬🇧", "label": "English"}], "starters": ["On Friday I had …", "We had a test in …", "No, not this week", "In PE we …", "We ran.", "We played volleyball.", "We played basketball."], "more": ["Did you have a test this week?", "What did you do in PE?"]}, {"icon": "🦜", "name": "Pets", "q": "Which of these would you like as a pet?", "ideas": [{"icon": "🦜", "label": "a parrot"}, {"icon": "🐈", "label": "a cat"}, {"icon": "🐕", "label": "a dog"}, {"icon": "🦎", "label": "a lizard"}], "starters": ["I'd like a …", "It can …", "It's got …"], "more": ["What can a parrot do?", "What does it eat?"]}, {"icon": "🧑‍🤝‍🧑", "name": "My friend", "q": "Which of these does your friend like?", "ideas": [{"icon": "🎮", "label": "games"}, {"icon": "🎨", "label": "drawing"}, {"icon": "🎵", "label": "music"}, {"icon": "⚽", "label": "sport"}], "starters": ["My friend likes …", "My friend's very …", "We always …", "We sometimes …"], "more": ["What's your friend like?", "What do you do together at school?"]}]}</script>
+<script type="application/json" id="wheel-images">{}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js" crossorigin="anonymous"></script>
 <script>
-/* Every sector is a CLOSED MENU about something that has already happened:
-   she picks first, says the sentence, then "What else?" opens the follow-ups.
-   Refreshed 12 Oct: Drawing, Books and Games retired (their "this week" premise
-   failed live: "I didn't", "No, I didn't", "I didn't play"); My bag retired (old set).
-   New: My clothes (uniform text), Minecraft house (her own info gap), Roblox games
-   (our end-of-lesson games), Wimpy Kid (the pages read together).
-   Refreshed 19 Oct (Dasha's OK): After school retired (its "this week" premise failed
-   live: "No, I didn't", 3 Oct; "I was busy this week and I didn't play", 10 Oct).
-   New: My phone yesterday (17 Oct technology phrases + her own screenshots of songs),
-   Tech pets (17 Oct listening 2.2; species from the Go Getter 2 audio script).
-   My clothes now jumper / trousers / socks (what she named 17 Oct), Breakfast has an
-   apple ("I just eat one apple", 17 Oct), Roblox games adds the chip "rare fish".
-   This or that retired to keep nine readable sectors: it is the one sector about
-   nothing that has already happened, and the next target is past questions.
-   No emoji shows a jumper, trousers or a guinea pig, so those three are small drawings.
-   Refreshed 26 Oct (Dasha: all sectors are conversation, none tied to an exercise):
-   Tech pets, Wimpy Kid, My phone yesterday and School day retired; new Right now
-   (present continuous about her mum and her window), My weekend, Pets (parrots),
-   My friend. Every sector: one closed menu, then two follow-ups.
-   Refreshed 3 Nov (weekly refresh): Breakfast retired (on the wheel since 19 Sept,
-   answered in the 17 Oct chat); Minecraft house retired (since 12 Oct, spun 31 Oct,
-   and its "at the moment" premise met «No, I didn't play Minecraft»). New: Last night
-   (bedtime, past simple; 24 Oct sleep chat) and Minecraft garden (her own 31 Oct garden
-   with flowers, «maybe some more lights»; pond and koi fish taught that day).
-   Roblox games: the Hollow event out, Don't Splash in (31 Oct).
-   Refreshed 9 Nov (weekly refresh): Right now and My weekend retired (both spun and
-   fully answered 7 Nov); Minecraft garden retired (spun 7 Nov and skipped, she has not
-   played Minecraft for two weeks). New: Calls and texts (7 Nov phone lesson, about her
-   own friends), Fireworks (7 Nov bonfire night chat), To school (getting to school,
-   usually and yesterday). Roblox games: Wacky Games (played 7 Nov) in, Taxi Boss out.
-   My clothes chip: "I usually wear …, but today I'm wearing …".
-   Refreshed 17 Nov (weekly refresh): Fireworks retired (bonfire night is over, spun and
-   answered 14 Nov, «On the TV»); My clothes retired (on since 12 Oct, answered in full
-   14 Nov); Roblox games retired (spun four lessons running, 14 Nov «I didn't have time»;
-   the end-of-lesson Roblox block keeps the topic). New, all from the 14 Nov chat: My hair
-   (her new half-blonde hairstyle), Cold days (Riga below zero, staying home; options are
-   her own interests), Friday at school (her maths test week; subjects from her 26 Sept
-   paragraph). Riga weather: snowy in place of windy, snow follow-up.
-   Refreshed 23 Nov (weekly refresh): Last night and Cold days retired (both spun and
-   answered 21 Nov: «I went to bed at 11», «On cold days I have to go to school»).
-   New, from 21 Nov: This morning (her «long sleep» chat; getting up, the menu bank's
-   clock faces) and Music (her own paragraph: headphones, «I use them to listen to
-   music»). The 21 Nov hinge stays off the wheel: no «What about you?», no «I use … to». */
-const PIC = {
-  jumper: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M22 15h20l13 9-5 22-8-3v9a2 2 0 0 1-2 2H24a2 2 0 0 1-2-2v-9l-8 3-5-22z' fill='#3f8f5c' stroke='#2a6440' stroke-width='2' stroke-linejoin='round'/><path d='M22 15a10 5 0 0 0 20 0' fill='none' stroke='#2a6440' stroke-width='2'/><rect x='22' y='45' width='20' height='6' rx='1' fill='#2f7049'/><rect x='9' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(12 13 43)'/><rect x='46' y='40' width='9' height='6' rx='1' fill='#2f7049' transform='rotate(-12 51 43)'/></svg>",
-  trousers: "<svg width='40' height='40' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><path d='M20 10h24v8l-3 36h-9l-1-24-1 24h-9l-3-36z' fill='#8b8f98' stroke='#5c6069' stroke-width='2' stroke-linejoin='round'/><rect x='20' y='10' width='24' height='5' fill='#5c6069'/><line x1='32' y1='18' x2='32' y2='30' stroke='#5c6069' stroke-width='1.6'/></svg>",
-  guineaPig: "<svg width='48' height='38' viewBox='4 16 56 44' xmlns='http://www.w3.org/2000/svg'><ellipse cx='30' cy='37' rx='24' ry='15' fill='#c98a4b' stroke='#7a4e22' stroke-width='2'/><path d='M20 25c6-4 14-4 18 2-2 9-12 12-20 8z' fill='#fff' opacity='.9'/><path d='M40 24c8-3 16 2 17 11 1 6-4 10-10 10' fill='#c98a4b' stroke='#7a4e22' stroke-width='2'/><path d='M43 25c-2-5 3-8 6-5' fill='#e8a3a3' stroke='#7a4e22' stroke-width='1.6'/><circle cx='50' cy='31' r='2.4' fill='#222'/><circle cx='57' cy='37' r='1.6' fill='#7a4e22'/><rect x='17' y='49' width='6' height='5' rx='2' fill='#e8a3a3'/><rect x='38' y='49' width='6' height='5' rx='2' fill='#e8a3a3'/></svg>"
+/* vinyl: a pastel studio. The wheel is a record with sound bars round it, on a big speaker; headphones, a drawing tablet, a parrot. */
+window.WHEEL_THEME = {
+  id: 'vinyl',
+  sky: ['#ffd3e6', '#e3d6ff', '#cdefff'],
+  light: { sky: '#ffffff', ground: '#e8d9ff', hemi: 1.05, sun: '#ffffff', sunI: 1.1, pos: [5, 10, 9] },
+  particles: ['🎵', '🎶', '⭐', '✨'],
+  wheel: { colors: ['#ff4f9a', '#22b8c3', '#ffae1a', '#7b61ff', '#2fca85', '#ff7a59'], rim: '#221a33', rimTube: 0.2, side: '#221a33', hub: '#ff4f9a', hubEmoji: '🎧', peg: '#ffd1e6', pointer: '#ff4f9a', stand: false },
+  build: function (c) {
+    var H = c.H, THREE = c.THREE, scene = c.scene, g0 = c.ground, i;
+    var floor = H.add(scene, H.cyl(26, 26, 0.3, 64), H.mat('#f3e9ff', { rough: 0.9 }), [0, g0 - 0.15, -6]); floor.castShadow = false;
+    // sound bars in a ring behind the record
+    var bars = [], NB = 44, ring = H.group(c.rig, [0, 0, -c.TH / 2 - 0.05]);
+    for (i = 0; i < NB; i++) {
+      var a = i / NB * H.TAU, col = new THREE.Color().setHSL(0.92 - (i / NB) * 0.42, 0.9, 0.62);
+      var pv = H.group(ring); pv.rotation.z = a;
+      var b = H.add(pv, H.box(0.16, 1, 0.16), H.mat('#' + col.getHexString(), { emissive: '#' + col.getHexString(), ei: 0.35, rough: 0.4 }), [0, c.R + 0.75, 0]);
+      b.castShadow = false; bars.push({ m: b, ph: i * 0.9 });
+    }
+    // the speaker the record hangs on
+    var box = H.mat('#b9a4f5', { rough: 0.55 });
+    H.add(c.rig, H.box(4.4, 2.4, 2.0), box, [0, g0 + 1.2, -1.5]);
+    H.add(c.rig, H.box(0.5, c.R + 1.2, 0.4), box, [0, -0.2, -c.TH / 2 - 0.5]);
+    var cones = [];
+    [-1.25, 1.25].forEach(function (x) {
+      H.add(c.rig, H.cyl(0.78, 0.78, 0.1, 32), H.mat('#34264f', { rough: 0.4 }), [x, g0 + 1.2, -0.46], [Math.PI / 2, 0, 0]);
+      var cn = H.add(c.rig, H.cyl(0.3, 0.62, 0.22, 32), H.mat('#ff4f9a', { rough: 0.35 }), [x, g0 + 1.2, -0.36], [Math.PI / 2, 0, 0]); cones.push(cn);
+    });
+    // headphones
+    var hp = H.group(scene, [-6.6, 2.4, -2.2]); hp.rotation.z = 0.25;
+    H.add(hp, H.tor(0.9, 0.09, 10, 28, Math.PI), H.mat('#221a33', { rough: 0.4 }));
+    [-0.9, 0.9].forEach(function (x) { H.add(hp, H.cyl(0.36, 0.36, 0.3, 24), H.mat('#22b8c3', { rough: 0.35 }), [x, -0.12, 0], [0, 0, Math.PI / 2]); H.add(hp, H.cyl(0.28, 0.28, 0.34, 24), H.mat('#ffd1e6', { rough: 0.6 }), [x * 0.93, -0.12, 0], [0, 0, Math.PI / 2]); });
+    H.onClick(hp, function () { hpSpin = 1; c.burst(hp, 8); });
+    var hpSpin = 0;
+    // drawing tablet with a pen
+    var tab = H.group(scene, [-3.9, g0 + 0.5, 1.5]); tab.rotation.set(-0.95, 0.35, 0.08);
+    H.add(tab, H.box(2.3, 1.6, 0.1), H.mat('#34264f', { rough: 0.4 }));
+    var scr = H.tex(256, function (g, s) { var gr = g.createLinearGradient(0, 0, s, s); gr.addColorStop(0, '#fff3b0'); gr.addColorStop(1, '#ffd1e6'); g.fillStyle = gr; g.fillRect(0, 0, s, s); g.lineWidth = 12; g.lineCap = 'round'; g.strokeStyle = '#7b61ff'; g.beginPath(); g.moveTo(40, 170); g.bezierCurveTo(80, 60, 130, 220, 200, 90); g.stroke(); g.strokeStyle = '#22b8c3'; g.beginPath(); g.arc(160, 170, 34, 0, Math.PI * 2); g.stroke(); g.fillStyle = '#ff4f9a'; g.beginPath(); g.arc(70, 70, 22, 0, Math.PI * 2); g.fill(); });
+    H.add(tab, new THREE.PlaneGeometry(2.0, 1.3), H.mat('#ffffff', { map: scr, emissive: '#ffffff', ei: 0.15 }), [0, 0, 0.056]);
+    var pen = H.add(tab, H.cyl(0.05, 0.05, 1.3, 10), H.mat('#ff4f9a', { rough: 0.3 }), [0.75, -0.15, 0.3], [0.6, 0, -0.7]);
+    // parrot on top of the speaker
+    var PY = g0 + 2.3; H.add(scene, H.cyl(0.06, 0.08, 2.3, 10), H.mat('#221a33', { rough: 0.4 }), [-4.9, g0 + 1.15, 0.4]); H.add(scene, H.cyl(0.05, 0.05, 1.2, 10), H.mat('#ff4f9a', { rough: 0.4 }), [-4.9, PY, 0.4], [Math.PI / 2, 0, 0.9]); H.add(scene, H.cyl(0.5, 0.6, 0.12, 20), H.mat('#221a33', { rough: 0.4 }), [-4.9, g0 + 0.06, 0.4]);
+    var pr = H.group(scene, [-4.9, PY, 0.4]); pr.rotation.y = 0.55;
+    var red = H.mat('#ff5a5f', { rough: 0.6 }), blue = H.mat('#3a86ff', { rough: 0.6 }), yel = H.mat('#ffc93c', { rough: 0.5 });
+    H.add(pr, H.sph(0.42, 18, 14), red, [0, 0.55, 0], null, [0.85, 1.15, 0.85]);
+    H.add(pr, H.sph(0.3, 18, 14), red, [0.08, 1.12, 0]);
+    H.add(pr, H.cone(0.13, 0.3, 10), yel, [0.36, 1.06, 0], [0, 0, -2.2]);
+    H.add(pr, H.sph(0.085, 12, 8), H.mat('#ffffff'), [0.2, 1.2, 0.2]); H.add(pr, H.sph(0.085, 12, 8), H.mat('#ffffff'), [0.2, 1.2, -0.2]);
+    H.add(pr, H.sph(0.045, 10, 8), H.mat('#1b1b2a'), [0.25, 1.2, 0.26]); H.add(pr, H.sph(0.045, 10, 8), H.mat('#1b1b2a'), [0.25, 1.2, -0.26]);
+    var wgL = H.group(pr, [0, 0.8, 0.33]), wgR = H.group(pr, [0, 0.8, -0.33]);
+    H.add(wgL, H.sph(0.3, 14, 10), blue, [-0.08, -0.3, 0.02], null, [0.7, 1.25, 0.28]); H.add(wgR, H.sph(0.3, 14, 10), blue, [-0.08, -0.3, -0.02], null, [0.7, 1.25, 0.28]);
+    H.add(pr, H.box(0.16, 0.9, 0.06), blue, [-0.42, 0.05, 0.06], [0, 0, -0.6]); H.add(pr, H.box(0.14, 0.8, 0.06), yel, [-0.4, 0.08, -0.06], [0, 0, -0.55]);
+    [0.12, -0.12].forEach(function (z) { H.add(pr, H.cyl(0.035, 0.035, 0.2, 6), yel, [0.02, 0.06, z]); });
+    var flap = 0; H.onClick(pr, function () { flap = 1.2; c.burst(pr, 10); });
+    // notes floating up
+    var notes = [];
+    for (i = 0; i < 8; i++) { var n = H.emoji(i % 2 ? '🎵' : '🎶', 0.7); n.userData = { x: H.rand(-9, 3), z: H.rand(-5, 1), v: H.rand(0.4, 0.9), ph: H.rand(0, 6), y: H.rand(g0, 6) }; scene.add(n); notes.push(n); }
+    var bubbles = [];
+    [['#ffd1e6', -9, 5, -12, 1.5], ['#cdefff', 7, 6.5, -14, 2], ['#fff3b0', -2, 7.5, -16, 1.2], ['#d8ffe9', 13, 3.5, -10, 1.3]].forEach(function (q) { var m = H.add(scene, H.sph(q[4], 24, 16), H.mat(q[0], { rough: 0.3, opacity: 0.75 }), [q[1], q[2], q[3]]); m.castShadow = false; bubbles.push(m); });
+    return {
+      update: function (t, dt, S) {
+        var beat = 0.5 + 0.5 * Math.sin(t * 6.2), boost = Math.min(1.6, S.speed * 0.12);
+        bars.forEach(function (b, k) { var v = 0.35 + (0.5 + 0.5 * Math.sin(t * 5 + b.ph)) * (0.5 + 0.5 * Math.sin(t * 2.3 + k * 0.37)) * (0.9 + boost) + boost * 0.25; b.m.scale.y = v; b.m.position.y = c.R + 0.3 + v / 2; });
+        cones.forEach(function (cn) { var s = 1 + beat * 0.08 + boost * 0.05; cn.scale.set(s, 1, s); });
+        hp.position.y = 2.4 + Math.sin(t * 1.1) * 0.25; hp.rotation.y = Math.sin(t * 0.6) * 0.5 + (hpSpin > 0 ? (1 - hpSpin) * H.TAU : 0); hpSpin = Math.max(0, hpSpin - dt);
+        pr.position.y = PY + Math.abs(Math.sin(t * 3.1)) * 0.08 + (flap > 0 ? Math.sin((1.2 - flap) / 1.2 * Math.PI) * 0.8 : 0);
+        pr.rotation.z = Math.sin(t * 3.1) * 0.06;
+        var fl = flap > 0 ? Math.sin(t * 28) * 1.0 + 1.0 : 0; flap = Math.max(0, flap - dt);
+        wgL.rotation.x = -fl; wgR.rotation.x = fl;
+        pen.rotation.z = -0.7 + Math.sin(t * 2) * 0.08;
+        notes.forEach(function (n) { var u = n.userData; u.y += u.v * dt; if (u.y > 7) u.y = g0 + 0.5; n.position.set(u.x + Math.sin(t + u.ph) * 0.5, u.y, u.z); n.material.opacity = Math.min(1, (7 - u.y) / 2.5); });
+        bubbles.forEach(function (m, k) { m.position.y += Math.sin(t * 0.5 + k) * dt * 0.2; });
+      },
+      land: function () { flap = 1.2; hpSpin = 1; }
+    };
+  }
 };
-const TOPICS = [
-  { e:"🌦️", name:"Riga weather", color:"#0ea5e9",
-    q:"What's the weather like in Riga today?",
-    opts:[["☀️","sunny"],["☁️","cloudy"],["🌧️","rainy"],["❄️","snowy"]],
-    more:["What was the weather like yesterday?","Is there snow on the ground?"],
-    words:["It's …","It was …","It's below zero","No, not yet","Yes, there's a little."] },
-  { e:"☀️", name:"This morning", color:"#f59e0b",
-    q:"What time did you get up this morning?",
-    opts:[["🕘","nine"],["🕙","ten"],["🕚","eleven"],["🕛","midday"]],
-    more:["Did you sleep well?","What did you do before our lesson?"],
-    words:["I got up at …","Yes, I did.","No, not really.","Before the lesson, I …"] },
-  { e:"📞", name:"Calls and texts", color:"#8b5cf6",
-    q:"How do you usually talk to your friends after school?",
-    opts:[["💬","text"],["📞","call"],["🎥","video call"],["🎮","chat in Roblox"]],
-    more:["Who do you text most?","When did you last call someone?"],
-    words:["I usually text …","I sometimes call …","We chat in …","Yesterday I called …"] },
-  { e:"💇‍♀️", name:"My hair", color:"#ec4899",
-    q:"Who did your hair?",
-    opts:[["💇‍♀️","a hairdresser"],["👩","my mum"],["👭","a friend"],["🪞","I did it myself"]],
-    more:["What colour was your hair before?","What colour would you like next time?"],
-    words:["… did it","Before, it was …","Next time I'd like …"] },
-  { e:"🎵", name:"Music", color:"#22c55e",
-    q:"When do you usually listen to music?",
-    opts:[["🚌","on the way to school"],["🎨","when I draw"],["🎮","when I play games"],["🌙","before bed"]],
-    more:["Do you listen with headphones or without?","What was the last song you listened to?"],
-    words:["I usually listen to music …","I sometimes listen …","With headphones.","The last song was …"] },
-  { e:"🚌", name:"To school", color:"#6366f1",
-    q:"How do you usually get to school?",
-    opts:[["🚌","by bus"],["🚋","by tram"],["🚗","by car"],["🚶","on foot"]],
-    more:["How long does it take?","Did you go the same way yesterday?"],
-    words:["I usually go …","It takes about … minutes","Yesterday I went …"] },
-  { e:"🏫", name:"Friday at school", color:"#14b8a6",
-    q:"Which of these lessons did you have on Friday?",
-    opts:[["🔢","Maths"],["⚽","PE"],["🖌️","Art"],["🇬🇧","English"]],
-    more:["Did you have a test this week?","What did you do in PE?"],
-    words:["On Friday I had …","We had a test in …","No, not this week","In PE we …","We ran.","We played volleyball.","We played basketball."] },
-  { e:"🦜", name:"Pets", color:"#a855f7",
-    q:"Which of these would you like as a pet?",
-    opts:[["🦜","a parrot"],["🐈","a cat"],["🐕","a dog"],["🦎","a lizard"]],
-    more:["What can a parrot do?","What does it eat?"],
-    words:["I'd like a …","It can …","It's got …"] },
-  { e:"🧑‍🤝‍🧑", name:"My friend", color:"#f97316",
-    q:"Which of these does your friend like?",
-    opts:[["🎮","games"],["🎨","drawing"],["🎵","music"],["⚽","sport"]],
-    more:["What's your friend like?","What do you do together at school?"],
-    words:["My friend likes …","My friend's very …","We always …","We sometimes …"] }
-];
 
-const n = TOPICS.length, seg = 360 / n;
-const wheel = document.getElementById('wheel');
-const panel = document.getElementById('panel');
-const spinBtn = document.getElementById('spinBtn');
+</script>
+<script>
+/* Speaking Wheel engine. One construction for every pupil:
+   spin the 3D wheel -> a topic card: question, idea tiles, sentence starters, follow-up questions.
+   Content comes from #wheel-data (JSON), pictures from #wheel-images, the look from window.WHEEL_THEME.
+   No sound anywhere. */
+(function () {
+'use strict';
+var TAU = Math.PI * 2;
+var D = JSON.parse(document.getElementById('wheel-data').textContent);
+var IMG = JSON.parse(document.getElementById('wheel-images').textContent || '{}');
+var T = window.WHEEL_THEME || {};
+var WC = Object.assign({
+  colors: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#14b8a6'],
+  rim: '#ffffff', side: null, rimTube: 0.13, rimMetal: 0, hub: '#fde047', hubEmoji: '',
+  label: '#ffffff', stroke: 'rgba(0,0,0,.42)', sep: 'rgba(255,255,255,.95)', peg: '#ffffff',
+  bulbs: null, stand: '#8b5a2b', pointer: '#ef4444', emissive: 0.24
+}, T.wheel || {});
+var topics = D.topics, N = topics.length, SEG = TAU / N;
+var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+function $(s) { return document.querySelector(s); }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function mod(a, n) { return ((a % n) + n) % n; }
+function lerp(a, b, k) { return a + (b - a) * k; }
+function rand(a, b) { return a + Math.random() * (b - a); }
+function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
 
-wheel.style.background = `conic-gradient(${TOPICS.map((t,i)=>`${t.color} ${i*seg}deg ${(i+1)*seg}deg`).join(',')})`;
-TOPICS.forEach((t,i)=>{
-  const mid = i*seg + seg/2, d = document.createElement('div');
-  d.className = 'lbl';
-  d.innerHTML = `<span class="e">${t.e}</span>${t.name}`;
-  d.style.transform = `rotate(${mid}deg) translateY(-118px) rotate(${-mid}deg)`;
-  wheel.appendChild(d);
-});
+var S = { rot: 0, from: 0, to: 0, t0: 0, dur: 0, spinning: false, target: -1, cur: -1, step: 0, visited: {}, speed: 0,
+  ptr: 0, pv: 0, listen: false, swap: false, time: 0, hero: 1, heroTo: 1, pair: -1 };
 
-let rotation = 0, spinning = false, lastIdx = -1;
-const randInt = (a,b) => a + Math.floor(Math.random()*(b-a+1));
-function pickIdx(){ let i; do { i = randInt(0, n-1); } while(i === lastIdx); lastIdx = i; return i; }
-function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=randInt(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+/* ---------- wheel face (2D canvas, used as the 3D texture and as the flat fallback) ---------- */
+var faceCv = document.createElement('canvas'); faceCv.width = faceCv.height = 1024;
+var fontD = getComputedStyle(document.documentElement).getPropertyValue('--font-d').trim() || 'sans-serif';
+function segColor(i) {
+  var L = WC.colors.length;
+  if (i === N - 1 && N % L === 1 && L > 2) return WC.colors[1 + ((N - 2) % L === 1 ? 1 : 0)];
+  return WC.colors[i % L];
+}
+function splitOptions(name) {
+  var w = name.split(' '), out = [[name]], a, b;
+  for (a = 1; a < w.length; a++) out.push([w.slice(0, a).join(' '), w.slice(a).join(' ')]);
+  for (a = 1; a < w.length - 1; a++) for (b = a + 1; b < w.length; b++) out.push([w.slice(0, a).join(' '), w.slice(a, b).join(' '), w.slice(b).join(' ')]);
+  return out;
+}
+function fitLabel(g, name, maxW) {
+  var opts = splitOptions(name), size, best, i, j, mw;
+  for (size = 50; size >= 24; size -= 2) {
+    g.font = '700 ' + size + 'px ' + fontD;
+    best = null;
+    for (i = 0; i < opts.length; i++) {
+      if (opts[i].length > (size > 34 ? 2 : 3)) continue;
+      mw = 0; for (j = 0; j < opts[i].length; j++) mw = Math.max(mw, g.measureText(opts[i][j]).width);
+      if (mw <= maxW && (!best || opts[i].length < best.lines.length || (opts[i].length === best.lines.length && mw < best.w))) best = { lines: opts[i], w: mw };
+    }
+    if (best) return { size: size, lines: best.lines };
+  }
+  return { size: 24, lines: opts[opts.length - 1] };
+}
+function drawFace() {
+  var g = faceCv.getContext('2d'), Sz = 1024, c = Sz / 2, R = c - 2, i, a0;
+  g.clearRect(0, 0, Sz, Sz);
+  for (i = 0; i < N; i++) {
+    a0 = -Math.PI / 2 + i * SEG;
+    g.beginPath(); g.moveTo(c, c); g.arc(c, c, R, a0, a0 + SEG); g.closePath();
+    g.fillStyle = segColor(i); g.fill();
+    if (S.visited[i] && i !== S.cur) { g.fillStyle = 'rgba(20,20,40,.34)'; g.fill(); }
+  }
+  var rg = g.createRadialGradient(c, c, R * 0.2, c, c, R);
+  rg.addColorStop(0, 'rgba(255,255,255,.16)'); rg.addColorStop(0.7, 'rgba(255,255,255,0)'); rg.addColorStop(1, 'rgba(0,0,0,.16)');
+  g.fillStyle = rg; g.beginPath(); g.arc(c, c, R, 0, TAU); g.fill();
+  g.strokeStyle = WC.sep; g.lineWidth = 7; g.lineCap = 'round';
+  for (i = 0; i < N; i++) {
+    a0 = -Math.PI / 2 + i * SEG;
+    g.beginPath(); g.moveTo(c + Math.cos(a0) * R * 0.2, c + Math.sin(a0) * R * 0.2); g.lineTo(c + Math.cos(a0) * R, c + Math.sin(a0) * R); g.stroke();
+  }
+  var maxW = 2 * 0.67 * R * Math.tan(SEG / 2) * 0.9;
+  for (i = 0; i < N; i++) {
+    var t = topics[i], name = t.short || t.name, fit = fitLabel(g, name, Math.min(maxW, R * 0.86));
+    g.save(); g.translate(c, c); g.rotate((i + 0.5) * SEG);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = '700 ' + fit.size + 'px ' + fontD;
+    var lh = fit.size * 1.12, n = fit.lines.length, top = -R * (n === 1 ? 0.79 : n === 2 ? 0.845 : 0.87);
+    g.lineJoin = 'round'; g.lineWidth = Math.max(6, fit.size * 0.2); g.strokeStyle = WC.stroke; g.fillStyle = WC.label;
+    for (var k = 0; k < n; k++) { g.strokeText(fit.lines[k], 0, top + k * lh); g.fillText(fit.lines[k], 0, top + k * lh); }
+    g.font = Math.round(R * 0.2) + 'px ' + EMOJI_FONT; g.fillStyle = '#000';
+    g.fillText(t.icon || '💬', 0, -R * 0.44);
+    g.restore();
+  }
+  if (faceTex) faceTex.needsUpdate = true;
+}
+var faceTex = null;
 
-function showTopic(i){
-  const t = TOPICS[i];
-  const opts = t.pairs ? t.list[randInt(0, t.list.length-1)] : shuffle(t.opts);
-  panel.classList.remove('idle');
-  panel.innerHTML = `
-    <div class="head"><span class="e">${t.e}</span><span class="name">${t.name}</span></div>
-    <div class="q">${t.q}</div>
-    <div class="menu">${opts.map(o=>`<button class="opt"><span class="big">${o[0]}</span>${o[1]}</button>`).join('')}</div>
-    <div class="words"><div class="cap">Helpful words</div>${t.words.map(w=>`<span class="chip">${w}</span>`).join('')}</div>
-    <button class="moreBtn" id="moreBtn">What else? ➕</button>
-    <div class="more" id="more"><div class="cap">Next questions</div><ul>${t.more.map(q=>`<li>${q}</li>`).join('')}</ul></div>`;
-  panel.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
-    panel.querySelectorAll('.opt').forEach(x => x.classList.remove('on'));
-    b.classList.add('on');
-  }));
-  document.getElementById('moreBtn').addEventListener('click', () => {
-    document.getElementById('more').classList.add('show');
-    document.getElementById('moreBtn').style.display = 'none';
+/* ---------- 3D ---------- */
+var G = null; // {renderer, scene, camera, wheel, ptr, bulbs, api, clickables}
+var R3 = 2, TH = 0.36, FOV = 36;
+var H = {}; // helpers handed to themes
+function init3D() {
+  if (!window.THREE) return false;
+  var THREE = window.THREE, canvas = $('#gl'), renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' }); } catch (e) { return false; }
+  if (THREE.ColorManagement && 'legacyMode' in THREE.ColorManagement) THREE.ColorManagement.legacyMode = false;
+  var small = Math.min(innerWidth, innerHeight) < 560;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  var scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 300);
+
+  H.THREE = THREE;
+  H.mat = function (c, o) {
+    o = o || {};
+    var m = new THREE.MeshStandardMaterial({ color: new THREE.Color(c), roughness: o.rough == null ? 0.72 : o.rough, metalness: o.metal || 0, flatShading: !!o.flat });
+    if (o.emissive != null) { m.emissive = new THREE.Color(o.emissive); m.emissiveIntensity = o.ei == null ? 1 : o.ei; }
+    if (o.opacity != null) { m.transparent = true; m.opacity = o.opacity; m.depthWrite = o.depthWrite !== false && o.opacity > 0.6; }
+    if (o.side) m.side = THREE.DoubleSide;
+    if (o.map) m.map = o.map;
+    return m;
+  };
+  H.basic = function (c, o) { o = o || {}; var m = new THREE.MeshBasicMaterial({ color: new THREE.Color(c) }); if (o.opacity != null) { m.transparent = true; m.opacity = o.opacity; m.depthWrite = false; } if (o.add) m.blending = THREE.AdditiveBlending; if (o.side) m.side = THREE.DoubleSide; if (o.map) m.map = o.map; return m; };
+  H.box = function (w, h, d) { return new THREE.BoxGeometry(w, h, d); };
+  H.sph = function (r, a, b) { return new THREE.SphereGeometry(r, a || 20, b || 14); };
+  H.ico = function (r, d) { return new THREE.IcosahedronGeometry(r, d || 0); };
+  H.cyl = function (rt, rb, h, s) { return new THREE.CylinderGeometry(rt, rb, h, s || 18); };
+  H.cone = function (r, h, s) { return new THREE.ConeGeometry(r, h, s || 14); };
+  H.tor = function (r, t, a, b, arc) { return new THREE.TorusGeometry(r, t, a || 10, b || 40, arc || TAU); };
+  H.add = function (parent, geo, material, pos, rot, scl) {
+    var m = new THREE.Mesh(geo, material);
+    if (pos) m.position.set(pos[0], pos[1], pos[2]);
+    if (rot) m.rotation.set(rot[0], rot[1], rot[2]);
+    if (scl != null) { if (scl.length) m.scale.set(scl[0], scl[1], scl[2]); else m.scale.setScalar(scl); }
+    m.castShadow = true; m.receiveShadow = true;
+    parent.add(m); return m;
+  };
+  H.group = function (parent, pos) { var g = new THREE.Group(); if (pos) g.position.set(pos[0], pos[1], pos[2]); (parent || scene).add(g); return g; };
+  H.tex = function (size, draw) { var c = document.createElement('canvas'); c.width = c.height = size; draw(c.getContext('2d'), size); var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; };
+  H.emoji = function (ch, s) {
+    var t = H.tex(128, function (g) { g.font = '104px ' + EMOJI_FONT; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(ch, 64, 70); });
+    var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false })); sp.scale.setScalar(s || 1); return sp;
+  };
+  H.glow = function (color, s) {
+    var t = H.tex(128, function (g) { var r = g.createRadialGradient(64, 64, 0, 64, 64, 64); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.35, 'rgba(255,255,255,.45)'); r.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = r; g.fillRect(0, 0, 128, 128); });
+    var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, color: new THREE.Color(color), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); sp.scale.setScalar(s || 1); return sp;
+  };
+  H.cloud = function (parent, pos, s, color) {
+    var g = H.group(parent, pos), m = H.mat(color || '#ffffff', { flat: true, rough: 1 });
+    [[0, 0, 0, 1], [0.9, -0.1, 0.1, 0.75], [-0.9, -0.15, 0, 0.7], [0.35, 0.45, -0.1, 0.7], [-0.4, 0.35, 0.1, 0.6]].forEach(function (p) {
+      var b = H.add(g, H.ico(1, 1), m, [p[0], p[1], p[2]], null, [p[3], p[3] * 0.8, p[3] * 0.8]); b.castShadow = false; b.receiveShadow = false;
+    });
+    g.scale.setScalar(s || 1); return g;
+  };
+  H.rand = rand; H.pick = pick; H.lerp = lerp; H.TAU = TAU;
+  var clickables = [];
+  H.onClick = function (obj, fn) { clickables.push({ obj: obj, fn: fn }); };
+
+  // sky
+  var sky = T.sky || ['#7dd3fc', '#e0f2fe'];
+  scene.background = H.tex(256, function (g, s) { var gr = g.createLinearGradient(0, 0, 0, s); sky.forEach(function (c, i) { gr.addColorStop(i / (sky.length - 1), c); }); g.fillStyle = gr; g.fillRect(0, 0, s, s); });
+  if (T.fog) scene.fog = new THREE.Fog(new THREE.Color(T.fog[0]), T.fog[1], T.fog[2]);
+  var L = T.light || {};
+  var hemi = new THREE.HemisphereLight(new THREE.Color(L.sky || '#ffffff'), new THREE.Color(L.ground || '#8a9bb0'), L.hemi == null ? 0.95 : L.hemi); scene.add(hemi);
+  var sun = new THREE.DirectionalLight(new THREE.Color(L.sun || '#ffffff'), L.sunI == null ? 1.15 : L.sunI);
+  var sp = L.pos || [5, 9, 9]; sun.position.set(sp[0], sp[1], sp[2]); sun.castShadow = true;
+  sun.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048);
+  var sc = sun.shadow.camera; sc.left = -10; sc.right = 10; sc.top = 10; sc.bottom = -10; sc.near = 0.5; sc.far = 50;
+  sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.03; scene.add(sun);
+
+  // wheel
+  var rig = new THREE.Group(); scene.add(rig);
+  var wheel = new THREE.Group(); rig.add(wheel);
+  faceTex = new THREE.CanvasTexture(faceCv); faceTex.encoding = THREE.sRGBEncoding; faceTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  var faceMat = new THREE.MeshStandardMaterial({ map: faceTex, roughness: 0.42, metalness: 0, emissive: new THREE.Color('#ffffff'), emissiveMap: faceTex, emissiveIntensity: WC.emissive });
+  var face = new THREE.Mesh(new THREE.CircleGeometry(R3, 80), faceMat); face.position.z = TH / 2 + 0.002; face.receiveShadow = true; wheel.add(face);
+  var body = H.add(wheel, H.cyl(R3, R3, TH, 80), H.mat(WC.side || WC.rim, { rough: 0.5 }), null, [Math.PI / 2, 0, 0]);
+  H.add(wheel, new THREE.TorusGeometry(R3 + 0.03, WC.rimTube, 16, 80), H.mat(WC.rim, { rough: 0.32, metal: WC.rimMetal }), [0, 0, TH / 2 - 0.03]);
+  var back = H.add(wheel, new THREE.CircleGeometry(R3, 48), H.mat(WC.side || WC.rim), [0, 0, -TH / 2 - 0.002], [0, Math.PI, 0]);
+  var i, a;
+  for (i = 0; i < N; i++) { // pegs on the sector borders
+    a = Math.PI / 2 - i * SEG;
+    H.add(wheel, H.sph(0.085, 14, 10), H.mat(WC.peg, { rough: 0.3 }), [Math.cos(a) * (R3 + 0.03), Math.sin(a) * (R3 + 0.03), TH / 2 + 0.1]);
+  }
+  var bulbs = [];
+  if (WC.bulbs && WC.bulbs.n) {
+    for (i = 0; i < WC.bulbs.n; i++) {
+      a = Math.PI / 2 - (i + 0.5) * TAU / WC.bulbs.n;
+      var col = WC.bulbs.colors[i % WC.bulbs.colors.length];
+      var b = H.add(wheel, H.sph(WC.bulbs.r || 0.075, 12, 8), H.mat(col, { emissive: col, ei: 0.5, rough: 0.3 }), [Math.cos(a) * (R3 + 0.03), Math.sin(a) * (R3 + 0.03), TH / 2 + 0.09]);
+      b.castShadow = false; bulbs.push(b);
+    }
+  }
+  // hub does not turn
+  var hub = H.group(rig, [0, 0, TH / 2]);
+  H.add(hub, H.cyl(0.4, 0.46, 0.2, 32), H.mat(WC.hub, { rough: 0.3, metal: 0.15 }), [0, 0, 0.1], [Math.PI / 2, 0, 0]);
+  H.add(hub, H.sph(0.4, 28, 14), H.mat(WC.hub, { rough: 0.25, metal: 0.15 }), [0, 0, 0.2], null, [1, 1, 0.42]);
+  if (WC.hubEmoji) { var he = H.emoji(WC.hubEmoji, 0.56); he.position.set(0, 0, 0.42); hub.add(he); }
+  // pointer (pivot at the top, tip pointing down)
+  var ptr = H.group(rig, [0, R3 + 0.5, TH / 2 + 0.2]);
+  if (T.pointer) T.pointer(ptr, H);
+  else {
+    H.add(ptr, H.cone(0.2, 0.62, 20), H.mat(WC.pointer, { rough: 0.35 }), [0, -0.2, 0], [Math.PI, 0, 0]);
+    H.add(ptr, H.sph(0.24, 20, 14), H.mat(WC.pointer, { rough: 0.3 }), [0, 0.12, 0]);
+  }
+  var ground = T.ground == null ? -3.05 : T.ground;
+  if (WC.stand) {
+    H.add(rig, H.box(0.34, R3 + Math.abs(ground), 0.3), H.mat(WC.stand, { rough: 0.6 }), [0, (ground) / 2 - 0.2, -TH / 2 - 0.2]);
+    H.add(rig, H.cyl(1.05, 1.3, 0.26, 28), H.mat(WC.stand, { rough: 0.6 }), [0, ground + 0.13, -TH / 2 - 0.1]);
+    H.add(rig, H.box(0.5, 0.5, 0.3), H.mat(WC.stand, { rough: 0.6 }), [0, R3 + 0.5, -TH / 2 - 0.2]);
+    H.add(rig, H.box(0.3, 0.3, 0.5), H.mat(WC.stand, { rough: 0.6 }), [0, R3 + 0.5, -0.02]);
+  }
+  H.onClick(face, function () { spin(); });
+
+  G = { renderer: renderer, scene: scene, camera: camera, wheel: wheel, rig: rig, ptr: ptr, bulbs: bulbs, sun: sun, hemi: hemi, clickables: clickables, api: {}, ground: ground };
+  var ctx = { THREE: THREE, H: H, scene: scene, camera: camera, rig: rig, wheel: wheel, hub: hub, ptr: ptr, R: R3, TH: TH, ground: ground, sun: sun, hemi: hemi, N: N, reduce: reduce,
+    burst: function (obj, n) { var p = project(obj); burst(p.x, p.y, n || 10); } };
+  if (T.build) { try { G.api = T.build(ctx) || {}; } catch (e) { console.error('theme build failed', e); G.api = {}; } }
+
+  // pointer events
+  var ray = new THREE.Raycaster(), v2 = new THREE.Vector2();
+  function hit(ev) {
+    var r = canvas.getBoundingClientRect();
+    v2.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(v2, camera);
+    var objs = clickables.map(function (c) { return c.obj; });
+    var hits = ray.intersectObjects(objs, true), k, o;
+    if (!hits.length) return null;
+    o = hits[0].object;
+    while (o) { for (k = 0; k < clickables.length; k++) if (clickables[k].obj === o) return { c: clickables[k], point: hits[0].point }; o = o.parent; }
+    return null;
+  }
+  canvas.addEventListener('click', function (ev) { var h = hit(ev); if (h) h.c.fn(h.point, ev); });
+  var lastMove = 0;
+  canvas.addEventListener('pointermove', function (ev) {
+    par.tx = (ev.clientX / innerWidth) * 2 - 1; par.ty = (ev.clientY / innerHeight) * 2 - 1;
+    var now = performance.now(); if (now - lastMove < 70) return; lastMove = now;
+    canvas.style.cursor = hit(ev) ? 'pointer' : 'default';
+  });
+  window.addEventListener('pointermove', function (ev) { par.tx = (ev.clientX / innerWidth) * 2 - 1; par.ty = (ev.clientY / innerHeight) * 2 - 1; });
+  return true;
+}
+var par = { x: 0, y: 0, tx: 0, ty: 0 };
+var lay = { w: 0, h: 0, wide: true, ppu: 100 };
+function layout() {
+  var st = $('#stage'), r = st.getBoundingClientRect();
+  lay.w = Math.max(1, r.width); lay.h = Math.max(1, r.height); lay.wide = innerWidth >= 900;
+  var fx = $('#fx'), dpr = Math.min(window.devicePixelRatio || 1, 2);
+  fx.width = innerWidth * dpr; fx.height = innerHeight * dpr;
+  if (G) { G.renderer.setSize(lay.w, lay.h, false); G.camera.aspect = lay.w / lay.h; G.camera.updateProjectionMatrix(); }
+}
+function applyCamera() {
+  var w = lay.w, h = lay.h, k = lay.wide ? 1 - S.hero : 0;
+  var diam = lay.wide ? lerp(Math.min(0.5 * w, 0.62 * h), Math.min(0.41 * w, 0.62 * h), k) : Math.min(0.8 * w, 0.6 * h);
+  var ppu = diam / 4.7, dist = h / (2 * Math.tan(FOV * Math.PI / 360) * ppu);
+  var cx = lay.wide ? k * (0.25 * w) / ppu : 0;
+  lay.ppu = ppu;
+  var px = reduce ? 0 : par.x * 0.55, py = reduce ? 0 : par.y * 0.3;
+  G.camera.position.set(cx + px, 0.5 - py, dist);
+  G.camera.lookAt(cx + px * 0.25, lay.wide ? 0.12 : 0.3, 0);
+}
+var _v;
+function project(obj) {
+  if (!G) return { x: innerWidth / 2, y: innerHeight / 2 };
+  _v = _v || new G.THREE_V3();
+  obj.getWorldPosition ? obj.getWorldPosition(_v) : _v.set(obj[0], obj[1], obj[2]);
+  _v.project(G.camera);
+  var r = $('#gl').getBoundingClientRect();
+  return { x: r.left + (_v.x * 0.5 + 0.5) * r.width, y: r.top + (-_v.y * 0.5 + 0.5) * r.height };
+}
+
+/* ---------- confetti (2D overlay) ---------- */
+var parts = [];
+function burst(x, y, n, set) {
+  if (reduce) return;
+  set = set || T.particles || ['⭐', '✨'];
+  for (var i = 0; i < n; i++) parts.push({ x: x, y: y, vx: rand(-1, 1) * 520, vy: rand(-980, -260), r: rand(0, TAU), vr: rand(-5, 5), s: rand(22, 46), ch: pick(set), life: 0, max: rand(1.1, 2) });
+}
+function drawParts(dt) {
+  var fx = $('#fx'), g = fx.getContext('2d'), dpr = fx.width / innerWidth;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, fx.width, fx.height);
+  if (!parts.length) return;
+  g.setTransform(dpr, 0, 0, dpr, 0, 0); g.textAlign = 'center'; g.textBaseline = 'middle';
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var p = parts[i]; p.life += dt; if (p.life > p.max) { parts.splice(i, 1); continue; }
+    p.vy += 1500 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt;
+    g.save(); g.translate(p.x, p.y); g.rotate(p.r); g.globalAlpha = Math.max(0, 1 - p.life / p.max);
+    g.font = p.s + 'px ' + EMOJI_FONT; g.fillText(p.ch, 0, 0); g.restore();
+  }
+}
+
+/* ---------- spin ---------- */
+function spin(toIdx) {
+  if (S.spinning) return;
+  var i = toIdx, k, pool = [];
+  if (i == null) {
+    for (k = 0; k < N; k++) if (!S.visited[k] && k !== S.cur) pool.push(k);
+    if (!pool.length) { S.visited = {}; for (k = 0; k < N; k++) if (k !== S.cur) pool.push(k); }
+    i = pick(pool);
+  }
+  var want = mod(-(i + 0.5) * SEG + (Math.random() - 0.5) * SEG * 0.5, TAU), cur = mod(S.rot, TAU);
+  var turns = toIdx == null ? (reduce ? 1 : 5) : 1;
+  S.from = S.rot; S.to = S.rot + turns * TAU + mod(want - cur, TAU);
+  S.dur = reduce ? 0.5 : (toIdx == null ? 4.4 : 1.5); S.t0 = S.time; S.spinning = true; S.target = i;
+  document.body.classList.add('spinning'); $('#spin').disabled = true; $('#topicMenu').hidden = true;
+  if (G && G.api.spin) G.api.spin();
+}
+function landed(i) {
+  S.spinning = false; S.speed = 0; S.cur = i; S.visited[i] = true; S.step = 0; S.pair = -1; S.swap = false; S.listen = false; // every new card starts plain: the pupil answers first
+  document.body.classList.remove('spinning'); document.body.classList.add('has-card');
+  $('#spin').disabled = false; $('#spin').firstChild.textContent = 'Spin again';
+  S.heroTo = 0; drawFace(); renderCard(true); buildMenu();
+  var p = G ? project(G.ptr) : { x: innerWidth * 0.25, y: innerHeight * 0.2 };
+  burst(p.x, p.y + 30, 34);
+  if (G && G.api.land) G.api.land(i);
+}
+function tick(dt) {
+  S.time += dt;
+  if (S.spinning) {
+    var u = Math.min(1, (S.time - S.t0) / S.dur), e = 1 - Math.pow(1 - u, 3.4), prev = S.rot;
+    S.rot = S.from + (S.to - S.from) * e; S.speed = (S.rot - prev) / dt;
+    if (Math.floor(prev / SEG) !== Math.floor(S.rot / SEG)) S.pv += Math.min(10, 2.5 + S.speed * 0.55);
+    if (u >= 1) landed(S.target);
+  }
+  S.pv += (-110 * S.ptr - 11 * S.pv) * dt; S.ptr += S.pv * dt; if (S.ptr < -0.12) { S.ptr = -0.12; S.pv = 0; } if (S.ptr > 0.8) { S.ptr = 0.8; S.pv *= -0.2; }
+  S.hero += (S.heroTo - S.hero) * Math.min(1, dt * 3.2);
+  par.x += (par.tx - par.x) * Math.min(1, dt * 3); par.y += (par.ty - par.y) * Math.min(1, dt * 3);
+  if (G) {
+    G.wheel.rotation.z = -S.rot; G.ptr.rotation.z = S.ptr;
+    for (var i = 0; i < G.bulbs.length; i++) {
+      var on = S.spinning ? ((i + Math.floor(S.time * 14)) % 3 === 0) : ((i + Math.floor(S.time * 1.6)) % 2 === 0);
+      G.bulbs[i].material.emissiveIntensity = on ? 1.5 : 0.25;
+    }
+    if (G.api.update) G.api.update(S.time, dt, S);
+  } else {
+    var f = $('#flat canvas'); if (f) f.style.transform = 'rotate(' + S.rot + 'rad)';
+  }
+}
+function render(dt) { if (G) { applyCamera(); G.renderer.render(G.scene, G.camera); } drawParts(dt || 0); }
+var last = 0;
+function frame(now) {
+  var dt = Math.min(0.05, (now - last) / 1000 || 0.016); last = now;
+  tick(dt); render(dt); requestAnimationFrame(frame);
+}
+
+/* ---------- card ---------- */
+function questions(t) {
+  var list = [{ q: t.q, starters: t.starters || [], note: t.qnote || '' }];
+  (t.more || []).forEach(function (m) { list.push(typeof m === 'string' ? { q: m, starters: null, note: '' } : { q: m.q, starters: m.starters || null, note: m.note || '' }); });
+  return list;
+}
+function ideaHTML(o, veil) {
+  var art = o.img && IMG[o.img] ? '<img src="' + IMG[o.img] + '" alt="">' : (o.icon ? '<span class="emo">' + o.icon + '</span>' : '');
+  return '<button type="button" class="idea' + (veil ? ' veil' : '') + (art ? '' : ' noart') + '">' + (art ? '<span class="i-art">' + art + '</span>' : '') + '<span class="i-lab">' + esc(o.label) + '</span></button>';
+}
+function renderCard(fresh) {
+  var card = $('#card'), t = topics[S.cur]; if (!t) return;
+  var qs = questions(t), n = qs.length, cur = qs[S.step];
+  var veil = D.ideaLabels === 'tap';
+  var ideas = t.ideas || [], pair = null, html = '';
+  if (t.pairs) {
+    if (S.pair < 0) { var p; do { p = Math.floor(Math.random() * t.pairs.length); } while (t.pairs.length > 1 && p === t._last); S.pair = p; t._last = p; }
+    pair = t.pairs[S.pair];
+  }
+  var starters = cur.starters || t.starters || [];
+  html += '<div class="c-body"><div class="c-head"><div class="topic"><span class="t-ico">' + (t.icon || '💬') + '</span><span class="t-name">' + esc(t.name) + '</span></div>' +
+    '<div class="c-tools">' + (n > 1 ? '<span class="q-step">Question ' + (S.step + 1) + ' of ' + n + '</span>' : '') + '<button type="button" class="tool" id="tListen" aria-pressed="' + S.listen + '" title="Hide the question and the starters (I say the question myself)">🙈</button>' +
+    '<button type="button" class="tool" id="tSwap" aria-pressed="' + S.swap + '" title="Swap: the pupil asks the question">🔁</button></div></div>';
+  html += '<div class="swapbar">' + esc(D.swapText || 'Your turn: ask me!') + '</div>';
+  html += '<h2 class="q swapin' + (S.listen ? ' veiled' : '') + '"><span class="q-txt">' + esc(cur.q) + '</span><span class="q-veil">🙈 Tap to show the question</span></h2>';
+  if (S.step === 0 && pair) {
+    html += '<div class="ideas pair">' + ideaHTML({ label: pair[0] }) + '<span class="or">or</span>' + ideaHTML({ label: pair[1] }) + '</div>';
+  } else if ((S.step === 0 || D.ideasStay) && ideas.length) {
+    html += '<div class="cap"><span>Ideas</span>' + (veil ? '<button type="button" id="showWords">Show words</button>' : '') + '<button type="button" class="own" id="ownIdea">✨ My own idea</button></div>' +
+      '<div class="ideas n' + Math.min(ideas.length, 6) + (ideas.length >= 4 ? ' wide' : '') + '">' + ideas.map(function (o) { return ideaHTML(o, veil); }).join('') + '</div>';
+  }
+  if (starters.length) html += '<div class="say"><div class="cap">Sentence starters</div><div class="chips">' + starters.map(function (s) { return '<button type="button" class="chip">' + esc(s) + '</button>'; }).join('') + '</div></div>';
+  var dots = ''; for (var i = 0; i < n; i++) dots += '<button type="button" class="dot' + (i === S.step ? ' on' : '') + '" data-i="' + i + '" aria-label="Question ' + (i + 1) + '"></button>';
+  var lastQ = S.step >= n - 1;
+  html += '<div class="nav"><button type="button" class="nbtn back" id="prevQ"' + (S.step === 0 ? ' disabled' : '') + ' aria-label="Back">←</button>' + (n > 1 ? '<div class="dots">' + dots + '</div>' : '') +
+    (t.pairs && lastQ ? '<button type="button" class="nbtn back" id="again">Another one 🎲</button>' : '') +
+    '<button type="button" class="nbtn next" id="nextQ">' + (lastQ ? 'Spin again 🎡' : 'Next question →') + '</button></div></div>';
+  card.innerHTML = html;
+  card.classList.toggle('swap', S.swap); card.classList.toggle('hideq', S.listen);
+  if (fresh) { card.classList.remove('flip'); void card.offsetWidth; card.classList.add('flip'); card.scrollTop = 0; }
+  // wiring
+  card.querySelectorAll('.idea').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var was = b.classList.contains('on');
+      card.querySelectorAll('.idea').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.remove('veil');
+      var ow = $('#ownIdea'); if (ow) ow.classList.remove('on');
+      if (!was) { b.classList.add('on'); var r = b.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 7); }
+    });
+  });
+  var own = $('#ownIdea'); if (own) own.addEventListener('click', function () {
+    card.querySelectorAll('.idea').forEach(function (x) { x.classList.remove('on'); });
+    own.classList.toggle('on'); if (own.classList.contains('on')) { var r = own.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 7); }
+  });
+  card.querySelectorAll('.chip').forEach(function (b) {
+    b.addEventListener('click', function () { var was = b.classList.contains('on'); card.querySelectorAll('.chip').forEach(function (x) { x.classList.remove('on'); }); if (!was) b.classList.add('on'); });
+  });
+  var sw = $('#showWords'); if (sw) sw.addEventListener('click', function () { card.querySelectorAll('.idea.veil').forEach(function (x) { x.classList.remove('veil'); }); sw.remove(); });
+  var q = card.querySelector('.q'); q.addEventListener('click', function () { q.classList.remove('veiled'); card.classList.remove('hideq'); });
+  $('#tListen').addEventListener('click', function () { S.listen = !S.listen; this.setAttribute('aria-pressed', S.listen); q.classList.toggle('veiled', S.listen); card.classList.toggle('hideq', S.listen); });
+  $('#tSwap').addEventListener('click', function () { S.swap = !S.swap; this.setAttribute('aria-pressed', S.swap); card.classList.toggle('swap', S.swap); });
+  $('#prevQ').addEventListener('click', function () { if (S.step > 0) { S.step--; renderCard(); } });
+  $('#nextQ').addEventListener('click', function () { if (S.step < n - 1) { S.step++; renderCard(); } else spin(); });
+  var ag = $('#again'); if (ag) ag.addEventListener('click', function () { S.pair = -1; renderCard(true); });
+  card.querySelectorAll('.dot').forEach(function (d) { d.addEventListener('click', function () { S.step = +d.dataset.i; renderCard(); }); });
+  renderNotes();
+}
+function renderNotes() {
+  var box = $('#notesBody'), t = topics[S.cur], html = '';
+  if (D.notes) html += '<h3>About this wheel</h3><p>' + esc(D.notes) + '</p>';
+  if (t) {
+    var cur = questions(t)[S.step];
+    if (t.note) html += '<h3>' + esc(t.name) + '</h3><p>' + esc(t.note) + '</p>';
+    if (cur && cur.note) html += '<h3>This question</h3><p>' + esc(cur.note) + '</p>';
+  }
+  box.innerHTML = html || '<p>No notes for this card.</p>';
+}
+function buildMenu() {
+  var m = $('#topicMenu'); m.innerHTML = '';
+  topics.forEach(function (t, i) {
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = (t.icon || '') + ' ' + t.name; if (S.visited[i]) b.className = 'done';
+    b.addEventListener('click', function () { m.hidden = true; spin(i); }); m.appendChild(b);
   });
 }
 
-function spin(){
-  if(spinning) return;
-  spinning = true; spinBtn.disabled = true;
-  const i = pickIdx();
-  const targetMod = (360 - (i*seg + seg/2) + 360) % 360;
-  const currentMod = ((rotation % 360) + 360) % 360;
-  rotation += 360*5 + (targetMod - currentMod + 360) % 360;
-  wheel.style.transform = `rotate(${rotation}deg)`;
-  wheel.addEventListener('transitionend', () => {
-    showTopic(i);
-    spinning = false; spinBtn.disabled = false;
-    spinBtn.textContent = 'Spin again 🎡';
-  }, { once:true });
+/* ---------- start ---------- */
+function start() {
+  $('#brandIcon').textContent = D.icon || '🎡';
+  if (D.tip) $('#hint').textContent = D.tip;
+  $('#brandText').textContent = D.title || 'Speaking Wheel';
+  document.title = D.title || 'Speaking Wheel';
+  drawFace();
+  var ok = false; try { ok = init3D(); } catch (e) { console.error(e); ok = false; }
+  if (ok) { G.THREE_V3 = window.THREE.Vector3; }
+  else {
+    G = null; document.body.classList.add('no3d');
+    var fl = $('#flat'); fl.hidden = false; fl.querySelector('.f-wrap').appendChild(faceCv);
+    faceCv.addEventListener('click', function () { spin(); });
+    var sky = T.sky || ['#7dd3fc', '#e0f2fe']; $('#stage').style.background = 'linear-gradient(' + sky.join(',') + ')';
+  }
+  layout(); buildMenu(); renderNotes();
+  window.addEventListener('resize', layout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fontD = getComputedStyle(document.documentElement).getPropertyValue('--font-d').trim() || fontD; drawFace(); });
+  $('#spin').addEventListener('click', function () { spin(); });
+  $('#btnTopics').addEventListener('click', function () { var m = $('#topicMenu'); m.hidden = !m.hidden; });
+  $('#btnNotes').addEventListener('click', function () { var n = $('#notes'); n.hidden = !n.hidden; });
+  $('#notesClose').addEventListener('click', function () { $('#notes').hidden = true; });
+  document.addEventListener('keydown', function (e) {
+    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    if (e.key === 'ArrowRight' && S.cur >= 0) { var b = $('#nextQ'); if (b && questions(topics[S.cur]).length - 1 > S.step) b.click(); }
+    if (e.key === 'ArrowLeft' && S.cur >= 0) { var p = $('#prevQ'); if (p && !p.disabled) p.click(); }
+  });
+  requestAnimationFrame(function (t) { last = t; frame(t); });
+  // test hooks: the pane may throttle animation frames, so tests step time by hand
+  window.__wheel = { S: S, spin: spin, topics: topics, G: function () { return G; },
+    still: function () { document.body.classList.add('notrans'); },
+    step: function (sec) { var t = 0; while (t < sec) { tick(1 / 60); t += 1 / 60; } layout(); render(1 / 60); return { cur: S.cur, spinning: S.spinning, rot: S.rot }; } };
 }
-spinBtn.addEventListener('click', spin);
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
 </script>
 </body>
 </html>
