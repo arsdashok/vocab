@@ -35,6 +35,13 @@ button{font-family:inherit}
 /* flat fallback when 3D is not available */
 #flat{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 #flat[hidden]{display:none}
+/* pre-rendered scene (no 3D in this browser): a looping plate, the live wheel face, a rendered rim and pointer */
+#flat.lite{display:block;overflow:hidden;cursor:default}
+#flat.lite .lv{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;will-change:transform;pointer-events:none;object-fit:fill}
+#flat.lite .lface{position:absolute;border-radius:50%;overflow:hidden;cursor:pointer;will-change:transform}
+#flat.lite .lface canvas{width:100%;height:100%;display:block;border:0;border-radius:0;box-shadow:none}
+#flat.lite .lgloss{position:absolute;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 34% 26%,rgba(255,255,255,.26),rgba(255,255,255,0) 46%),radial-gradient(circle at 50% 50%,rgba(0,0,0,0) 64%,rgba(0,0,0,.2) 100%)}
+#flat.lite .lframe,#flat.lite .lptr{position:absolute;max-width:none;pointer-events:none;will-change:transform}
 #flat .f-wrap{position:relative;width:min(70vh,46vw);aspect-ratio:1}
 #flat canvas{width:100%;height:100%;border-radius:50%;border:10px solid #fff;box-shadow:0 14px 40px rgba(0,0,0,.35)}
 #flat .f-ptr{position:absolute;left:50%;top:-14px;transform:translateX(-50%);width:0;height:0;border-left:20px solid transparent;border-right:20px solid transparent;border-top:36px solid var(--btn);z-index:2;filter:drop-shadow(0 3px 2px rgba(0,0,0,.3))}
@@ -203,6 +210,7 @@ body.notrans *,body.notrans{transition:none!important;animation:none!important}
 <script type="application/json" id="wheel-images">{}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js" crossorigin="anonymous"></script>
 <script>
+window.WHEEL_PLATE = {"w": 1600, "h": 720, "cx": 800, "cy": 370.11656412773135, "ppu": 81.00264356948207, "R": 2, "frameHalf": 2.75, "ptr": {"halfW": 0.9, "top": 3.95, "bottom": 1.75, "pivot": 2.5}, "fps": 24, "loop": 13.963, "base": "https://arsdashok.github.io/vocab/wheel-assets/surf/"};
 /* surf: a sunny sea with moving waves, a sand island, a palm, a shark fin and a jumping dolphin. */
 window.WHEEL_THEME = {
   id: 'surf',
@@ -323,6 +331,9 @@ var WC = Object.assign({
 }, T.wheel || {});
 var topics = D.topics, N = topics.length, SEG = TAU / N;
 var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var QS = {}; location.search.replace(/[?&]([^=&]+)=([^&]*)/g, function (_, k, v) { QS[k] = decodeURIComponent(v); });
+var PLATE = QS.plate === '1';        // used only by Tools/speaking_wheel/render_plates.py
+var PM = window.WHEEL_PLATE || null; // the pre-rendered scene for browsers without 3D (Koala's co-browser)
 var EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 function $(s) { return document.querySelector(s); }
 function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -401,9 +412,9 @@ var G = null; // {renderer, scene, camera, wheel, ptr, bulbs, api, clickables}
 var R3 = 2, TH = 0.36, FOV = 36;
 var H = {}; // helpers handed to themes
 function init3D() {
-  if (!window.THREE) return false;
+  if (!window.THREE || QS.lite === '1') return false;
   var THREE = window.THREE, canvas = $('#gl'), renderer;
-  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' }); } catch (e) { return false; }
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance', alpha: PLATE, preserveDrawingBuffer: PLATE }); } catch (e) { return false; }
   if (THREE.ColorManagement && 'legacyMode' in THREE.ColorManagement) THREE.ColorManagement.legacyMode = false;
   var small = Math.min(innerWidth, innerHeight) < 560;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2));
@@ -475,7 +486,7 @@ function init3D() {
   faceTex = new THREE.CanvasTexture(faceCv); faceTex.encoding = THREE.sRGBEncoding; faceTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
   var faceMat = new THREE.MeshStandardMaterial({ map: faceTex, roughness: 0.42, metalness: 0, emissive: new THREE.Color('#ffffff'), emissiveMap: faceTex, emissiveIntensity: WC.emissive });
   var face = new THREE.Mesh(new THREE.CircleGeometry(R3, 80), faceMat); face.position.z = TH / 2 + 0.002; face.receiveShadow = true; wheel.add(face);
-  var body = H.add(wheel, H.cyl(R3, R3, TH, 80), H.mat(WC.side || WC.rim, { rough: 0.5 }), null, [Math.PI / 2, 0, 0]);
+  var body = H.add(wheel, new THREE.CylinderGeometry(R3, R3, TH, 80, 1, true), H.mat(WC.side || WC.rim, { rough: 0.5 }), null, [Math.PI / 2, 0, 0]);
   H.add(wheel, new THREE.TorusGeometry(R3 + 0.03, WC.rimTube, 16, 80), H.mat(WC.rim, { rough: 0.32, metal: WC.rimMetal }), [0, 0, TH / 2 - 0.03]);
   var back = H.add(wheel, new THREE.CircleGeometry(R3, 48), H.mat(WC.side || WC.rim), [0, 0, -TH / 2 - 0.002], [0, Math.PI, 0]);
   var i, a;
@@ -513,7 +524,7 @@ function init3D() {
   }
   H.onClick(face, function () { spin(); });
 
-  G = { renderer: renderer, scene: scene, camera: camera, wheel: wheel, rig: rig, ptr: ptr, bulbs: bulbs, sun: sun, hemi: hemi, clickables: clickables, api: {}, ground: ground };
+  G = { renderer: renderer, scene: scene, camera: camera, wheel: wheel, rig: rig, ptr: ptr, hub: hub, face: face, back: back, bulbs: bulbs, sun: sun, hemi: hemi, clickables: clickables, api: {}, ground: ground };
   var ctx = { THREE: THREE, H: H, scene: scene, camera: camera, rig: rig, wheel: wheel, hub: hub, ptr: ptr, R: R3, TH: TH, ground: ground, sun: sun, hemi: hemi, N: N, reduce: reduce,
     burst: function (obj, n) { var p = project(obj); burst(p.x, p.y, n || 10); } };
   if (T.build) { try { G.api = T.build(ctx) || {}; } catch (e) { console.error('theme build failed', e); G.api = {}; } }
@@ -548,12 +559,16 @@ function layout() {
   lay.w = Math.max(1, r.width); lay.h = Math.max(1, r.height); lay.wide = innerWidth >= 900;
   var fx = $('#fx'), dpr = Math.min(window.devicePixelRatio || 1, 2);
   fx.width = innerWidth * dpr; fx.height = innerHeight * dpr;
-  if (G) { G.renderer.setSize(lay.w, lay.h, false); G.camera.aspect = lay.w / lay.h; G.camera.updateProjectionMatrix(); }
+  if (G && !PLATE) { G.renderer.setSize(lay.w, lay.h, false); G.camera.aspect = lay.w / lay.h; G.camera.updateProjectionMatrix(); }
 }
-function applyCamera() {
+function wheelPx() { // wheel size and place on screen, the same in 3D and in the pre-rendered mode
   var w = lay.w, h = lay.h, k = lay.wide ? 1 - S.hero : 0;
   var diam = lay.wide ? lerp(Math.min(0.5 * w, 0.62 * h), Math.min(0.41 * w, 0.62 * h), k) : Math.min(0.8 * w, 0.6 * h);
-  var ppu = diam / 4.7, dist = h / (2 * Math.tan(FOV * Math.PI / 360) * ppu);
+  return { k: k, ppu: diam / 4.7 };
+}
+function applyCamera() {
+  var w = lay.w, h = lay.h, wp = wheelPx(), k = wp.k;
+  var ppu = wp.ppu, dist = h / (2 * Math.tan(FOV * Math.PI / 360) * ppu);
   var cx = lay.wide ? k * (0.25 * w) / ppu : 0;
   lay.ppu = ppu;
   var px = reduce ? 0 : par.x * 0.55, py = reduce ? 0 : par.y * 0.3;
@@ -611,7 +626,7 @@ function landed(i) {
   document.body.classList.remove('spinning'); document.body.classList.add('has-card');
   $('#spin').disabled = false; $('#spin').firstChild.textContent = 'Spin again';
   S.heroTo = 0; drawFace(); renderCard(true); buildMenu();
-  var p = G ? project(G.ptr) : { x: innerWidth * 0.25, y: innerHeight * 0.2 };
+  var p = G ? project(G.ptr) : (LT ? (function () { var r = LT.ptr.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })() : { x: innerWidth * 0.25, y: innerHeight * 0.2 });
   burst(p.x, p.y + 30, 34);
   if (G && G.api.land) G.api.land(i);
 }
@@ -633,14 +648,79 @@ function tick(dt) {
       G.bulbs[i].material.emissiveIntensity = on ? 1.5 : 0.25;
     }
     if (G.api.update) G.api.update(S.time, dt, S);
-  } else {
+  } else if (!LT) {
     var f = $('#flat canvas'); if (f) f.style.transform = 'rotate(' + S.rot + 'rad)';
   }
 }
-function render(dt) { if (G) { applyCamera(); G.renderer.render(G.scene, G.camera); } drawParts(dt || 0); }
-var last = 0;
+/* ---------- no 3D: the scene is a pre-rendered loop, the wheel is live on top of it ---------- */
+var LT = null;
+function setupLite(base) {
+  var fl = $('#flat'); fl.innerHTML = ''; fl.classList.add('lite');
+  function mk(tag, cls) { var e = document.createElement(tag); e.className = cls; fl.appendChild(e); return e; }
+  var img = mk('img', 'lv'); img.alt = ''; img.src = base + 'plate.jpg';
+  var vid = null;
+  if (!reduce) {
+    vid = mk('video', 'lv'); vid.muted = true; vid.defaultMuted = true; vid.loop = true; vid.autoplay = true; vid.playsInline = true;
+    vid.setAttribute('muted', ''); vid.setAttribute('playsinline', ''); vid.setAttribute('preload', 'auto'); vid.poster = base + 'plate.jpg';
+    ['webm', 'mp4'].forEach(function (x) { var so = document.createElement('source'); so.src = base + 'plate.' + x; so.type = 'video/' + x; vid.appendChild(so); });
+    var kick = function () { if (LT && LT.still) return; var pr = vid.play(); if (pr && pr.catch) pr.catch(function () {}); };
+    vid.addEventListener('canplay', kick); document.addEventListener('pointerdown', kick, { once: true });
+  }
+  [img, vid].forEach(function (e) { if (e) { e.style.width = PM.w + 'px'; e.style.height = PM.h + 'px'; } });
+  var face = mk('div', 'lface'); face.appendChild(faceCv);
+  var gloss = mk('div', 'lgloss');
+  var frame = mk('img', 'lframe'); frame.alt = ''; frame.src = base + 'frame.webp';
+  var ptr = mk('img', 'lptr'); ptr.alt = ''; ptr.src = base + 'pointer.webp';
+  face.addEventListener('click', function (ev) { ev.stopPropagation(); spin(); });
+  fl.addEventListener('click', function (ev) { burst(ev.clientX, ev.clientY, 9); });
+  LT = { img: img, vid: vid, face: face, gloss: gloss, frame: frame, ptr: ptr };
+}
+function applyLite() {
+  var w = lay.w, h = lay.h, wp = wheelPx(), ppu = wp.ppu, R = PM.R;
+  var X = lay.wide ? w * (0.5 - 0.25 * wp.k) : w * 0.5, s0 = ppu / PM.ppu, Y = h * 0.5 + (PM.cy - PM.h / 2) * s0;
+  var s = Math.max(s0, X / PM.cx, (w - X) / (PM.w - PM.cx), Y / PM.cy, (h - Y) / (PM.h - PM.cy));
+  var tf = 'translate(' + (X - PM.cx * s).toFixed(1) + 'px,' + (Y - PM.cy * s).toFixed(1) + 'px) scale(' + s.toFixed(4) + ')';
+  LT.img.style.transform = tf; if (LT.vid) LT.vid.style.transform = tf;
+  function box(e, half, extra) { e.style.left = (X - half * ppu) + 'px'; e.style.top = (Y - half * ppu) + 'px'; e.style.width = e.style.height = (2 * half * ppu) + 'px'; if (extra != null) e.style.transform = extra; }
+  box(LT.face, R, 'rotate(' + S.rot.toFixed(4) + 'rad)'); box(LT.gloss, R); box(LT.frame, PM.frameHalf);
+  var P = PM.ptr; LT.ptr.style.left = (X - P.halfW * ppu) + 'px'; LT.ptr.style.top = (Y - P.top * ppu) + 'px';
+  LT.ptr.style.width = (2 * P.halfW * ppu) + 'px'; LT.ptr.style.height = ((P.top - P.bottom) * ppu) + 'px';
+  LT.ptr.style.transformOrigin = '50% ' + ((P.top - P.pivot) / (P.top - P.bottom) * 100).toFixed(2) + '%';
+  LT.ptr.style.transform = 'rotate(' + (-S.ptr).toFixed(4) + 'rad)';
+}
+function plateSetup() { // deterministic frames for the pre-rendered mode; no animation loop here
+  var THREE = window.THREE, PW = 1600, PH = 720, U = 80, bg = G.scene.background, fog = G.scene.fog;
+  document.body.classList.add('notrans'); ['#top', '#wheelzone', '#card', '#fx'].forEach(function (q) { $(q).style.display = 'none'; });
+  function size(k) { G.renderer.setPixelRatio(1); G.renderer.setSize(PW * k, PH * k, false); G.camera.aspect = PW / PH; G.camera.updateProjectionMatrix(); }
+  function cam() { G.camera.position.set(0, 0.5, PH / (2 * Math.tan(FOV * Math.PI / 360) * U)); G.camera.lookAt(0, 0.12, 0); G.camera.updateMatrixWorld(); }
+  function proj(x, y, z) { var v = new THREE.Vector3(x, y, z).project(G.camera); return [(v.x * 0.5 + 0.5) * PW, (-v.y * 0.5 + 0.5) * PH]; }
+  function scene(on) { G.wheel.visible = !on; G.hub.visible = !on; G.ptr.visible = !on; }
+  window.__plate = {
+    meta: function () { size(1); cam(); var c = proj(0, 0, TH / 2), u = proj(1, 0, TH / 2); return { w: PW, h: PH, cx: c[0], cy: c[1], ppu: u[0] - c[0], R: R3 }; },
+    skip: function (sec) { scene(true); for (var t = 0; t < sec; t += 1 / 24) tick(1 / 24); return true; },
+    frame: function (dt) { size(1); cam(); scene(true); tick(dt); G.renderer.render(G.scene, G.camera); return $('#gl').toDataURL('image/jpeg', 0.93); },
+    part: function (which) {
+      size(2); cam(); scene(false);
+      var keep = which === 'pointer' ? [G.ptr] : [G.wheel, G.hub], saved = [];
+      G.scene.children.forEach(function (o) { if (o.isLight || o === G.rig) return; saved.push([o, o.visible]); o.visible = false; });
+      G.rig.children.forEach(function (o) { saved.push([o, o.visible]); o.visible = keep.indexOf(o) >= 0; });
+      G.face.visible = false; G.back.visible = false; G.wheel.rotation.z = 0; G.ptr.rotation.z = 0;
+      G.scene.background = null; G.scene.fog = null; G.renderer.setClearColor(0x000000, 0); G.renderer.render(G.scene, G.camera);
+      var url = $('#gl').toDataURL('image/png');
+      saved.forEach(function (x) { x[0].visible = x[1]; }); G.face.visible = true; G.back.visible = true; G.scene.background = bg; G.scene.fog = fog;
+      return url;
+    }
+  };
+}
+function render(dt) { if (G) { applyCamera(); G.renderer.render(G.scene, G.camera); } else if (LT) applyLite(); drawParts(dt || 0); }
+var last = 0, slowT = 0, slowN = 0;
 function frame(now) {
-  var dt = Math.min(0.05, (now - last) / 1000 || 0.016); last = now;
+  var raw = (now - last) / 1000 || 0.016, dt = Math.min(0.05, raw); last = now;
+  // a weak browser (no graphics card): if the page draws under 10 frames a second, stop the background film so the wheel stays quick
+  if (LT && LT.vid && !LT.still && !LT.vid.paused && !document.hidden && raw < 0.6) {
+    slowT += raw; slowN++;
+    if (slowT >= 3) { if (slowT / slowN > 0.1) { LT.still = true; LT.vid.pause(); } slowT = 0; slowN = 0; }
+  }
   tick(dt); render(dt); requestAnimationFrame(frame);
 }
 
@@ -740,10 +820,13 @@ function start() {
   if (ok) { G.THREE_V3 = window.THREE.Vector3; }
   else {
     G = null; document.body.classList.add('no3d');
-    var fl = $('#flat'); fl.hidden = false; fl.querySelector('.f-wrap').appendChild(faceCv);
-    faceCv.addEventListener('click', function () { spin(); });
+    var fl = $('#flat'); fl.hidden = false;
     var sky = T.sky || ['#7dd3fc', '#e0f2fe']; $('#stage').style.background = 'linear-gradient(' + sky.join(',') + ')';
+    var base = QS.assets || (PM && PM.base);
+    if (PM && base) setupLite(base);
+    else { fl.querySelector('.f-wrap').appendChild(faceCv); faceCv.addEventListener('click', function () { spin(); }); }
   }
+  if (PLATE && G) return plateSetup();
   layout(); buildMenu(); renderNotes();
   window.addEventListener('resize', layout);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fontD = getComputedStyle(document.documentElement).getPropertyValue('--font-d').trim() || fontD; drawFace(); });
