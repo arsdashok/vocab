@@ -38,5 +38,10 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
+      # 24 Nov 2026: deploy-pages began failing on its first try with «Fetching artifact
+      # metadata failed» right after a successful upload (four runs in a row; a re-run of the
+      # same job always passed). A short pause lets the new artifact become visible first.
+      - name: Wait for the artifact to register
+        run: sleep 30
       - id: deployment
         uses: actions/deploy-pages@v4
